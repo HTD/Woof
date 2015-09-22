@@ -1,0 +1,15 @@
+A:\CodeDog\Woof\bin\test\dll\WoofData.dll
+A:\CodeDog\Woof\bin\test\dll\WoofData.pdb
+A:\CodeDog\Woof\WoofData\obj\Debug\WoofData.csprojResolveAssemblyReference.cache
+A:\CodeDog\Woof\WoofData\obj\Debug\WoofData.dll
+A:\CodeDog\Woof\WoofData\obj\Debug\WoofData.pdb
+C:\Source\CodeDog\Woof\bin\test\dll\WoofData.dll
+C:\Source\CodeDog\Woof\bin\test\dll\WoofData.pdb
+C:\Source\CodeDog\Woof\WoofData\obj\Debug\WoofData.csprojResolveAssemblyReference.cache
+C:\Source\CodeDog\Woof\WoofData\obj\Debug\WoofData.dll
+C:\Source\CodeDog\Woof\WoofData\obj\Debug\WoofData.pdb
+C:\Source\IGT\Woof\bin\test\dll\WoofData.dll
+C:\Source\IGT\Woof\bin\test\dll\WoofData.pdb
+C:\Source\IGT\Woof\WoofData\obj\Debug\WoofData.csprojResolveAssemblyReference.cache
+C:\Source\IGT\Woof\WoofData\obj\Debug\WoofData.dll
+C:\Source\IGT\Woof\WoofData\obj\Debug\WoofData.pdb

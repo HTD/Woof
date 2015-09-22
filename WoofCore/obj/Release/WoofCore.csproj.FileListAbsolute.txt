@@ -1,0 +1,15 @@
+A:\CodeDog\Woof\Deployment\WoofCore.dll
+A:\CodeDog\Woof\Deployment\WoofCore.pdb
+A:\CodeDog\Woof\WoofCore\obj\Release\WoofCore.pdb
+A:\CodeDog\Woof\WoofCore\obj\Release\WoofCore.dll
+A:\CodeDog\Woof\Deployment\Backend\WoofCore.dll
+A:\CodeDog\Woof\Deployment\Backend\WoofCore.pdb
+C:\Source\CodeDog\Woof\Deployment\Backend\WoofCore.dll
+C:\Source\CodeDog\Woof\Deployment\Backend\WoofCore.pdb
+C:\Source\CodeDog\Woof\WoofCore\obj\Release\WoofCore.dll
+C:\Source\CodeDog\Woof\WoofCore\obj\Release\WoofCore.pdb
+C:\Source\IGT\Woof\Deployment\Backend\WoofCore.dll
+C:\Source\IGT\Woof\Deployment\Backend\WoofCore.pdb
+C:\Source\IGT\Woof\WoofCore\obj\Release\WoofCore.dll
+C:\Source\IGT\Woof\WoofCore\obj\Release\WoofCore.pdb
+C:\Source\IGT\Woof\WoofCore\obj\Release\WoofCore.csprojResolveAssemblyReference.cache

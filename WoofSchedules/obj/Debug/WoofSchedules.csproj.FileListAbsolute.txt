@@ -1,0 +1,13 @@
+A:\CodeDog\Woof\bin\test\dll\WoofSchedules.dll
+A:\CodeDog\Woof\bin\test\dll\WoofSchedules.pdb
+A:\CodeDog\Woof\WoofSchedules\obj\Debug\WoofSchedules.dll
+A:\CodeDog\Woof\WoofSchedules\obj\Debug\WoofSchedules.pdb
+C:\Source\CodeDog\Woof\bin\test\dll\WoofSchedules.dll
+C:\Source\CodeDog\Woof\bin\test\dll\WoofSchedules.pdb
+C:\Source\CodeDog\Woof\WoofSchedules\obj\Debug\WoofSchedules.dll
+C:\Source\CodeDog\Woof\WoofSchedules\obj\Debug\WoofSchedules.pdb
+C:\Source\CodeDog\Woof\WoofSchedules\obj\Debug\WoofSchedules.csprojResolveAssemblyReference.cache
+C:\Source\IGT\Woof\bin\test\dll\WoofSchedules.dll
+C:\Source\IGT\Woof\bin\test\dll\WoofSchedules.pdb
+C:\Source\IGT\Woof\WoofSchedules\obj\Debug\WoofSchedules.dll
+C:\Source\IGT\Woof\WoofSchedules\obj\Debug\WoofSchedules.pdb

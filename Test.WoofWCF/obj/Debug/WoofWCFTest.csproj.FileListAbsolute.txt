@@ -1,0 +1,6 @@
+A:\CodeDog\Woof\bin\test\WoofWCFTest.exe.config
+A:\CodeDog\Woof\bin\test\WoofWCFTest.exe
+A:\CodeDog\Woof\bin\test\WoofWCFTest.pdb
+A:\CodeDog\Woof\WoofWCFTest\obj\Debug\WoofWCFTest.csprojResolveAssemblyReference.cache
+A:\CodeDog\Woof\WoofWCFTest\obj\Debug\WoofWCFTest.exe
+A:\CodeDog\Woof\WoofWCFTest\obj\Debug\WoofWCFTest.pdb

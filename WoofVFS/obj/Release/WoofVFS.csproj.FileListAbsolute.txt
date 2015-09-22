@@ -1,0 +1,15 @@
+A:\CodeDog\Woof\Deployment\WoofVFS.dll
+A:\CodeDog\Woof\Deployment\WoofVFS.pdb
+A:\CodeDog\Woof\WoofVFS\obj\Release\WoofVFS.pdb
+A:\CodeDog\Woof\WoofVFS\obj\Release\WoofVFS.dll
+A:\CodeDog\Woof\Deployment\Backend\WoofVFS.dll
+A:\CodeDog\Woof\Deployment\Backend\WoofVFS.pdb
+C:\Source\CodeDog\Woof\Deployment\Backend\WoofVFS.dll
+C:\Source\CodeDog\Woof\Deployment\Backend\WoofVFS.pdb
+C:\Source\CodeDog\Woof\WoofVFS\obj\Release\WoofVFS.dll
+C:\Source\CodeDog\Woof\WoofVFS\obj\Release\WoofVFS.pdb
+C:\Source\CodeDog\Woof\WoofVFS\obj\Release\WoofVFS.csprojResolveAssemblyReference.cache
+C:\Source\IGT\Woof\Deployment\Backend\WoofVFS.dll
+C:\Source\IGT\Woof\Deployment\Backend\WoofVFS.pdb
+C:\Source\IGT\Woof\WoofVFS\obj\Release\WoofVFS.dll
+C:\Source\IGT\Woof\WoofVFS\obj\Release\WoofVFS.pdb

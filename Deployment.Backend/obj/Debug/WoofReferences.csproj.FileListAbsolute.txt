@@ -1,0 +1,6 @@
+A:\CodeDog\Woof\bin\test\WoofReferences.exe.config
+A:\CodeDog\Woof\bin\test\WoofReferences.exe
+A:\CodeDog\Woof\bin\test\WoofReferences.pdb
+A:\CodeDog\Woof\WoofReferences\obj\Debug\WoofReferences.csprojResolveAssemblyReference.cache
+A:\CodeDog\Woof\WoofReferences\obj\Debug\WoofReferences.exe
+A:\CodeDog\Woof\WoofReferences\obj\Debug\WoofReferences.pdb

@@ -1,0 +1,17 @@
+A:\CodeDog\Woof\Deployment\WoofData.dll
+A:\CodeDog\Woof\Deployment\WoofData.pdb
+A:\CodeDog\Woof\WoofData\obj\Release\WoofData.pdb
+A:\CodeDog\Woof\Deployment\Backend\WoofData.dll
+A:\CodeDog\Woof\Deployment\Backend\WoofData.pdb
+A:\CodeDog\Woof\WoofData\obj\Release\WoofData.csprojResolveAssemblyReference.cache
+A:\CodeDog\Woof\WoofData\obj\Release\WoofData.dll
+C:\Source\CodeDog\Woof\Deployment\Backend\WoofData.dll
+C:\Source\CodeDog\Woof\Deployment\Backend\WoofData.pdb
+C:\Source\CodeDog\Woof\WoofData\obj\Release\WoofData.csprojResolveAssemblyReference.cache
+C:\Source\CodeDog\Woof\WoofData\obj\Release\WoofData.dll
+C:\Source\CodeDog\Woof\WoofData\obj\Release\WoofData.pdb
+C:\Source\IGT\Woof\Deployment\Backend\WoofData.dll
+C:\Source\IGT\Woof\Deployment\Backend\WoofData.pdb
+C:\Source\IGT\Woof\WoofData\obj\Release\WoofData.csprojResolveAssemblyReference.cache
+C:\Source\IGT\Woof\WoofData\obj\Release\WoofData.dll
+C:\Source\IGT\Woof\WoofData\obj\Release\WoofData.pdb

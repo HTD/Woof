@@ -1,0 +1,15 @@
+A:\CodeDog\Woof\Deployment\WoofSchedules.dll
+A:\CodeDog\Woof\Deployment\WoofSchedules.pdb
+A:\CodeDog\Woof\WoofSchedules\obj\Release\WoofSchedules.pdb
+A:\CodeDog\Woof\WoofSchedules\obj\Release\WoofSchedules.dll
+A:\CodeDog\Woof\Deployment\Backend\WoofSchedules.dll
+A:\CodeDog\Woof\Deployment\Backend\WoofSchedules.pdb
+C:\Source\CodeDog\Woof\Deployment\Backend\WoofSchedules.dll
+C:\Source\CodeDog\Woof\Deployment\Backend\WoofSchedules.pdb
+C:\Source\CodeDog\Woof\WoofSchedules\obj\Release\WoofSchedules.dll
+C:\Source\CodeDog\Woof\WoofSchedules\obj\Release\WoofSchedules.pdb
+C:\Source\CodeDog\Woof\WoofSchedules\obj\Release\WoofSchedules.csprojResolveAssemblyReference.cache
+C:\Source\IGT\Woof\Deployment\Backend\WoofSchedules.dll
+C:\Source\IGT\Woof\Deployment\Backend\WoofSchedules.pdb
+C:\Source\IGT\Woof\WoofSchedules\obj\Release\WoofSchedules.dll
+C:\Source\IGT\Woof\WoofSchedules\obj\Release\WoofSchedules.pdb

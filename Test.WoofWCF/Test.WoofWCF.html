@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Woof WCF Test</title>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script>
+        (function ($) {
+            $(function () {
+                var serviceURI = 'http://localhost:8080/woof/';
+                var input = { message: 'Hello world!' };
+                var json = JSON.stringify(input);
+                $.ajax({ url: serviceURI + 'echo', type: 'POST', dataType: 'json', contentType: 'application/json', data: json }).done(function (response) { console.dir(response); });
+            });
+        })(jQuery);
+    </script>
+</head>
+<body>
+</body>
+</html>

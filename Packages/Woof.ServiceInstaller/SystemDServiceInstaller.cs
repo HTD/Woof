@@ -37,8 +37,8 @@ internal class SystemDServiceInstaller {
         Linux.AddSystemDirectory(bundleExtractDirectory, serviceUserName, serviceGroupName);
         var serviceUser = UserInfo.FromName(serviceUserName)!;
         var serviceGroup = GroupInfo.FromName(serviceGroupName)!;
-        // FIXME: Data protection configuration for the service user!
-        DPAPI.GetInstance<DPAPI_Linux>()?.RestrictKeyAccess(serviceUser, serviceGroup);
+        var dpapi = ApiResolver.GetNonWindowsDPAPI<IAcceptMessage>();
+        dpapi?.Message((serviceUserName, serviceGroupName)); // configures DPAPI for the service user if applicable
         var isDll = Application.Path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase);
         FileSystem.CopyDirectoryContent(Application.Directory, targetDirectory);
         Linux.ChownR(targetDirectory, serviceUser, serviceGroup);
@@ -46,19 +46,19 @@ internal class SystemDServiceInstaller {
         var binaryPath = Path.Combine(targetDirectory, Application.Info.Name);
         if (!isDll) Linux.Chmod(binaryPath, "+x,o-wx");
         File.WriteAllLines($"/etc/systemd/system/{Metadata.Name}.service", new string[] {
-                "[Unit]",
-                $"Description={Metadata.DisplayName}",
-                "",
-                "[Service]",
-                "Type=notify",
-                $"Environment=\"DOTNET_BUNDLE_EXTRACT_BASE_DIR={bundleExtractDirectory}\"",
-                $"ExecStart={(isDll ? $"dotnet {binaryPath}" : binaryPath)}",
-                $"User={serviceUserName}",
-                $"Group={serviceGroupName}",
-                "",
-                "[Install]",
-                "WantedBy=multi-user.target"
-            });
+            "[Unit]",
+            $"Description={Metadata.DisplayName}",
+            "",
+            "[Service]",
+            "Type=notify",
+            $"Environment=\"DOTNET_BUNDLE_EXTRACT_BASE_DIR={bundleExtractDirectory}\"",
+            $"ExecStart={(isDll ? $"dotnet {binaryPath}" : binaryPath)}",
+            $"User={serviceUserName}",
+            $"Group={serviceGroupName}",
+            "",
+            "[Install]",
+            "WantedBy=multi-user.target"
+        });
         if (Metadata.Start is StartType.Auto or StartType.DelayedAuto)
             await new ShellCommand($"systemctl enable {Metadata.Name}.service").ExecVoidAsync();
     }

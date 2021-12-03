@@ -323,4 +323,12 @@ public static class Linux {
     /// <returns>Absolute path.</returns>
     public static string ResolveUserPath(string path) => path.Replace("~", HomeDirectory);
 
+    /// <summary>
+    /// Resolves the path containing "~" by replacing it with absolute user's home directory location.
+    /// </summary>
+    /// <param name="path">Path containing "~" reference.</param>
+    /// <param name="user">User who's home directory will be resolved.</param>
+    /// <returns>Absolute path.</returns>
+    public static string ResolveUserPath(string path, UserInfo user) => path.Replace("~", user.Directory);
+
 }

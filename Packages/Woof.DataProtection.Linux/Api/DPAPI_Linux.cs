@@ -3,7 +3,7 @@
 /// <summary>
 /// Linux data protection API.
 /// </summary>
-public class DPAPI_Linux : IDPAPI {
+public class DPAPI_Linux : IDPAPI, IAcceptMessage {
 
     /// <summary>
     /// Default system directory for storing Linux application keys.
@@ -100,7 +100,20 @@ public class DPAPI_Linux : IDPAPI {
             return;
         }
         KeyDirectory = Linux.ResolveUserPath(DefaultLinuxKeyDirectoryUser);
-        // FIXME: ADD OPTION TO CONFIGURE THE KEY DIRECTORY FOR THE SPECIFIED USER!
+    }
+
+    /// <summary>
+    /// Accepts a message requesting keys configuration for a specified system user.
+    /// </summary>
+    /// <param name="message"></param>
+    /// <returns></returns>
+    public void Message(object message) {
+        if (message is (string userName, string groupName)) {
+            var user = UserInfo.FromName(userName);
+            var group = GroupInfo.FromName(groupName);
+            if (user is not null && group is not null)
+                RestrictKeyAccess(user, group);
+        }
     }
 
     /// <summary>
@@ -110,18 +123,30 @@ public class DPAPI_Linux : IDPAPI {
     /// <param name="user">User information or null, to use current user.</param>
     /// <param name="group">Optional group the access will be granted to.</param>
     public void RestrictKeyAccess(UserInfo? user = null, GroupInfo? group = null) {
-        if (user is null) user = CurrentUser.BehindSudo ?? Linux.CurrentProcessUser;
-        if (KeyDirectory is null) AutoConfigure(); // FIXME: ADD OPTION TO CONFIGURE THE KEY DIRECTORY FOR THE SPECIFIED USER!
-        var currentKey = KeyManager!.GetAllKeys().Where(k => !k.IsRevoked).OrderByDescending(k => k.ActivationDate).FirstOrDefault();
-        var keyFileName = $"key-{currentKey!.KeyId}.xml";
-        var keyPath = Path.Combine(KeyDirectory!, keyFileName);
+        var isForCurrentUser = user is null;
+        if (isForCurrentUser) user = CurrentUser.BehindSudo ?? Linux.CurrentProcessUser;
+        if (KeyDirectory is null) {
+            if (isForCurrentUser) AutoConfigure();
+            else KeyDirectory = Linux.ResolveUserPath(DefaultLinuxKeyDirectoryUser, user!);
+        }
+        var keyPath = CurrentKeyPath;
         if (group is not null) {
-            Linux.Chown(KeyDirectory!, user.Uid, group.Id);
+            Linux.Chown(KeyDirectory!, user!.Uid, group.Id);
             Linux.Chown(keyPath, user.Uid, group.Id);
             Linux.Chmod(keyPath, "g+rw");
         }
         Linux.Chmod(keyPath, "o-rwx");
     }
+
+    /// <summary>
+    /// Gets the current data protection key.
+    /// </summary>
+    private IKey? CurrentKey => KeyManager!.GetAllKeys().Where(k => !k.IsRevoked).OrderByDescending(k => k.ActivationDate).FirstOrDefault();
+
+    /// <summary>
+    /// Gets the current data protection key path.
+    /// </summary>
+    private string CurrentKeyPath => Path.Combine(KeyDirectory!, $"key-{CurrentKey!.KeyId}.xml");
 
     /// <summary>
     /// Encrypts data.

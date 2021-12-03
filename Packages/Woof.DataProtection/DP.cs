@@ -62,18 +62,9 @@ public static class DP {
     /// <summary>
     /// Configures the data protection API for the current OS.
     /// </summary>
-    static DP() {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) DPAPI = new Api.DPAPI();
-        else { // other OS-es support can possibly found in other compatible assemblies
-            (string name, OSPlatform platform)[] platforms = new[] {
-                (nameof(OSPlatform.Linux), OSPlatform.Linux),
-                (nameof(OSPlatform.OSX), OSPlatform.OSX),
-                (nameof(OSPlatform.FreeBSD), OSPlatform.FreeBSD)
-            };
-            var osName = platforms.FirstOrDefault(p => RuntimeInformation.IsOSPlatform(p.platform)).name;
-            var api = ApiResolver.GetInstance<IDPAPI>($"Woof.DataProtection.{osName}", $"Woof.DataProtection.Api.DPAPI_{osName}");
-            DPAPI = api ?? new Api.Unsupported();
-        }
-    }
+    static DP()
+        => DPAPI = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? new Api.DPAPI()
+            : ApiResolver.GetNonWindowsDPAPI<IDPAPI>() ?? new Api.Unsupported();
 
 }

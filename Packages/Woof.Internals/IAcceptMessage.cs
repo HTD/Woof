@@ -10,6 +10,6 @@ public interface IAcceptMessage {
     /// </summary>
     /// <param name="message">A message object.</param>
     /// <returns>A response object.</returns>
-    object Message(object message);
+    void Message(object message);
 
 }

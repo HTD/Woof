@@ -7,6 +7,4 @@ global using Microsoft.Extensions.Logging.EventLog;
 
 global using Woof.LinuxAdmin;
 global using Woof.Shell;
-global using Woof.DataProtection;
-global using Woof.DataProtection.Api;
 global using Woof.Internals;

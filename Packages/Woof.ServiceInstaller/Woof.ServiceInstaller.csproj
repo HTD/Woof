@@ -36,7 +36,6 @@
     <ItemGroup Label="Local dependencies" Condition="'$(Configuration)'=='Debug'">
         <ProjectReference Include="..\Woof.CommandLine\Woof.CommandLine.csproj" />
         <ProjectReference Include="..\Woof.LinuxAdmin\Woof.LinuxAdmin.csproj" />
-        <ProjectReference Include="..\Woof.DataProtection.Linux\Woof.DataProtection.Linux.csproj" />
     </ItemGroup>
 
     <!-- Published Woof Toolkit package dependencies for Release configuration only -->

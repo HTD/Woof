@@ -1,8 +1,6 @@
-﻿using Woof.DataProtection;
+﻿using Woof.LinuxAdmin;
 
-var plainText = "Hello, World!";
-var encryptedText = DP.Protect(plainText);
-var decryptedText = DP.Unprotect(encryptedText);
-if (decryptedText != plainText || encryptedText == decryptedText)
-    throw new InvalidOperationException("Module doesn't work!");
-Console.WriteLine("It works.");
+var serviceUser = UserInfo.FromName("service");
+var path = "~/.net/dpapi";
+var resolved = Linux.ResolveUserPath(path, serviceUser!);
+Console.WriteLine(resolved);

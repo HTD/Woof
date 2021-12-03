@@ -28,6 +28,7 @@
 
     <!-- Local project references for Debug configuration only -->
     <ItemGroup Label="Local dependencies" Condition="'$(Configuration)'=='Debug'">
+        <ProjectReference Include="..\Woof.Internals\Woof.Internals.csproj" />
         <ProjectReference Include="..\Woof.Shell\Woof.Shell.csproj" />
     </ItemGroup>
 

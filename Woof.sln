@@ -61,6 +61,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.Config.Protected.Demo"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.Config.AKV.Protected", "Packages\Woof.Config.AKV.Protected\Woof.Config.AKV.Protected.csproj", "{4795FCE2-264C-4EC0-A293-25A9ADABBF5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Woof.Internals", "Packages\Woof.Internals\Woof.Internals.csproj", "{5A638729-2713-476D-BBC7-7E3AC9DF739D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,6 +153,10 @@ Global
 		{4795FCE2-264C-4EC0-A293-25A9ADABBF5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4795FCE2-264C-4EC0-A293-25A9ADABBF5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4795FCE2-264C-4EC0-A293-25A9ADABBF5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A638729-2713-476D-BBC7-7E3AC9DF739D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A638729-2713-476D-BBC7-7E3AC9DF739D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A638729-2713-476D-BBC7-7E3AC9DF739D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A638729-2713-476D-BBC7-7E3AC9DF739D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,6 +183,7 @@ Global
 		{E9DF2327-5299-4E7B-842A-F84CF9C0613F} = {939A05DB-484D-4F93-8A87-99D98486B020}
 		{51F82596-04BA-43A4-A0F2-7E6BE5876297} = {939A05DB-484D-4F93-8A87-99D98486B020}
 		{4795FCE2-264C-4EC0-A293-25A9ADABBF5F} = {05050EE6-FEEC-4EF2-956C-B70278C56ED4}
+		{5A638729-2713-476D-BBC7-7E3AC9DF739D} = {05050EE6-FEEC-4EF2-956C-B70278C56ED4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3151199D-4569-4768-93BA-473FE0CDBC6F}

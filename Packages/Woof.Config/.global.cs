@@ -8,5 +8,6 @@ global using System.Text.RegularExpressions;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.Primitives;
 
+global using Woof.Internals;
 global using Woof.Config.Internals;
 global using SysPath = System.IO.Path;

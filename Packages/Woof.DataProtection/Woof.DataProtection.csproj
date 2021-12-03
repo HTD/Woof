@@ -31,6 +31,15 @@
         <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="6.0.0" />
     </ItemGroup>
 
+    <!-- Local project references for Debug configuration only -->
+    <ItemGroup Label="Local dependencies" Condition="'$(Configuration)'=='Debug'">
+        <ProjectReference Include="..\Woof.Internals\Woof.Internals.csproj" />
+    </ItemGroup>
+
+    <!-- Published Woof Toolkit package dependencies for Release configuration only -->
+    <ItemGroup Label="Package dependencies" Condition="'$(Configuration)'=='Release'">
+    </ItemGroup>
+
     <PropertyGroup Label="Project settings">
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>

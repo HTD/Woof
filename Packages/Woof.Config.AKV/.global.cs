@@ -5,4 +5,4 @@ global using Microsoft.Extensions.Configuration;
 global using Azure.Identity;
 global using Azure.Security.KeyVault.Secrets;
 
-global using Woof.Config.Internals;
+global using Woof.Internals;

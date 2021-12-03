@@ -1,0 +1,1 @@
+﻿await Woof.LinuxAdmin.Test.Tests.RunAsync();

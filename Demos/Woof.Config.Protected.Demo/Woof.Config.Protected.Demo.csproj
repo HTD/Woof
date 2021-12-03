@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>pconfig</AssemblyName>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Packages\Woof.Config.Protected\Woof.Config.Protected.csproj" />
+    <ProjectReference Include="..\..\Packages\Woof.DataProtection.Linux\Woof.DataProtection.Linux.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="pconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

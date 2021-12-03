@@ -1,0 +1,64 @@
+<!-- Paste the content into the new package .csproj file -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup Label="Package metadata">
+        <Title>Woof.CronTimer</Title>
+        <Version>6.2.0</Version>
+        <PackageTags>woof;toolkit;cron;timer</PackageTags>
+        <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
+        <Authors>Adam Łyskawa</Authors>
+        <Company>CodeDog</Company>
+        <Description>A very simple task scheduler using cron expressions to schedule events.
+    - 5 fields format: [minute] [hour] [day of the month] [month] [day of the week].
+    - 6 fields format: [second] [minute] [hour] [day of the month] [month] [day of the week].
+    - The [year] field is NOT SUPPORTED.
+
+Use ScheduledEvent.Data to pass additional information about the job to be done on the schedule.</Description>
+        <Copyright>(c)2021 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof/Woof.CronTimer</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <IncludeSymbols>True</IncludeSymbols>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>D:\Source\Woof\Woof.snk</AssemblyOriginatorKeyFile>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <PackageIcon>Icon.png</PackageIcon>
+    </PropertyGroup>
+
+    <ItemGroup Label="Embedded files">
+        <None Include="..\..\Icon.png" Pack="true" PackagePath="" />
+        <None Include="Readme.md" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+    <!-- Microsoft and 3rd party packages -->
+    <ItemGroup Label="System dependencies">
+        <PackageReference Include="NCrontab.Signed" Version="3.3.2" />
+    </ItemGroup>
+
+    <!-- Local project references for Debug configuration only -->
+    <ItemGroup Label="Local dependencies" Condition="'$(Configuration)'=='Debug'">
+    </ItemGroup>
+
+    <!-- Published Woof Toolkit package dependencies for Release configuration only -->
+    <ItemGroup Label="Package dependencies" Condition="'$(Configuration)'=='Release'">
+    </ItemGroup>
+
+    <PropertyGroup Label="Project settings">
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DebugType>embedded</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Code quality">
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Code quality: Release" Condition="'$(Configuration)'=='Release'">
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+</Project>
+<!-- Make sure to update ALL the package metadata! -->

@@ -6,3 +6,4 @@
 // TODO: 5.2. Publish the rest of the packages in order of least dependencies with setting dependencies to already published packages.
 // TODO: 6. Include tests for all applicable classes.
 // TODO: 7. Include demos for all packages.
+// LATER: Add Windows MVVM packages

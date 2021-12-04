@@ -1,0 +1,27 @@
+{
+  "profiles": {
+    "TestService": {
+      "commandName": "Project"
+    },
+    "Install": {
+      "commandName": "Project",
+      "commandLineArgs": "-i"
+    },
+    "Uninstall": {
+      "commandName": "Project",
+      "commandLineArgs": "-u"
+    },
+    "Query": {
+      "commandName": "Project",
+      "commandLineArgs": "-q"
+    },
+    "Running": {
+      "commandName": "Project",
+      "commandLineArgs": "-r"
+    },
+    "Help": {
+      "commandName": "Project",
+      "commandLineArgs": "-?"
+    }
+  }
+}

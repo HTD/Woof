@@ -1,0 +1,13 @@
+{
+    "Service": {
+        "Name": "TestSvc",
+        "DisplayName": "Woof Service Installer Test",
+        "Description": "Tests the Woof.ServiceInstaller.",
+        "EventLogName": "Woof.ServiceInstaller",
+        "EventSourceName": "Woof.ServiceInstaller.Test",
+        "EventLogLevelMinimal": "debug",
+        "LinuxName": "testsvc",
+        "LinuxUser": "service",
+        "LinuxGroup": "service"
+    }
+}

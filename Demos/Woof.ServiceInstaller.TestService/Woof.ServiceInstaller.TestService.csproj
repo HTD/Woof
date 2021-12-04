@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <LangVersion>10</LangVersion>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <Authors>CodeDog</Authors>
+        <Description>Tests the Woof.ServiceInstaller package.</Description>
+        <Copyright>(c)2022 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof.ServiceInstaller</PackageProjectUrl>
+        <DebugType>embedded</DebugType>
+        <AssemblyName>testsvc</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="publish\**" />
+      <EmbeddedResource Remove="publish\**" />
+      <None Remove="publish\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Packages\Woof.CommandLine\Woof.CommandLine.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.DataProtection.Linux\Woof.DataProtection.Linux.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.Config.Protected\Woof.Config.Protected.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.ServiceInstaller\Woof.ServiceInstaller.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="testsvc.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

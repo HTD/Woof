@@ -57,7 +57,6 @@ public sealed class JsonConfigProtected : JsonConfig {
     /// <returns>This configuration.</returns>
     public JsonConfigProtected Protect() {
         if (IsProtected) return this;
-        if (!DP.IsAvailable) return this;
         string? unprotectedFile = null;
         if (Path.GetExtension(SourcePath) != Ext) {
             unprotectedFile = SourcePath;
@@ -79,7 +78,6 @@ public sealed class JsonConfigProtected : JsonConfig {
     /// </remarks>
     public override void Save() {
         if (!IsProtected) { base.Save(); return; }
-        if (!DP.IsAvailable) throw new NotSupportedException(DPAPI_Error);
         SaveProtected();
     }
 
@@ -92,7 +90,6 @@ public sealed class JsonConfigProtected : JsonConfig {
     /// <returns>A <see cref="ValueTask"/> completed when the configuration is saved.</returns>
     public override async ValueTask SaveAsync() {
         if (!IsProtected) await base.SaveAsync();
-        if (!DP.IsAvailable) throw new NotSupportedException(DPAPI_Error);
         await SaveProtectedAsync();
     }
 
@@ -105,7 +102,6 @@ public sealed class JsonConfigProtected : JsonConfig {
     /// <exception cref="NotSupportedException">Data protection API is not available.</exception>
     private static (JsonNodeConfiguration, bool) GetConfigurationFromPath(string path, DataProtectionScope scope) {
         if (Path.GetExtension(path) != Ext) return (JsonNodeConfiguration.Load(path), false);
-        if (!DP.IsAvailable) throw new NotSupportedException(DPAPI_Error);
         using var readStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
         var protectedData = new byte[readStream.Length];
         readStream.Read(protectedData, 0, protectedData.Length);
@@ -145,10 +141,5 @@ public sealed class JsonConfigProtected : JsonConfig {
     /// Protected file extension.
     /// </summary>
     private const string Ext = ".data";
-
-    /// <summary>
-    /// An error message for the data protection API not available.
-    /// </summary>
-    private const string DPAPI_Error = "Data protection API is not available";
 
 }

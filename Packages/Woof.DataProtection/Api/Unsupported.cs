@@ -6,11 +6,6 @@
 internal class Unsupported : IDPAPI {
 
     /// <summary>
-    /// This API is not supported so obviously not operational.
-    /// </summary>
-    public bool IsOperational => false;
-
-    /// <summary>
     /// Just throws the <see cref="PlatformNotSupportedException"/>.
     /// </summary>
     /// <param name="data"></param>

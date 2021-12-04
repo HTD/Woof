@@ -8,11 +8,6 @@
 public class DPAPI : IDPAPI {
 
     /// <summary>
-    /// Windows DPAPI is available on Windows systems, so it will return true on Windows, false everywhere else.
-    /// </summary>
-    public bool IsOperational => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-
-    /// <summary>
     /// Encrypts data.
     /// </summary>
     /// <param name="data">Raw data.</param>

@@ -5,9 +5,6 @@ namespace UnitTests;
 public class DataProtectionTests {
 
     [Fact]
-    public void Availability() => Assert.True(DP.IsAvailable);
-
-    [Fact]
     public void CurrentUser() {
         var plain = "The quick brown fox jumps over the lazy dog.";
         var encrypted = DP.Protect(plain, DataProtectionScope.CurrentUser);

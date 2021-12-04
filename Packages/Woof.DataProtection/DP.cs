@@ -11,16 +11,6 @@ public static class DP {
     public static IDPAPI DPAPI { get; }
 
     /// <summary>
-    /// Gets a value indicating that the data protection service is operational.<br/>
-    /// It always returns true on Windows, because Protect and Unprotect mehtods for windows don't require special configuration.<br/>
-    /// If false is returned, it indicates the program doesn't have sufficient access to the key directory.<br/>
-    /// This happens when the key directory and key file cannot be read by the program.<br/>
-    /// This also happens when the program is first run, the key file does not exist and the program can't write to the key directory.
-    /// It will also return false if you forget to add a reference for the non-windows OS extension package.
-    /// </summary>
-    public static bool IsAvailable => DPAPI.IsOperational;
-
-    /// <summary>
     /// Encrypts data.
     /// </summary>
     /// <param name="data">Raw data.</param>

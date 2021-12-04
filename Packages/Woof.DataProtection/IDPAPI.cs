@@ -6,11 +6,6 @@
 public interface IDPAPI {
 
     /// <summary>
-    /// Gets a value indicating the API has all requirements met and is ready to be used.
-    /// </summary>
-    bool IsOperational { get; }
-
-    /// <summary>
     /// Encrypts data.
     /// </summary>
     /// <param name="data">Raw data.</param>

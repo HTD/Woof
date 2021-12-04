@@ -104,9 +104,12 @@ public class DPAPI_Linux : IDPAPI, IAcceptMessage {
 
     /// <summary>
     /// Accepts a message requesting keys configuration for a specified system user.
+    /// Called by Woof.ServiceInstaller to configure the data protection if the service uses it.
     /// </summary>
-    /// <param name="message"></param>
-    /// <returns></returns>
+    /// <remarks>
+    /// When this message is sent, the calling process must run with root privileges.
+    /// </remarks>
+    /// <param name="message">A tuple containing user name and group name is recognized. Other values are silently ignored.</param>
     public void Message(object message) {
         if (message is (string userName, string groupName)) {
             var user = UserInfo.FromName(userName);

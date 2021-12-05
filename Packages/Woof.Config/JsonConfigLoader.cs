@@ -3,7 +3,7 @@
 /// <summary>
 /// Implements the default loader for the <see cref="JsonNodeSection"/> type.
 /// </summary>
-public class DefaultLoader : IJsonNodeLoader {
+public class JsonConfigLoader : IJsonNodeLoader {
 
     /// <summary>
     /// Gets the default options for parsing JSON files.

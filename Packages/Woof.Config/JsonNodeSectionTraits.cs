@@ -1,7 +1,7 @@
 ﻿namespace Woof.Config;
 
 /// <summary>
-/// Provides extension methods for saving the <see cref="JsonNodeSection"/> type from the <see cref="DefaultLoader"/>.
+/// Provides extension methods for saving the <see cref="JsonNodeSection"/> type from the <see cref="JsonConfigLoader"/>.
 /// </summary>
 public static class JsonNodeSectionTraits {
 

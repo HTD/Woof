@@ -60,7 +60,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// <summary>
     /// Gets the default loader for the section.
     /// </summary>
-    public static IJsonNodeLoader Loader { get; } = new DefaultLoader();
+    public static IJsonNodeLoader Loader { get; } = new JsonConfigLoader();
 
     /// <summary>
     /// Gets a value indicating the section is empty and the node for it does not exist.

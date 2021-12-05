@@ -62,9 +62,9 @@ public class JsonConfig : IConfiguration {
             SysPath.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), '.' + Application.Name);
 
     /// <summary>
-    /// Gets the <see cref="JsonNodeConfiguration"/> instance.
+    /// Gets the <see cref="JsonNodeSection"/> instance.
     /// </summary>
-    protected virtual JsonNodeConfiguration Configuration { get; }
+    protected virtual JsonNodeSection Configuration { get; }
 
     /// <summary>
     /// Gets the supported configuration file extensions. Derived class can add its own.
@@ -97,7 +97,7 @@ public class JsonConfig : IConfiguration {
     /// </remarks>
     public JsonConfig(string name) {
         SourcePath = GetPath(name);
-        Configuration = JsonNodeConfiguration.Load(GetReadStream(SourcePath));
+        Configuration = JsonNodeSection.Loader.Load(GetReadStream(SourcePath));
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public class JsonConfig : IConfiguration {
     /// A function accepting the configuration file path,
     /// returning the tuple consisting of the decoded configuration node and a boolean flag passed to derived class.
     /// </param>
-    protected JsonConfig(Func<string, (JsonNodeConfiguration configuration, bool flag)> loadFromPath) {
+    protected JsonConfig(Func<string, (JsonNodeSection configuration, bool flag)> loadFromPath) {
         SourcePath = GetPath(Application.Name);
         var (configuration, flag) = loadFromPath(SourcePath);
         Configuration = configuration;
@@ -119,7 +119,7 @@ public class JsonConfig : IConfiguration {
     /// </summary>
     /// <param name="name">Name of the configuration. No extension!</param>
     /// <param name="loadFromPath">A function accepting the configuration file path and returning the decoded configuration node.</param>
-    protected JsonConfig(string name, Func<string, (JsonNodeConfiguration configuration, bool flag)> loadFromPath) {
+    protected JsonConfig(string name, Func<string, (JsonNodeSection configuration, bool flag)> loadFromPath) {
         SourcePath = GetPath(name);
         Configuration = loadFromPath(SourcePath).configuration;
     }
@@ -148,10 +148,10 @@ public class JsonConfig : IConfiguration {
     }
 
     /// <summary>
-    /// Converts the configuration to <see cref="JsonNodeConfiguration"/> type.
+    /// Converts the configuration to <see cref="JsonNodeSection"/> type.
     /// </summary>
     /// <param name="config">Converted value.</param>
-    public static implicit operator JsonNodeConfiguration(JsonConfig config) => config.Configuration;
+    public static implicit operator JsonNodeSection(JsonConfig config) => config.Configuration;
 
     #region Implementation
 

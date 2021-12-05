@@ -15,7 +15,7 @@
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <IncludeSymbols>True</IncludeSymbols>
         <SignAssembly>True</SignAssembly>
-        <AssemblyOriginatorKeyFile>D:\Source\Woof\Woof.snk</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile>..\..\..\CodeDog\Keys\Woof.snk</AssemblyOriginatorKeyFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
         <PackageIcon>Icon.png</PackageIcon>
@@ -36,6 +36,10 @@
         <ProjectReference Include="..\Woof.Config\Woof.Config.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Internals\" />
+    </ItemGroup>
+
     <PropertyGroup Label="Project settings">
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -50,6 +54,7 @@
     <PropertyGroup Label="Code quality: Release" Condition="'$(Configuration)'=='Release'">
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     </PropertyGroup>
+
 
 </Project>
 <!-- Make sure to update ALL the package metadata! -->

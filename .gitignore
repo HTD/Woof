@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 !Packages/*
+/desktop.ini

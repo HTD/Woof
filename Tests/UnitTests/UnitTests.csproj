@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,6 +7,10 @@
     <IsPackable>false</IsPackable>
 
     <ImplicitUsings>enable</ImplicitUsings>
+
+    <SignAssembly>True</SignAssembly>
+
+    <AssemblyOriginatorKeyFile>..\..\..\CodeDog\Keys\Woof.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Packages\Woof.Config.AKV\Woof.Config.AKV.csproj" />
     <ProjectReference Include="..\..\Packages\Woof.DataProtection\Woof.DataProtection.csproj" />
     <ProjectReference Include="..\..\Packages\Woof.LinuxAdmin\Woof.LinuxAdmin.csproj" />
     <ProjectReference Include="..\..\Packages\Woof.Shell\Woof.Shell.csproj" />

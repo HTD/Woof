@@ -27,8 +27,7 @@ public class JsonNodeLoader : IJsonNodeLoader {
     /// <param name="caseSensitive">Case sensitive key matching.</param>
     /// <returns>Root node.</returns>
     public JsonNodeSection Parse(string json, bool caseSensitive = false) {
-        var document = JsonDocument.Parse(json, DocumentOptions);
-        var root = JsonObject.Create(document.RootElement, caseSensitive ? CaseSensitive : CaseInsensitive);
+        var root = JsonObject.Create(JsonDocument.Parse(json, DocumentOptions).RootElement, caseSensitive ? CaseSensitive : CaseInsensitive);
         return root is null ? JsonNodeSection.Empty : new(root);
     }
 
@@ -85,10 +84,8 @@ public class JsonNodeLoader : IJsonNodeLoader {
     /// <param name="stream">JSON stream.</param>
     /// <param name="caseSensitive">Case sensitive property matching.</param>
     /// <returns>JSON root node.</returns>
-    public virtual JsonNode? LoadRoot(Stream stream, bool caseSensitive = false) {
-        using var document = JsonDocument.Parse(stream, DocumentOptions);
-        return JsonObject.Create(document.RootElement, caseSensitive ? CaseSensitive : CaseInsensitive);
-    }
+    public virtual JsonNode? LoadRoot(Stream stream, bool caseSensitive = false)
+        => JsonObject.Create(JsonDocument.Parse(stream, DocumentOptions).RootElement, caseSensitive ? CaseSensitive : CaseInsensitive);
 
     /// <summary>
     /// Loads the root node from stream.
@@ -98,8 +95,7 @@ public class JsonNodeLoader : IJsonNodeLoader {
     /// <returns>A <see cref="ValueTask"/> returning the JSON root node.</returns>
     public async ValueTask<JsonNode?> LoadRootAsync(string path, bool caseSensitive = false) {
         await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        using var document = await JsonDocument.ParseAsync(stream, DocumentOptions);
-        return JsonObject.Create(document.RootElement, caseSensitive ? CaseSensitive : CaseInsensitive);
+        return JsonObject.Create((await JsonDocument.ParseAsync(stream, DocumentOptions)).RootElement, caseSensitive ? CaseSensitive : CaseInsensitive);
     }
 
     /// <summary>
@@ -108,10 +104,8 @@ public class JsonNodeLoader : IJsonNodeLoader {
     /// <param name="stream">JSON stream.</param>
     /// <param name="caseSensitive">Case sensitive property matching.</param>
     /// <returns>A <see cref="ValueTask"/> returning the JSON root node.</returns>
-    public virtual async ValueTask<JsonNode?> LoadRootAsync(Stream stream, bool caseSensitive = false) {
-        using var document = await JsonDocument.ParseAsync(stream, DocumentOptions);
-        return JsonObject.Create(document.RootElement, caseSensitive ? CaseSensitive : CaseInsensitive);
-    }
+    public virtual async ValueTask<JsonNode?> LoadRootAsync(Stream stream, bool caseSensitive = false)
+        => JsonObject.Create((await JsonDocument.ParseAsync(stream, DocumentOptions)).RootElement, caseSensitive ? CaseSensitive : CaseInsensitive);
 
     /// <summary>
     /// Saves the current state of the configuration to a file.

@@ -15,7 +15,8 @@ public class PropertyBinder : IPropertyBinder {
         var target = new T();
         var properties = PropertyTraverser.Traverse(target);
         foreach (var item in properties) {
-            var value = FromString(item.Property.PropertyType, configuration[JsonNodeSection.GetKeyPath(item.Path)]);
+            var valueString = configuration[JsonNodeSection.GetKeyPath(item.Path)];
+            var value = valueString is null ? null : Conversions[item.Property.PropertyType].Parse(valueString);
             item.Property.SetValue(item.Owner, value);
         }
         return target;
@@ -32,42 +33,20 @@ public class PropertyBinder : IPropertyBinder {
     public void Set<T>(JsonNodeSection configuration, T value) where T : class, new() {
         var properties = PropertyTraverser.Traverse(value);
         foreach (var item in properties) {
-            var path = JsonNodeSection.GetKeyPath(item.Path);
-            var section = configuration.GetSection(JsonNodeSection.GetKeyPath(item.Path));
+            var fullKeyPath = JsonNodeSection.GetKeyPath(item.Path);
+            var lastSeparatorOffset = fullKeyPath.LastIndexOf(':');
+            var keyPath = fullKeyPath[(lastSeparatorOffset + 1)..];
+            var sectionPath = lastSeparatorOffset < 0 ? null : fullKeyPath[0..lastSeparatorOffset];
             var propertyValue = item.Property.GetValue(value);
+            var valueString = propertyValue is null ? null : Conversions[item.Property.PropertyType].GetString(propertyValue);
+            if (sectionPath is null) configuration[keyPath] = valueString;
+            else configuration.GetSection(sectionPath)[keyPath] = valueString;
         }
     }
 
     /// <summary>
-    /// Gets the specified type of value from string.
+    /// Provides supported value conversions.
     /// </summary>
-    /// <param name="type">Target type.</param>
-    /// <param name="value">String value.</param>
-    /// <returns>Value object.</returns>
-    /// <exception cref="NotSupportedException">Type is unsupported.</exception>
-    protected static object? FromString(Type type, string? value)
-        => value is null
-            ? null
-            : type.Name switch {
-                nameof(String) => value,
-                nameof(Int32) => Int32.Parse(value, CultureInfo.InvariantCulture),
-                nameof(Double) => Double.Parse(value, CultureInfo.InvariantCulture),
-                nameof(Boolean) => Boolean.Parse(value),
-                nameof(DateTime) => DateTime.Parse(value, CultureInfo.InvariantCulture),
-                nameof(TimeSpan) => TimeSpan.Parse(value, CultureInfo.InvariantCulture),
-                nameof(DateOnly) => DateOnly.Parse(value, CultureInfo.InvariantCulture),
-                nameof(TimeOnly) => TimeOnly.Parse(value, CultureInfo.InvariantCulture),
-                nameof(Uri) => new Uri(value),
-                nameof(Guid) => new Guid(value),
-                nameof(Int64) => Int64.Parse(value, CultureInfo.InvariantCulture),
-                nameof(Int16) => Int16.Parse(value, CultureInfo.InvariantCulture),
-                nameof(Byte) => Byte.Parse(value, CultureInfo.InvariantCulture),
-                nameof(Single) => Single.Parse(value, CultureInfo.InvariantCulture),
-                nameof(Decimal) => Decimal.Parse(value, CultureInfo.InvariantCulture),
-                nameof(FileInfo) => new FileInfo(value),
-                nameof(DirectoryInfo) => new DirectoryInfo(value),
-                "Byte[]" => Convert.FromBase64String(value),
-                _ => throw new NotSupportedException($"Binding values of type \"{type.Name}\" is not supported")
-            };
+    public static ValueConversions Conversions { get; } = ValueConversions.Default;
 
 }

@@ -61,6 +61,38 @@ public interface IJsonNodeLoader {
     ValueTask<JsonNodeSection> LoadAsync(Stream stream, bool caseSensitive = false);
 
     /// <summary>
+    /// Loads the root node from file.
+    /// </summary>
+    /// <param name="path">A path to the file.</param>
+    /// <param name="caseSensitive">Case sensitive property matching.</param>
+    /// <returns>JSON root node.</returns>
+    JsonNode? LoadRoot(string path, bool caseSensitive = false);
+
+    /// <summary>
+    /// Loads the root node from stream.
+    /// </summary>
+    /// <param name="stream">JSON stream.</param>
+    /// <param name="caseSensitive">Case sensitive property matching.</param>
+    /// <returns>JSON root node.</returns>
+    JsonNode? LoadRoot(Stream stream, bool caseSensitive = false);
+
+    /// <summary>
+    /// Loads the root node from stream.
+    /// </summary>
+    /// <param name="path">A path to the file.</param>
+    /// <param name="caseSensitive">Case sensitive property matching.</param>
+    /// <returns>A <see cref="ValueTask"/> returning the JSON root node.</returns>
+    ValueTask<JsonNode?> LoadRootAsync(string path, bool caseSensitive = false);
+
+    /// <summary>
+    /// Loads the root node from stream.
+    /// </summary>
+    /// <param name="stream">JSON stream.</param>
+    /// <param name="caseSensitive">Case sensitive property matching.</param>
+    /// <returns>A <see cref="ValueTask"/> returning the JSON root node.</returns>
+    ValueTask<JsonNode?> LoadRootAsync(Stream stream, bool caseSensitive = false);
+
+    /// <summary>
     /// Saves the current state of the configuration to a file.
     /// </summary>
     /// <param name="node">The <see cref="JsonNodeSection"/> to save.</param>

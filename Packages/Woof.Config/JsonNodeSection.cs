@@ -11,8 +11,8 @@ public class JsonNodeSection : IConfigurationSection {
     /// <param name="key">The configuration key.</param>
     /// <returns>The configuration value.</returns>
     public string? this[string key] {
-        get => GetNode(key).Value;
-        set => GetNode(Key).Value = value;
+        get => GetNodeSection(key).Value;
+        set => GetNodeSection(key).Value = value;
     }
 
     /// <summary>
@@ -58,9 +58,12 @@ public class JsonNodeSection : IConfigurationSection {
     public static JsonNodeSection Empty { get; } = new();
 
     /// <summary>
-    /// Gets the default loader for the section.
+    /// Gets or sets the default loader for the section.
     /// </summary>
-    public static IJsonNodeLoader Loader { get; } = new JsonConfigLoader();
+    public IJsonNodeLoader Loader {
+        get => _Loader ?? new JsonNodeLoader();
+        set => _Loader = value;
+    }
 
     /// <summary>
     /// Gets a value indicating the section is empty and the node for it does not exist.
@@ -87,6 +90,14 @@ public class JsonNodeSection : IConfigurationSection {
         Key = Node?.GetPath().Split('.').LastOrDefault()?.TrimStart('$', '.') ?? string.Empty;
         Path =  Node is null ? String.Empty : GetKeyPath(Node.GetPath().TrimStart('$', '.'));
     }
+
+    /// <summary>
+    /// Creates a <see cref="JsonNodeSection"/> from JSON string.
+    /// </summary>
+    /// <param name="json">JSON.</param>
+    /// <param name="caseSensitive">Case sensitive key matching.</param>
+    /// <returns>A <see cref="JsonNodeSection"/> instance.</returns>
+    public static JsonNodeSection Parse(string json, bool caseSensitive = false) => new JsonNodeLoader().Parse(json, caseSensitive);
 
     /// <summary>
     /// Creates an empty <see cref="IConfigurationSection"/>, the node for this section does not exist.
@@ -134,7 +145,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// the specified key, an empty Microsoft.Extensions.Configuration.IConfigurationSection
     /// will be returned.
     /// </remarks>
-    public IConfigurationSection GetSection(string key) => GetNode(key);
+    public IConfigurationSection GetSection(string key) => GetNodeSection(key);
 
     /// <summary>
     /// Gets the configuration section as the JSON string.
@@ -161,7 +172,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// </summary>
     /// <param name="key">The key of the configuration section.</param>
     /// <returns>Token matched or null.</returns>
-    private JsonNodeSection GetNode(string key) {
+    private JsonNodeSection GetNodeSection(string key) {
         var node = Node;
         foreach (var part in key.Split(':')) {
             if (node is JsonArray array) {
@@ -188,6 +199,11 @@ public class JsonNodeSection : IConfigurationSection {
     /// Contains the parent node of the node used to create this section.
     /// </summary>
     public readonly JsonNode? Parent;
+
+    /// <summary>
+    /// Loader backing field.
+    /// </summary>
+    private IJsonNodeLoader? _Loader;
 
     /// <summary>
     /// Matches the <see cref="JsonNode"/> indices.

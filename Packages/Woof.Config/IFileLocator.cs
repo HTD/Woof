@@ -6,10 +6,15 @@
 public interface IFileLocator {
 
     /// <summary>
-    /// Tries to locate a configuration file for the specified configuration name.
+    /// Gets the path to the file located with the last <see cref="Locate(string?)"/> call.
+    /// </summary>
+    string? FilePath { get; }
+
+    /// <summary>
+    /// Locates a configuration file for the specified configuration name.
     /// </summary>
     /// <param name="name">Configuration name, or null for default name matching the main executable name.</param>
     /// <returns>A full path to the file, or null if the file is not found.</returns>
-    string? Locate(string? name = null);
+    string Locate(string? name = null);
 
 }

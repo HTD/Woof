@@ -38,9 +38,9 @@ public class JsonNodeSection : IConfigurationSection {
         set {
             if (IsNull) {
                 JsonValueKind kind = value switch {
-                    "=true" => JsonValueKind.True,
-                    "=false" => JsonValueKind.False,
-                    "=null" => JsonValueKind.Null,
+                    "=True" => JsonValueKind.True,
+                    "=False" => JsonValueKind.False,
+                    "=Null" => JsonValueKind.Null,
                     "{}" => JsonValueKind.Object,
                     "[]" => JsonValueKind.Array,
                     string s when s.StartsWith('=') => JsonValueKind.Number,

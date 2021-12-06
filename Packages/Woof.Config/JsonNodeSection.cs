@@ -8,11 +8,14 @@ public class JsonNodeSection : IConfigurationSection {
     /// <summary>
     /// Gets or sets a configuration value.
     /// </summary>
+    /// <remarks>
+    /// To set value as boolean or number prefix the value with '=', to set object and array use '{}' and '[]'.
+    /// </remarks>
     /// <param name="key">The configuration key.</param>
     /// <returns>The configuration value.</returns>
     public string? this[string key] {
         get => GetNodeSection(key).Value;
-        set => GetNodeSection(key).Value = value;
+        set => GetNodeSection(key, nullNodeIfNotExists: true).Value = value;
     }
 
     /// <summary>
@@ -33,13 +36,38 @@ public class JsonNodeSection : IConfigurationSection {
     public string? Value {
         get => Node is JsonValue valueNode ? valueNode.ToString() : null;
         set {
+            if (IsNull) {
+                JsonValueKind kind = value switch {
+                    "=true" => JsonValueKind.True,
+                    "=false" => JsonValueKind.False,
+                    "=null" => JsonValueKind.Null,
+                    "{}" => JsonValueKind.Object,
+                    "[]" => JsonValueKind.Array,
+                    string s when s.StartsWith('=') => JsonValueKind.Number,
+                    _ => JsonValueKind.String
+                };
+                var node = kind switch {
+                    JsonValueKind.String => JsonValue.Create(value),
+                    JsonValueKind.Null => null,
+                    JsonValueKind.True => JsonValue.Create(true),
+                    JsonValueKind.False => JsonValue.Create(false),
+                    JsonValueKind.Object => JsonObject.Parse("{}"),
+                    JsonValueKind.Array => JsonArray.Parse("[]"),
+                    JsonValueKind.Number => GetJsonNumberFromString(value!),
+                    _ => null
+                };
+                //var root = (JsonObject.Parse("{}") as JsonObject)!;
+                if (Parent is JsonObject o) {
+                    try { o.Remove(Key); } catch { }
+                    o.Add(Key, node);
+                }
+                else if (Parent is JsonArray a) a.Add(node);
+                return;
+            }
             if (Node is not JsonValue valueNode) return;
             var replacement = valueNode.GetValueKind() switch {
                 JsonValueKind.String => JsonValue.Create(value),
-                JsonValueKind.Number =>
-                    value is null ? null :
-                    value.Contains('.') ? JsonValue.Create(double.Parse(value, CultureInfo.InvariantCulture)) :
-                    JsonValue.Create(long.Parse(value, CultureInfo.InvariantCulture)),
+                JsonValueKind.Number => value is null ? null : GetJsonNumberFromString(value),
                 JsonValueKind.True => JsonValue.Create(value is null || bool.Parse(value)),
                 JsonValueKind.False => JsonValue.Create(value is not null && bool.Parse(value)),
                 _ => null
@@ -53,6 +81,18 @@ public class JsonNodeSection : IConfigurationSection {
     }
 
     /// <summary>
+    /// Gets a JSON value from string.
+    /// </summary>
+    /// <param name="json">Valid JSON string.</param>
+    /// <returns>A <see cref="JsonValue"/> instance.</returns>
+    private JsonValue GetJsonNumberFromString(string json) {
+        if (json.StartsWith('=')) json = json[1..];
+        return json.Contains('.')
+            ? JsonValue.Create(double.Parse(json, CultureInfo.InvariantCulture))
+            : JsonValue.Create(long.Parse(json, CultureInfo.InvariantCulture));
+    }
+
+    /// <summary>
     /// Gets an empty <see cref="IConfigurationSection"/> value.
     /// </summary>
     public static JsonNodeSection Empty { get; } = new();
@@ -63,6 +103,14 @@ public class JsonNodeSection : IConfigurationSection {
     public IJsonNodeLoader Loader {
         get => _Loader ?? new JsonNodeLoader();
         set => _Loader = value;
+    }
+
+    /// <summary>
+    /// Gets or sets the defult property binder.
+    /// </summary>
+    public IPropertyBinder Binder {
+        get => _Binder ?? new PropertyBinder();
+        set => _Binder = value;
     }
 
     /// <summary>
@@ -98,6 +146,20 @@ public class JsonNodeSection : IConfigurationSection {
     /// <param name="caseSensitive">Case sensitive key matching.</param>
     /// <returns>A <see cref="JsonNodeSection"/> instance.</returns>
     public static JsonNodeSection Parse(string json, bool caseSensitive = false) => new JsonNodeLoader().Parse(json, caseSensitive);
+
+    /// <summary>
+    /// Binds this configuration to <typeparamref name="T"/> object properties and returns it.
+    /// </summary>
+    /// <typeparam name="T">Configuration type.</typeparam>
+    /// <returns>Configuration.</returns>
+    public T Get<T>() where T : class, new() => Binder.Get<T>(this);
+
+    /// <summary>
+    /// Updates this configuration from <typeparamref name="T"/> object properties.
+    /// </summary>
+    /// <typeparam name="T">Configuration type.</typeparam>
+    /// <param name="value">Configuration.</param>
+    public void Set<T>(T value) where T : class, new() => Binder.Set<T>(this, value);
 
     /// <summary>
     /// Creates an empty <see cref="IConfigurationSection"/>, the node for this section does not exist.
@@ -158,7 +220,8 @@ public class JsonNodeSection : IConfigurationSection {
     /// </summary>
     /// <param name="nodePath">Node path.</param>
     /// <returns>The key of the configuration section.</returns>
-    public static string GetKeyPath(string nodePath) => RxNodePathIndex.Replace(nodePath, ":$1").Replace('.', ':');
+    public static string GetKeyPath(string nodePath)
+        => RxNodePathIndex.Replace(nodePath, ":$1").Replace('.', ':') is string s ? s.StartsWith('$') ? s[2..] : s : string.Empty;
 
     /// <summary>
     /// Gets the node path by configuration section path.
@@ -171,18 +234,19 @@ public class JsonNodeSection : IConfigurationSection {
     /// Gets the node by the key of the configuration section.
     /// </summary>
     /// <param name="key">The key of the configuration section.</param>
+    /// <param name="nullNodeIfNotExists">Returns a null node if the property doesn't exist.</param>
     /// <returns>Token matched or null.</returns>
-    private JsonNodeSection GetNodeSection(string key) {
+    private JsonNodeSection GetNodeSection(string key, bool nullNodeIfNotExists = false) {
         var node = Node;
         foreach (var part in key.Split(':')) {
             if (node is JsonArray array) {
                 node = int.TryParse(part, out var index) && index >= 0 && index < array.Count ? array[index] : null;
                 if (node is JsonArray or JsonObject) continue;
-                else return node is null ? Empty : new JsonNodeSection(node);
+                else return node is null ? nullNodeIfNotExists ? new JsonNodeSection(new NullNode(Node, part)) : Empty : new JsonNodeSection(node);
             }
             if (node is JsonObject obj) {
                 var exists = obj.TryGetPropertyValue(part, out var value);
-                if (value is null) return exists ? new JsonNodeSection(new NullNode(Node, part)) : Empty;
+                if (value is null) return nullNodeIfNotExists || exists ? new JsonNodeSection(new NullNode(Node, part)) : Empty;
                 node = value;
             }
             if (node is null) return Empty;
@@ -193,7 +257,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// <summary>
     /// Contains the node used to create this section.
     /// </summary>
-    public readonly JsonNode? Node;
+    public JsonNode? Node;
 
     /// <summary>
     /// Contains the parent node of the node used to create this section.
@@ -201,9 +265,14 @@ public class JsonNodeSection : IConfigurationSection {
     public readonly JsonNode? Parent;
 
     /// <summary>
-    /// Loader backing field.
+    /// <see cref="Loader"/> backing field.
     /// </summary>
     private IJsonNodeLoader? _Loader;
+
+    /// <summary>
+    /// <see cref="Binder"/> backing field.
+    /// </summary>
+    private IPropertyBinder? _Binder;
 
     /// <summary>
     /// Matches the <see cref="JsonNode"/> indices.

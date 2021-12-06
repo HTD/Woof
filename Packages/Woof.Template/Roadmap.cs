@@ -1,4 +1,4 @@
-﻿// TODO: 0 - Implement IPropertyBinder.
+﻿// TODO: 0 - Add collections to property binder.
 // TODO: 0.1 - MAKE Woof.Config.Protected as new implementation of the above.
 // TODO: 0.2 - MAKE Woof.Config fully writeable using the PropertyTraverser
 // TODO: 0.3 - MAKE Woof.Config.AKV as implementation of the above

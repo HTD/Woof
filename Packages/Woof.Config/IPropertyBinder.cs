@@ -3,7 +3,7 @@
 /// <summary>
 /// Two way property binder for <see cref="JsonNodeSection"/>.
 /// </summary>
-public interface IPropertyBinder { // TODO: implement default binder
+public interface IPropertyBinder {
 
     /// <summary>
     /// Gets the configuration record from the <see cref="JsonNodeSection"/> instance.

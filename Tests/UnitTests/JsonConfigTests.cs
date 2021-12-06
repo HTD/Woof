@@ -2,6 +2,7 @@
 using Woof.Config.Internals;
 using UnitTests.TestSubjects;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 
 namespace UnitTests {
 
@@ -80,12 +81,12 @@ namespace UnitTests {
         [Fact]
         public void A080_Binding() {
             var basicTypeConfig = JsonNodeSection.Parse(@"{""p1"":true,""p2"":1,""p3"":""test""}");
-            var basicTypeData = basicTypeConfig.Get<BasicType>();
+            var basicTypeData = basicTypeConfig.Get<BasicRecord>();
             Assert.True(basicTypeData.P1);
             Assert.Equal(1, basicTypeData.P2);
             Assert.Equal("test", basicTypeData.P3);
             var comlexTypeConfig = JsonNodeSection.Parse(@"{""s1"":{""p1"":true,""p2"":1,""p3"":""test""},""s2"":{""p1"":false,""p2"":0,""p3"":""spam""}}");
-            var comlexTypeData = comlexTypeConfig.Get<ComplexType>();
+            var comlexTypeData = comlexTypeConfig.Get<ComplexRecord>();
             Assert.True(comlexTypeData.S1.P1);
             Assert.Equal(1, comlexTypeData.S1.P2);
             Assert.Equal("test", comlexTypeData.S1.P3);
@@ -101,7 +102,7 @@ namespace UnitTests {
             config["s"] = "test";
             config["i"] = "0.123456789";
             config["d"] = "42";
-            config["n"] = "=true";
+            config["n"] = "=True";
             Assert.True(config.GetValue<bool>("b"));
             Assert.Equal("test", config.GetValue<string>("s"));
             Assert.Equal(0.123456789, config.GetValue<double>("i"));
@@ -126,6 +127,67 @@ namespace UnitTests {
             Assert.Equal(1, config.GetValue<int>("a:0"));
             Assert.Equal(2, config.GetValue<int>("a:1"));
             Assert.Equal(3, config.GetValue<int>("a:2"));
+        }
+
+        [Fact]
+        public void A110_BindFromObject() {
+            var testDateTime = DateTime.Parse("1986-04-26 01:23:40");
+            var testGuid = Guid.NewGuid();
+            var testUri = new Uri("https://www.codedog.pl/");
+            var testFileInfo = new FileInfo("UnitTests.dll");
+            var testDirectoryInfo = new DirectoryInfo(".");
+            var testKey = System.Security.Cryptography.Aes.Create().Key;
+            var direct = new DirectMutable {
+                String = "3.1415926535",
+                Boolean = true,
+                Byte = 1,
+                SByte = -2,
+                Short = -3,
+                UShort = 4,
+                Int = -5,
+                UInt = 6,
+                Long = -7,
+                ULong = 8,
+                Float = -9.1f,
+                Double = 10.2,
+                Decimal = 11.3m,
+                DateTime = testDateTime,
+                DateOnly = DateOnly.FromDateTime(testDateTime),
+                TimeSpan = TimeSpan.FromSeconds(12.345),
+                TimeOnly = TimeOnly.FromDateTime(testDateTime),
+                Guid = testGuid,
+                Uri = testUri,
+                FileInfo = testFileInfo,
+                DirectoryInfo = testDirectoryInfo,
+                Key = testKey
+            };
+            var config = JsonNodeSection.Parse("{}");
+            config.Set<DirectMutable>(direct);
+            var json = config.Node!.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+            var readConfig = JsonNodeSection.Parse(json);
+            var readDirect = readConfig.Get<DirectMutable>();
+            Assert.Equal(direct.String, readDirect.String);
+            Assert.Equal(direct.Boolean, readDirect.Boolean);
+            Assert.Equal(direct.Byte, readDirect.Byte);
+            Assert.Equal(direct.SByte, readDirect.SByte);
+            Assert.Equal(direct.Short, readDirect.Short);
+            Assert.Equal(direct.UShort, readDirect.UShort);
+            Assert.Equal(direct.Int, readDirect.Int);
+            Assert.Equal(direct.UInt, readDirect.UInt);
+            Assert.Equal(direct.Long, readDirect.Long);
+            Assert.Equal(direct.ULong, readDirect.ULong);
+            Assert.Equal(direct.Float, readDirect.Float);
+            Assert.Equal(direct.Double, readDirect.Double);
+            Assert.Equal(direct.Decimal, readDirect.Decimal);
+            Assert.Equal(direct.DateTime, readDirect.DateTime);
+            Assert.Equal(direct.DateOnly, readDirect.DateOnly);
+            Assert.Equal(direct.TimeSpan, readDirect.TimeSpan);
+            Assert.Equal(direct.TimeOnly, readDirect.TimeOnly);
+            Assert.Equal(direct.Guid, readDirect.Guid);
+            Assert.Equal(direct.Uri, readDirect.Uri);
+            Assert.Equal(direct.FileInfo.FullName, readDirect.FileInfo!.FullName);
+            Assert.Equal(direct.DirectoryInfo.FullName, readDirect.DirectoryInfo!.FullName);
+            Assert.True(direct.Key.SequenceEqual(readDirect.Key!));
         }
 
         [Fact]
@@ -174,10 +236,10 @@ namespace UnitTests {
         }
 
         [Fact]
-        public void Traverse() => Assert.Equal(7, PropertyTraverser.Traverse(new NestedRoot()).Count());
+        public void B010_PropertyTraverser() => Assert.Equal(7, PropertyTraverser.Traverse(new NestedRoot()).Count());
 
         [Fact]
-        public void NullNodes() {
+        public void B020_NullNodes() {
             var config = JsonNodeSection.Parse(@"{""p1"":null,""p2"":{},""p3"":{""p31"":""test"",""p32"":null}}");
             //var p1 = config.GetSection("p1");
             //var p2 = config.GetSection("p2");
@@ -194,7 +256,7 @@ namespace UnitTests {
 
 namespace UnitTests.TestSubjects {
 
-    record BasicType {
+    record BasicRecord {
 
         public bool P1 { get; init; }
 
@@ -206,16 +268,15 @@ namespace UnitTests.TestSubjects {
 
     }
 
-    record ComplexType {
+    record ComplexRecord {
 
-        public BasicType S1 { get; } = new();
+        public BasicRecord S1 { get; } = new();
 
-        public BasicType S2 { get; } = new();
+        public BasicRecord S2 { get; } = new();
 
         public TimeOnly Unused { get; init; }
 
     }
-
     record NestedRoot {
 
         public bool R1 { get; init; } // $.R1
@@ -249,6 +310,54 @@ namespace UnitTests.TestSubjects {
     record NestedBranch_2 {
 
         public int B21 { get; init; } // $.R4.B21
+
+    }
+
+    class DirectMutable {
+
+        public string? String { get; set; }
+
+        public bool Boolean { get; set; }
+
+        public byte Byte { get; set; }
+
+        public sbyte SByte { get; set; }
+
+        public short Short { get; set; }
+
+        public ushort UShort { get; set; }
+
+        public int Int { get; set; }
+
+        public uint UInt { get; set; }
+
+        public long Long { get; set; }
+
+        public ulong ULong { get; set; }
+
+        public float Float { get; set; }
+
+        public double Double { get; set; }
+
+        public Decimal Decimal { get; set; }
+
+        public DateTime DateTime { get; set; }
+
+        public DateOnly DateOnly { get; set; }
+
+        public TimeSpan TimeSpan { get; set; }
+
+        public TimeOnly TimeOnly { get; set; }
+
+        public Guid Guid { get; set; }
+
+        public Uri? Uri { get; set; }
+
+        public FileInfo? FileInfo { get; set; }
+
+        public DirectoryInfo? DirectoryInfo { get; set; }
+
+        public byte[]? Key { get; set; }
 
     }
 

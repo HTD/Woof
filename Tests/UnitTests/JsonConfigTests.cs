@@ -78,7 +78,7 @@ namespace UnitTests {
         }
 
         [Fact]
-        public void A080_Bindig() {
+        public void A080_Binding() {
             var basicTypeConfig = JsonNodeSection.Parse(@"{""p1"":true,""p2"":1,""p3"":""test""}");
             var basicTypeData = basicTypeConfig.Get<BasicType>();
             Assert.True(basicTypeData.P1);
@@ -101,18 +101,35 @@ namespace UnitTests {
             config["s"] = "test";
             config["i"] = "0.123456789";
             config["d"] = "42";
+            config["n"] = "=true";
             Assert.True(config.GetValue<bool>("b"));
             Assert.Equal("test", config.GetValue<string>("s"));
             Assert.Equal(0.123456789, config.GetValue<double>("i"));
             Assert.Equal(42, config.GetValue<int>("d"));
-            try {
-                config["n"] = "."; // it is not yet defined what should be written for an unknown type...
-            }
-            catch (NotImplementedException) { } // ...so it obvously throws "not implemented".
+            Assert.True(config.GetValue<bool>("n"));
         }
 
         [Fact]
-        public async ValueTask A100_LoadAsync() {
+        public void A100_BuildSupport() {
+            var config = JsonNodeSection.Parse(@"{}");
+            config["i"] = "=1";
+            config["d"] = "=0.1";
+            config["s"] = "{}";
+            config["a"] = "[]";
+            config.GetSection("s")["test"] = "hello";
+            config.GetSection("a")["0"] = "=1";
+            config.GetSection("a")["1"] = "=2";
+            config.GetSection("a")["2"] = "=3";
+            Assert.Equal(1, config.GetValue<int>("i"));
+            Assert.Equal(0.1, config.GetValue<double>("d"));
+            Assert.Equal("hello", config.GetValue<string?>("s:test"));
+            Assert.Equal(1, config.GetValue<int>("a:0"));
+            Assert.Equal(2, config.GetValue<int>("a:1"));
+            Assert.Equal(3, config.GetValue<int>("a:2"));
+        }
+
+        [Fact]
+        public async ValueTask A200_LoadAsync() {
             const string testInput = @"{""level1"":{""test"":[{""x"":1,""y"":2},{""z"":3},""surprise""]}}";
             using var testStream = new MemoryStream(Encoding.UTF8.GetBytes(testInput));
             testStream.Position = 0;
@@ -124,8 +141,10 @@ namespace UnitTests {
         }
 
         [Fact]
-        public async ValueTask A110_SaveAsync() {
+        public async ValueTask A210_SaveAsync() {
             var initial = JsonNodeSection.Parse(@"{""n"":null,""b"":false,""s"":""initial"",""i"":0,""d"":0.123456789}");
+            initial["z"] = "a new value";
+            initial["n"] = "not null";
             initial["b"] = "true";
             initial["s"] = "test";
             initial["i"] = "0.123456789";
@@ -134,10 +153,12 @@ namespace UnitTests {
             await initial.SaveAsync(testStream);
             testStream.Position = 0;
             var loaded = await new JsonNodeLoader().LoadAsync(testStream);
+            Assert.Equal("not null", loaded.GetValue<string?>("n"));
             Assert.True(loaded.GetValue<bool>("b"));
             Assert.Equal("test", loaded.GetValue<string>("s"));
             Assert.Equal(0.123456789, loaded.GetValue<double>("i"));
             Assert.Equal(42, loaded.GetValue<int>("d"));
+            Assert.Equal("a new value", loaded.GetValue<string?>("z"));
             testStream.Position = 0;
             using var textReader = new StreamReader(testStream);
             var output = await textReader.ReadToEndAsync();

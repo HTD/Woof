@@ -38,7 +38,12 @@ public class PropertyBinder : IPropertyBinder {
             var keyPath = fullKeyPath[(lastSeparatorOffset + 1)..];
             var sectionPath = lastSeparatorOffset < 0 ? null : fullKeyPath[0..lastSeparatorOffset];
             var propertyValue = item.Property.GetValue(value);
-            var valueString = propertyValue is null ? null : Conversions[item.Property.PropertyType].GetString(propertyValue);
+            string? valueString = null;
+            if (propertyValue is not null) {
+                var conversion = Conversions[item.Property.PropertyType];
+                valueString = conversion.IsQuoted ? string.Empty : "=";
+                valueString += conversion.GetString(propertyValue);
+            }
             if (sectionPath is null) configuration[keyPath] = valueString;
             else configuration.GetSection(sectionPath)[keyPath] = valueString;
         }

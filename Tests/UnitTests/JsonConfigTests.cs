@@ -9,6 +9,18 @@ namespace UnitTests {
     public class JsonConfigTests {
 
         [Fact]
+        public void A000_GetKeyPath() {
+            var one = NodePath.GetSectionPath("one");
+            var two = NodePath.GetSectionPath("one.two");
+            var three = NodePath.GetSectionPath("one.two.three");
+            var four = NodePath.GetSectionPath("$.one.two.three[four]");
+            Assert.Equal("one", one);
+            Assert.Equal("one:two", two);
+            Assert.Equal("one:two:three", three);
+            Assert.Equal("one:two:three:four", four);
+        }
+
+        [Fact]
         public void A010_Direct() {
             var config = JsonNodeSection.Parse(@"{""b"":true,""i"":1,""f"":3.1415926535,""s"":""0""}");
             Assert.True(config.GetValue<bool>("b"));
@@ -119,7 +131,7 @@ namespace UnitTests {
             config["a"] = "[]";
             config.GetSection("s")["test"] = "hello";
             config.GetSection("a")["0"] = "=1";
-            config.GetSection("a")["1"] = "=2";
+            config["a:1"] = "=2";
             config.GetSection("a")["2"] = "=3";
             Assert.Equal(1, config.GetValue<int>("i"));
             Assert.Equal(0.1, config.GetValue<double>("d"));

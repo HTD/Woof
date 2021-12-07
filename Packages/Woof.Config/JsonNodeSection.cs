@@ -15,7 +15,13 @@ public class JsonNodeSection : IConfigurationSection {
     /// <returns>The configuration value.</returns>
     public string? this[string key] {
         get => GetNodeSection(key).Value;
-        set => GetNodeSection(key, nullNodeIfNotExists: true).Value = value;
+        set {
+            var lastSeparatorOffset = key.LastIndexOf(':');
+            if (lastSeparatorOffset < 0) GetNodeSection(key, nullNodeIfNotExists: true).Value = value;
+            else
+                GetNodeSection(key[0..lastSeparatorOffset])
+                    .GetNodeSection(key[0..(lastSeparatorOffset + 1)], nullNodeIfNotExists: true).Value = value;
+        }
     }
 
     /// <summary>
@@ -135,8 +141,9 @@ public class JsonNodeSection : IConfigurationSection {
     public JsonNodeSection(JsonNode node) {
         Node = node;
         Parent = node?.Parent;
-        Key = Node?.GetPath().Split('.').LastOrDefault()?.TrimStart('$', '.') ?? string.Empty;
-        Path =  Node is null ? String.Empty : GetKeyPath(Node.GetPath().TrimStart('$', '.'));
+        Path =  Node is null ? String.Empty : NodePath.GetSectionPath(Node.GetPath());
+        var lastSeparatorIndex = Path.LastIndexOf(':');
+        Key = Path[(lastSeparatorIndex + 1)..];
     }
 
     /// <summary>
@@ -148,7 +155,7 @@ public class JsonNodeSection : IConfigurationSection {
     public static JsonNodeSection Parse(string json, bool caseSensitive = false) => new JsonNodeLoader().Parse(json, caseSensitive);
 
     /// <summary>
-    /// Binds this configuration to <typeparamref name="T"/> object properties and returns it.
+    /// Get a <typeparamref name="T"/> object built from this configuration.
     /// </summary>
     /// <typeparam name="T">Configuration type.</typeparam>
     /// <returns>Configuration.</returns>
@@ -160,24 +167,6 @@ public class JsonNodeSection : IConfigurationSection {
     /// <typeparam name="T">Configuration type.</typeparam>
     /// <param name="value">Configuration.</param>
     public void Set<T>(T value) where T : class, new() => Binder.Set<T>(this, value);
-
-    /// <summary>
-    /// Creates an empty <see cref="IConfigurationSection"/>, the node for this section does not exist.
-    /// </summary>
-    private JsonNodeSection() {
-        Key = string.Empty;
-        Path = string.Empty;
-    }
-
-    /// <summary>
-    /// Create a new <see cref="IConfiguration"/> null node, a node that has a path and parent, but not the value.
-    /// </summary>
-    /// <param name="node">An instance of <see cref="NullNode"/>.</param>
-    private JsonNodeSection(NullNode node) {
-        Key = node.PropertyName;
-        Path = node.Parent?.GetPath() + '.' + node.PropertyName ?? "";
-        Parent = node.Parent;
-    }
 
     /// <summary>
     /// Gets the immediate descendant configuration sub-sections.
@@ -216,19 +205,23 @@ public class JsonNodeSection : IConfigurationSection {
     public override string? ToString() => Node?.ToJsonString();
 
     /// <summary>
-    /// Gets the configuration section path by the node path.
+    /// Creates an empty <see cref="IConfigurationSection"/>, the node for this section does not exist.
     /// </summary>
-    /// <param name="nodePath">Node path.</param>
-    /// <returns>The key of the configuration section.</returns>
-    public static string GetKeyPath(string nodePath)
-        => RxNodePathIndex.Replace(nodePath, ":$1").Replace('.', ':') is string s ? s.StartsWith('$') ? s[2..] : s : string.Empty;
+    private JsonNodeSection() {
+        Key = string.Empty;
+        Path = string.Empty;
+    }
 
     /// <summary>
-    /// Gets the node path by configuration section path.
+    /// Create a new <see cref="IConfiguration"/> null node, a node that has a path and parent, but not the value.
     /// </summary>
-    /// <param name="keyPath">The key of the configuration section.</param>
-    /// <returns>Node path.</returns>
-    public static string GetNodePath(string keyPath) => RxIConfigurationSectionIndex.Replace(keyPath, "[$1]").Replace(':', '.');
+    /// <param name="node">An instance of <see cref="NullNode"/>.</param>
+    private JsonNodeSection(NullNode node) {
+        Key = node.PropertyName;
+        var prefix = node.Parent is null ? string.Empty : NodePath.GetSectionPath(node.Parent.GetPath()) + ':';
+        Path = prefix + node.PropertyName;
+        Parent = node.Parent;
+    }
 
     /// <summary>
     /// Gets the node by the key of the configuration section.
@@ -237,21 +230,25 @@ public class JsonNodeSection : IConfigurationSection {
     /// <param name="nullNodeIfNotExists">Returns a null node if the property doesn't exist.</param>
     /// <returns>Token matched or null.</returns>
     private JsonNodeSection GetNodeSection(string key, bool nullNodeIfNotExists = false) {
-        var node = Node;
-        foreach (var part in key.Split(':')) {
-            if (node is JsonArray array) {
+        JsonNode? node = Node, parent = node;
+        if (key.Length < 1) return this;
+        foreach (var part in NodePath.Split(key)) {
+            if (node is null) return nullNodeIfNotExists ? new JsonNodeSection(new NullNode(parent, part)) : Empty;
+            else if (node is JsonArray array) {
+                parent = node;
                 node = int.TryParse(part, out var index) && index >= 0 && index < array.Count ? array[index] : null;
+                if (node is null) return nullNodeIfNotExists ? new JsonNodeSection(new NullNode(parent, part)) : Empty;
                 if (node is JsonArray or JsonObject) continue;
-                else return node is null ? nullNodeIfNotExists ? new JsonNodeSection(new NullNode(Node, part)) : Empty : new JsonNodeSection(node);
+                else return new JsonNodeSection(node);
             }
-            if (node is JsonObject obj) {
+            else if (node is JsonObject obj) {
                 var exists = obj.TryGetPropertyValue(part, out var value);
-                if (value is null) return nullNodeIfNotExists || exists ? new JsonNodeSection(new NullNode(Node, part)) : Empty;
+                if (value is null) return nullNodeIfNotExists || exists ? new JsonNodeSection(new NullNode(parent, part)) : Empty;
+                parent = node;
                 node = value;
             }
-            if (node is null) return Empty;
         }
-        return node is null ? Empty : new JsonNodeSection(node);
+        return new JsonNodeSection(node!);
     }
 
     /// <summary>
@@ -262,7 +259,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// <summary>
     /// Contains the parent node of the node used to create this section.
     /// </summary>
-    public readonly JsonNode? Parent;
+    public JsonNode? Parent { get; }
 
     /// <summary>
     /// <see cref="Loader"/> backing field.
@@ -273,15 +270,5 @@ public class JsonNodeSection : IConfigurationSection {
     /// <see cref="Binder"/> backing field.
     /// </summary>
     private IPropertyBinder? _Binder;
-
-    /// <summary>
-    /// Matches the <see cref="JsonNode"/> indices.
-    /// </summary>
-    private static readonly Regex RxNodePathIndex = new(@"\[(\d+)\]", RegexOptions.Compiled);
-
-    /// <summary>
-    /// Matches the <see cref="IConfiguration"/> indices.
-    /// </summary>
-    private static readonly Regex RxIConfigurationSectionIndex = new(@":(\d+)", RegexOptions.Compiled);
 
 }

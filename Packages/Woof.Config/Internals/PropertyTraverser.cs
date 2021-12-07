@@ -21,7 +21,7 @@ internal static class PropertyTraverser {
         var rootNamespace = type.Namespace ?? string.Empty;
         var q = new Queue<PropertyGraphItem>();
         foreach (var property in type.GetProperties())
-            q.Enqueue(new() { Owner = root, Property = property, Path = "$." + property.Name });
+            q.Enqueue(new() { Owner = root, Property = property, Path = property.Name });
         PropertyGraphItem item;
         object? value;
         while (q.Count > 0) {
@@ -31,7 +31,7 @@ internal static class PropertyTraverser {
                 value = item.Property.GetValue(item.Owner);
                 if (value is null) continue;
                 foreach (var property in value.GetType().GetProperties())
-                    q.Enqueue(new() { Owner = value, Property = property, Path = item.Path + '.' + property.Name });
+                    q.Enqueue(new() { Owner = value, Property = property, Path = item.Path + ':' + property.Name });
             }
             else yield return item;
         }
@@ -55,7 +55,7 @@ internal struct PropertyGraphItem {
     public PropertyInfo Property;
 
     /// <summary>
-    /// The property path in the object's graph in <see cref="JsonNode"/> format.
+    /// The property path in the object's graph in <see cref="IConfiguration"/> format.
     /// </summary>
     public string Path;
 

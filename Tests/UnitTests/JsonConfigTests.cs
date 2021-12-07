@@ -3,6 +3,7 @@ using Woof.Config.Internals;
 using UnitTests.TestSubjects;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
+using UnitTests.Types;
 
 namespace UnitTests {
 
@@ -143,63 +144,13 @@ namespace UnitTests {
 
         [Fact]
         public void A110_BindFromObject() {
-            var testDateTime = DateTime.Parse("1986-04-26 01:23:40");
-            var testGuid = Guid.NewGuid();
-            var testUri = new Uri("https://www.codedog.pl/");
-            var testFileInfo = new FileInfo("UnitTests.dll");
-            var testDirectoryInfo = new DirectoryInfo(".");
-            var testKey = System.Security.Cryptography.Aes.Create().Key;
-            var direct = new DirectMutable {
-                String = "3.1415926535",
-                Boolean = true,
-                Byte = 1,
-                SByte = -2,
-                Short = -3,
-                UShort = 4,
-                Int = -5,
-                UInt = 6,
-                Long = -7,
-                ULong = 8,
-                Float = -9.1f,
-                Double = 10.2,
-                Decimal = 11.3m,
-                DateTime = testDateTime,
-                DateOnly = DateOnly.FromDateTime(testDateTime),
-                TimeSpan = TimeSpan.FromSeconds(12.345),
-                TimeOnly = TimeOnly.FromDateTime(testDateTime),
-                Guid = testGuid,
-                Uri = testUri,
-                FileInfo = testFileInfo,
-                DirectoryInfo = testDirectoryInfo,
-                Key = testKey
-            };
             var config = JsonNodeSection.Parse("{}");
-            config.Set<DirectMutable>(direct);
+            var sample = DirectSupported.Default;
+            config.Set<DirectSupported>(sample);
             var json = config.Node!.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
-            var readConfig = JsonNodeSection.Parse(json);
-            var readDirect = readConfig.Get<DirectMutable>();
-            Assert.Equal(direct.String, readDirect.String);
-            Assert.Equal(direct.Boolean, readDirect.Boolean);
-            Assert.Equal(direct.Byte, readDirect.Byte);
-            Assert.Equal(direct.SByte, readDirect.SByte);
-            Assert.Equal(direct.Short, readDirect.Short);
-            Assert.Equal(direct.UShort, readDirect.UShort);
-            Assert.Equal(direct.Int, readDirect.Int);
-            Assert.Equal(direct.UInt, readDirect.UInt);
-            Assert.Equal(direct.Long, readDirect.Long);
-            Assert.Equal(direct.ULong, readDirect.ULong);
-            Assert.Equal(direct.Float, readDirect.Float);
-            Assert.Equal(direct.Double, readDirect.Double);
-            Assert.Equal(direct.Decimal, readDirect.Decimal);
-            Assert.Equal(direct.DateTime, readDirect.DateTime);
-            Assert.Equal(direct.DateOnly, readDirect.DateOnly);
-            Assert.Equal(direct.TimeSpan, readDirect.TimeSpan);
-            Assert.Equal(direct.TimeOnly, readDirect.TimeOnly);
-            Assert.Equal(direct.Guid, readDirect.Guid);
-            Assert.Equal(direct.Uri, readDirect.Uri);
-            Assert.Equal(direct.FileInfo.FullName, readDirect.FileInfo!.FullName);
-            Assert.Equal(direct.DirectoryInfo.FullName, readDirect.DirectoryInfo!.FullName);
-            Assert.True(direct.Key.SequenceEqual(readDirect.Key!));
+            var parsedConfig = JsonNodeSection.Parse(json);
+            var parsedData = parsedConfig.Get<DirectSupported>();
+            parsedData.AssertEqual(sample);
         }
 
         [Fact]

@@ -20,22 +20,24 @@ internal static class PropertyTraverser {
         var type = root.GetType();
         var rootNamespace = type.Namespace ?? string.Empty;
         var q = new Queue<PropertyGraphItem>();
-        foreach (var property in type.GetProperties())
+        foreach (var property in type.GetProperties(Flags))
             q.Enqueue(new() { Owner = root, Property = property, Path = property.Name });
         PropertyGraphItem item;
         object? value;
         while (q.Count > 0) {
             item = q.Dequeue();
             type = item.Property.PropertyType;
-            if ((type.Namespace ?? string.Empty).StartsWith(rootNamespace, StringComparison.Ordinal)) {
+            if (type.BaseType != typeof(Enum) && (type.Namespace ?? string.Empty).StartsWith(rootNamespace, StringComparison.Ordinal)) {
                 value = item.Property.GetValue(item.Owner);
                 if (value is null) continue;
-                foreach (var property in value.GetType().GetProperties())
+                foreach (var property in value.GetType().GetProperties(Flags))
                     q.Enqueue(new() { Owner = value, Property = property, Path = item.Path + ':' + property.Name });
             }
             else yield return item;
         }
     }
+
+    private readonly static BindingFlags Flags = BindingFlags.Public | BindingFlags.Instance;
 
 }
 

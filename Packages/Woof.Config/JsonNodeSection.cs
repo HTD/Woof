@@ -95,7 +95,9 @@ public class JsonNodeSection : IConfigurationSection {
         if (json.StartsWith('=')) json = json[1..];
         return json.Contains('.')
             ? JsonValue.Create(double.Parse(json, CultureInfo.InvariantCulture))
-            : JsonValue.Create(long.Parse(json, CultureInfo.InvariantCulture));
+            : json[0] == '-'
+                ? JsonValue.Create(long.Parse(json, CultureInfo.InvariantCulture))
+                : JsonValue.Create(ulong.Parse(json, CultureInfo.InvariantCulture));
     }
 
     /// <summary>

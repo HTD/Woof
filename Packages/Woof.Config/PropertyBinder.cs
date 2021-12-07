@@ -44,7 +44,7 @@ public class PropertyBinder : IPropertyBinder {
     /// <param name="stringValue">String value.</param>
     /// <param name="value">Converted value.</param>
     /// <returns>True if value was converted using available conversions.</returns>
-    public bool TryGetValue(Type type, string stringValue, out object? value) {
+    public static bool TryGetValue(Type type, string stringValue, out object? value) {
         if (type.BaseType == typeof(Enum)) {
             value = Enum.Parse(type, stringValue);
             return true;
@@ -67,7 +67,7 @@ public class PropertyBinder : IPropertyBinder {
     /// <param name="stringValue">String value.</param>
     /// <param name="isQuoted">True if the string should be quoted in JSON.</param>
     /// <returns>True if value was converted using available conversions.</returns>
-    public bool TryGetString(Type type, object value, out string? stringValue, out bool isQuoted) {
+    public static bool TryGetString(Type type, object value, out string? stringValue, out bool isQuoted) {
         if (type.BaseType == typeof(Enum)) {
             stringValue = value.ToString();
             return isQuoted = true;

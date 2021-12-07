@@ -198,19 +198,6 @@ namespace UnitTests {
             Assert.Equal("surprise", config.GetValue("Level1:Test:2", "surprise"));
         }
 
-        [Fact]
-        public void B010_PropertyTraverser() => Assert.Equal(7, PropertyTraverser.Traverse(new NestedRoot()).Count());
-
-        [Fact]
-        public void B020_NullNodes() {
-            var config = JsonNodeSection.Parse(@"{""p1"":null,""p2"":{},""p3"":{""p31"":""test"",""p32"":null}}");
-            //var p1 = config.GetSection("p1");
-            //var p2 = config.GetSection("p2");
-            //var p31 = config.GetSection("p3:p31");
-            var p32 = config.GetSection("p3:p32");
-            ;
-        }
-
     }
 
 }

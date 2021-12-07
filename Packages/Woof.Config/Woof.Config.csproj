@@ -28,8 +28,8 @@
     </ItemGroup>
 
     <!-- Microsoft and 3rd party packages -->
-    <ItemGroup Label="System dependencies">
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     </ItemGroup>
 
     <!-- Local project references for Debug configuration only -->
@@ -40,6 +40,7 @@
     <!-- Published Woof Toolkit package dependencies for Release configuration only -->
     <ItemGroup Label="Package dependencies" Condition="'$(Configuration)'=='Release'">
     </ItemGroup>
+
 
     <PropertyGroup Label="Project settings">
         <TargetFramework>net6.0</TargetFramework>

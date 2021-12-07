@@ -37,32 +37,22 @@ public class JsonNodeSection : IConfigurationSection {
     /// <summary>
     /// Gets or sets the section value.
     /// </summary>
-    /// <exception cref="InvalidCastException">Incompatible section / token type.</exception>
-    /// <exception cref="InvalidDataException">Invalid string value for the token data type.</exception>
+    /// <remarks>
+    /// Prefix the value with '=' to set the non-string JSON type, unquoted value.
+    /// </remarks>
     public string? Value {
         get => Node is JsonValue valueNode ? valueNode.ToString() : null;
         set {
             if (IsNull) {
-                JsonValueKind kind = value switch {
-                    "=True" => JsonValueKind.True,
-                    "=False" => JsonValueKind.False,
-                    "=Null" => JsonValueKind.Null,
-                    "{}" => JsonValueKind.Object,
-                    "[]" => JsonValueKind.Array,
-                    string s when s.StartsWith('=') => JsonValueKind.Number,
-                    _ => JsonValueKind.String
+                var node = value switch {
+                    "=True" or "=true" => JsonValue.Create(true),
+                    "=False" or "=false" => JsonValue.Create(false),
+                    "=Null" or "=null" => null,
+                    "{}" => JsonObject.Parse("{}"),
+                    "[]" => JsonArray.Parse("[]"),
+                    string s when s.StartsWith('=') => GetJsonNumberFromString(s[1..]),
+                    _ => JsonValue.Create(value)
                 };
-                var node = kind switch {
-                    JsonValueKind.String => JsonValue.Create(value),
-                    JsonValueKind.Null => null,
-                    JsonValueKind.True => JsonValue.Create(true),
-                    JsonValueKind.False => JsonValue.Create(false),
-                    JsonValueKind.Object => JsonObject.Parse("{}"),
-                    JsonValueKind.Array => JsonArray.Parse("[]"),
-                    JsonValueKind.Number => GetJsonNumberFromString(value!),
-                    _ => null
-                };
-                //var root = (JsonObject.Parse("{}") as JsonObject)!;
                 if (Parent is JsonObject o) {
                     try { o.Remove(Key); } catch { }
                     o.Add(Key, node);
@@ -71,39 +61,19 @@ public class JsonNodeSection : IConfigurationSection {
                 return;
             }
             if (Node is not JsonValue valueNode) return;
-            var replacement = valueNode.GetValueKind() switch {
-                JsonValueKind.String => JsonValue.Create(value),
-                JsonValueKind.Number => value is null ? null : GetJsonNumberFromString(value),
-                JsonValueKind.True => JsonValue.Create(value is null || bool.Parse(value)),
-                JsonValueKind.False => JsonValue.Create(value is not null && bool.Parse(value)),
-                _ => null
-            };
             if (Node?.Parent is JsonObject parentObject) {
                 var propertyName = Key;
                 parentObject.Remove(propertyName);
-                parentObject.Add(propertyName, replacement);
+                parentObject.Add(propertyName, valueNode.GetValueKind() switch {
+                    JsonValueKind.String => JsonValue.Create(value),
+                    JsonValueKind.Number => value is null ? null : GetJsonNumberFromString(value),
+                    JsonValueKind.True => JsonValue.Create(value is null || bool.Parse(value)),
+                    JsonValueKind.False => JsonValue.Create(value is not null && bool.Parse(value)),
+                    _ => null
+                });
             }
         }
     }
-
-    /// <summary>
-    /// Gets a JSON value from string.
-    /// </summary>
-    /// <param name="json">Valid JSON string.</param>
-    /// <returns>A <see cref="JsonValue"/> instance.</returns>
-    private JsonValue GetJsonNumberFromString(string json) {
-        if (json.StartsWith('=')) json = json[1..];
-        return json.Contains('.')
-            ? JsonValue.Create(double.Parse(json, CultureInfo.InvariantCulture))
-            : json[0] == '-'
-                ? JsonValue.Create(long.Parse(json, CultureInfo.InvariantCulture))
-                : JsonValue.Create(ulong.Parse(json, CultureInfo.InvariantCulture));
-    }
-
-    /// <summary>
-    /// Gets an empty <see cref="IConfigurationSection"/> value.
-    /// </summary>
-    public static JsonNodeSection Empty { get; } = new();
 
     /// <summary>
     /// Gets or sets the default loader for the section.
@@ -137,6 +107,11 @@ public class JsonNodeSection : IConfigurationSection {
     public bool IsNullOrEmpty => Node is null;
 
     /// <summary>
+    /// Gets an empty <see cref="IConfigurationSection"/> value.
+    /// </summary>
+    public static JsonNodeSection Empty { get; } = new();
+
+    /// <summary>
     /// Creates a new <see cref="IConfigurationSection"/> directly from <see cref="JsonNode"/>.
     /// </summary>
     /// <param name="node">A JSON token to create the configuration section.</param>
@@ -162,6 +137,37 @@ public class JsonNodeSection : IConfigurationSection {
     /// <typeparam name="T">Configuration type.</typeparam>
     /// <returns>Configuration.</returns>
     public T Get<T>() where T : class, new() => Binder.Get<T>(this);
+
+    /// <summary>
+    /// Gets a value of type <typeparamref name="T"/> by the section path.
+    /// </summary>
+    /// <typeparam name="T">Value type.</typeparam>
+    /// <param name="path">Section path.</param>
+    /// <returns>Configuration value or default <typeparamref name="T"/>.</returns>
+    public T GetValue<T>(string path)
+        => PropertyBinder.TryGetValue(typeof(T), GetSection(path).Value, out var value) && value is not null ? (T)value : default!;
+
+    /// <summary>
+    /// Gets a value of type <typeparamref name="T"/> by the section path.
+    /// </summary>
+    /// <typeparam name="T">Value type.</typeparam>
+    /// <param name="path">Section path.</param>
+    /// <param name="fallback">Default value in case the section doesn't exist or the conversion fails.</param>
+    /// <returns>Configuration or <paramref name="fallback"/> value.</returns>
+    public T GetValue<T>(string path, T fallback)
+        => PropertyBinder.TryGetValue(typeof(T), GetSection(path).Value, out var value) && value is not null ? (T)value : fallback;
+
+    /// <summary>
+    /// Sets a value of type <typeparamref name="T"/> by the section path.
+    /// </summary>
+    /// <typeparam name="T">Value type.</typeparam>
+    /// <param name="path">Section path.</param>
+    /// <param name="value">Value to set.</param>
+    public void SetValue<T>(string path, T value) {
+        if (value is null) return;
+        if (PropertyBinder.TryGetString(typeof(T), value, out var valueString, out var isQuoted))
+            this[path] = isQuoted ? valueString : '=' + valueString;
+    }
 
     /// <summary>
     /// Updates this configuration from <typeparamref name="T"/> object properties.
@@ -254,14 +260,29 @@ public class JsonNodeSection : IConfigurationSection {
     }
 
     /// <summary>
+    /// Gets a JSON value from string.
+    /// </summary>
+    /// <param name="json">Valid JSON string.</param>
+    /// <returns>A <see cref="JsonValue"/> instance.</returns>
+    private static JsonValue GetJsonNumberFromString(string json)
+        => json.Contains('.')
+            ? JsonValue.Create(double.Parse(json, N))
+            : json[0] == '-' ? JsonValue.Create(long.Parse(json, N)) : JsonValue.Create(ulong.Parse(json, N));
+
+    /// <summary>
     /// Contains the node used to create this section.
     /// </summary>
-    public JsonNode? Node;
+    public JsonNode? Node { get; }
 
     /// <summary>
     /// Contains the parent node of the node used to create this section.
     /// </summary>
     public JsonNode? Parent { get; }
+
+    /// <summary>
+    /// Invariant culture format provider for JSON compatible conversions.
+    /// </summary>
+    private static readonly IFormatProvider N = CultureInfo.InvariantCulture;
 
     /// <summary>
     /// <see cref="Loader"/> backing field.

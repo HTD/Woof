@@ -33,7 +33,7 @@ public class PropertyBinder : IPropertyBinder {
             var propertyValue = item.Property.GetValue(value);
             if (propertyValue is null) continue;
             if (TryGetString(item.Property.PropertyType, propertyValue, out var stringValue, out var isQuoted))
-                configuration[item.Path] = stringValue;
+                configuration[item.Path] = isQuoted ? stringValue : '=' + stringValue;
         }
     }
 

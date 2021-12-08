@@ -237,7 +237,7 @@ public class DefaultPropertyBinder : IPropertyBinder {
 
     /// <summary>
     /// Gets the items collection from the source section to the target object property.
-    /// // TODO: Lists simple, Array of sections, List of sections.
+    /// // FIXME: Lists simple, List of sections.
     /// </summary>
     /// <param name="section">An array section.</param>
     /// <param name="item">Target item.</param>
@@ -254,7 +254,8 @@ public class DefaultPropertyBinder : IPropertyBinder {
                 var elementNode = arrayNode[i];
                 var elementSection = elementNode is null ? null : new JsonNodeSection(elementNode);
                 if (IsContainer(elementType) && elementSection is not null) {
-                    var value = elementSection.Get(elementType);
+                    var elementTarget = array.GetValue(i);
+                    if (elementTarget is not null) elementSection.Bind(elementTarget);
                 }
                 else if (isValueElementType) {
                     if ((elementNode as JsonValue)?.ToString() is string stringValue && TryGetValue(elementType, stringValue, out var value))
@@ -271,7 +272,7 @@ public class DefaultPropertyBinder : IPropertyBinder {
     /// <param name="section">Target array section.</param>
     /// <param name="item">Source item.</param>
     private static void SetCollection(JsonNodeSection section, PropertyGraphItem item) {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); // FIXME: Implement set collection!
     }
 
     /// <summary>

@@ -201,11 +201,24 @@ public class JsonConfigTests {
     }
 
     [Fact]
-    public void A110_ArrayBindingSimple() {
+    public void A110_ArrayBindingValues() {
         var section = JsonNodeSection.Parse(@"{""A"":[1,2,3]}");
-        var result = section.Get<ArraySimple>();
-        ;
+        var result = section.Get<ArrayOfValues>();
+        Assert.Equal(1, result.A[0]);
+        Assert.Equal(2, result.A[1]);
+        Assert.Equal(3, result.A[2]);
     }
+
+    [Fact]
+    public void A120_ArrayBindingSections() {
+        var section = JsonNodeSection.Parse(@"{""a"":[{""value"":""X""},{""value"":""Y""},{""value"":""Z""}]}");
+        var result = section.Get<ArrayOfSections>();
+        Assert.Equal("X", result.A[0].Value);
+        Assert.Equal("Y", result.A[1].Value);
+        Assert.Equal("Z", result.A[2].Value);
+    }
+
+
 
     /// <summary>
     /// Tests the asynchronous section loading.

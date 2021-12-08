@@ -1,6 +1,6 @@
 ﻿namespace UnitTests.Types;
 
-public class ArraySimple {
+public class ArrayOfValues {
 
     public int[] A { get; } = new[] { 0, 0, 0 };
 

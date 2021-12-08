@@ -1,7 +1,4 @@
-﻿// TODO: 0.1 - Provide tests for GetValue / SetValue.
-// TODO: 0.2 - Provide tests for complex Get / Set.
-// TODO: 0.6 - MAKE Woof.Config.Protected as new implementation of the above.
-// TODO: 0.7 - MAKE Woof.Config fully writeable using the PropertyTraverser
+﻿// TODO: 0.6 - MAKE Woof.Config.Protected as new implementation of the above.
 // TODO: 0.8 - MAKE Woof.Config.AKV as implementation of the above
 // TODO: 0.9 - Add collections to property binder.
 

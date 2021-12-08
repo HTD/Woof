@@ -158,18 +158,18 @@ public class JsonConfigTests {
         var testDouble = 2.5;
         var testTimeout = TimeSpan.FromSeconds(testDouble);
         var defaultTimeout = TimeSpan.FromSeconds(5);
-        var config = JsonNodeSection.Parse(@$"{{
+        var section = JsonNodeSection.Parse(@$"{{
             ""id"": ""{testId}"", // test comment 1
             ""date"":""{testDateString}"", // test comment 2
             ""timeout"": {testDouble.ToString(CultureInfo.InvariantCulture)} // {{ this should be ignored }}
         }}");
-        Assert.Equal(testId, config.GetValue<Guid>("id"));
-        Assert.Null(config.GetValue<Guid?>("id2"));
-        Assert.Equal(testId, config.GetValue<Guid>("id2", testId));
-        Assert.Equal(DateTime.Parse(testDateString), config.GetValue<DateTime>("date"));
-        Assert.Equal(testDouble, config.GetValue("timeout", 5.0));
-        Assert.Equal(testTimeout, TimeSpan.FromSeconds(config.GetValue("timeout", 5.0)));
-        Assert.Equal(defaultTimeout, TimeSpan.FromSeconds(config.GetValue("timeout1", 5.0)));
+        Assert.Equal(testId, section.GetValue<Guid>("id"));
+        Assert.Null(section.GetValue<Guid?>("id2"));
+        Assert.Equal(testId, section.GetValue<Guid>("id2", testId));
+        Assert.Equal(DateTime.Parse(testDateString), section.GetValue<DateTime>("date"));
+        Assert.Equal(testDouble, section.GetValue("timeout", 5.0));
+        Assert.Equal(testTimeout, TimeSpan.FromSeconds(section.GetValue("timeout", 5.0)));
+        Assert.Equal(defaultTimeout, TimeSpan.FromSeconds(section.GetValue("timeout1", 5.0)));
     }
 
     /// <summary>
@@ -177,10 +177,10 @@ public class JsonConfigTests {
     /// </summary>
     [Fact]
     public void A090_SimpleBinding() {
-        var config = JsonNodeSection.Parse("{}");
+        var section = JsonNodeSection.Parse("{}");
         var sample = DirectSupported.Default;
-        config.Set(sample);
-        var json = config.Node!.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+        section.Set(sample);
+        var json = section.Node!.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
         var parsedConfig = JsonNodeSection.Parse(json);
         var parsedData = parsedConfig.Get<DirectSupported>();
         parsedData.AssertEqual(sample);
@@ -191,13 +191,20 @@ public class JsonConfigTests {
     /// </summary>
     [Fact]
     public void A100_ComplexBinding() {
-        var config = JsonNodeSection.Parse("{}");
+        var section = JsonNodeSection.Parse("{}");
         var sample = ComplexBasic.Default;
-        config.Set(sample);
-        var json = config.Node!.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+        section.Set(sample);
+        var json = section.Node!.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
         var parsedConfig = JsonNodeSection.Parse(json);
         var parsedData = parsedConfig.Get<ComplexBasic>();
         parsedData.AssertEqual(sample);
+    }
+
+    [Fact]
+    public void A110_ArrayBindingSimple() {
+        var section = JsonNodeSection.Parse(@"{""A"":[1,2,3]}");
+        var result = section.Get<ArraySimple>();
+        ;
     }
 
     /// <summary>
@@ -205,7 +212,7 @@ public class JsonConfigTests {
     /// </summary>
     /// <returns>A <see cref="ValueTask"/> completed when the test is done.</returns>
     [Fact]
-    public async ValueTask A110_LoadAsync() {
+    public async ValueTask A200_LoadAsync() {
         const string testInput = @"{""level1"":{""test"":[{""x"":1,""y"":2},{""z"":3},""surprise""]}}";
         using var testStream = new MemoryStream(Encoding.UTF8.GetBytes(testInput));
         testStream.Position = 0;
@@ -221,7 +228,7 @@ public class JsonConfigTests {
     /// </summary>
     /// <returns>A <see cref="ValueTask"/> completed when the test is done.</returns>
     [Fact]
-    public async ValueTask A120_SaveAsync() {
+    public async ValueTask A210_SaveAsync() {
         var initial = JsonNodeSection.Parse(@"{""n"":null,""b"":false,""s"":""initial"",""i"":0,""d"":0.123456789}");
         initial["z"] = "a new value";
         initial["n"] = "not null";
@@ -248,7 +255,7 @@ public class JsonConfigTests {
     /// Tests reading of the missing properties.
     /// </summary>
     [Fact]
-    public void A130_MissingProperties() {
+    public void A220_MissingProperties() {
         var config = JsonNodeSection.Parse(@"{""n"":null,""b"":false,""s"":""initial"",""i"":0,""d"":0.123456789}");
         Assert.Equal(1, config.GetValue("Level1:Test:0:x", 1));
         Assert.Equal(2, config.GetValue("Level1:Test:0:y", 2));

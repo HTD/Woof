@@ -1,4 +1,6 @@
-﻿namespace UnitTests.Types;
+﻿using System.Net;
+
+namespace UnitTests.Types;
 
 public class DirectSupported {
 
@@ -42,6 +44,10 @@ public class DirectSupported {
 
     public Uri? Uri { get; set; }
 
+    public IPAddress? IPAddress { get;set; }
+
+    public IPEndPoint? IPEndPoint { get; set; }
+
     public FileInfo? FileInfo { get; set; }
 
     public DirectoryInfo? DirectoryInfo { get; set; }
@@ -69,6 +75,8 @@ public class DirectSupported {
         TimeOnly = TimeOnly.Parse("01:23:40"),
         Guid = new Guid("6d5593fd-fb43-4853-9260-bf4e33ec9615"),
         Uri = new Uri("https://www.codedog.pl/"),
+        IPAddress = IPAddress.Parse("13.95.20.240"),
+        IPEndPoint = IPEndPoint.Parse("13.95.20.240:443"),
         FileInfo = new FileInfo("test.txt"),
         DirectoryInfo = new DirectoryInfo("test"),
         Key = Convert.FromBase64String("yrK353x8uuPigdI0lMQwGYQ7LMGudOtljtMs1nxCeE8=")
@@ -93,6 +101,9 @@ public class DirectSupported {
         Assert.Equal(other.DateOnly, DateOnly);
         Assert.Equal(other.Guid, Guid);
         Assert.Equal(other.Uri!.OriginalString, Uri!.OriginalString);
+        Assert.True(other.IPAddress!.GetAddressBytes().SequenceEqual(IPAddress!.GetAddressBytes()));
+        Assert.True(other.IPEndPoint!.Address.GetAddressBytes().SequenceEqual(IPEndPoint!.Address.GetAddressBytes()));
+        Assert.Equal(other.IPEndPoint!.Port, IPEndPoint!.Port);
         Assert.Equal(other.FileInfo!.FullName, FileInfo!.FullName);
         Assert.Equal(other.DirectoryInfo!.FullName, DirectoryInfo!.FullName);
         Assert.True(other.Key!.SequenceEqual(Key!));

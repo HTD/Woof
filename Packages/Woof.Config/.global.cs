@@ -1,5 +1,7 @@
-﻿global using System.Diagnostics;
+﻿global using System.Collections;
+global using System.Diagnostics;
 global using System.Globalization;
+global using System.Net;
 global using System.Reflection;
 global using System.Runtime.CompilerServices;
 global using System.Runtime.InteropServices;

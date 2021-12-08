@@ -15,18 +15,18 @@ public class JsonNodeSection : IConfigurationSection {
     /// <param name="path">The section path.</param>
     /// <returns>The configuration value.</returns>
     public string? this[string path] {
-        get => Select(path).Value;
+        get => this.Select(path).Value;
         set {
-            var target = Select(path);
+            var target = this.Select(path);
             if (target.Parent is null) { // the case of building the parent container if possible
                 var nPath = new NodePath(path);
                 var parentPart = nPath.Parent;
-                var parentSection = Select(parentPart.Path);
+                var parentSection = this.Select(parentPart.Path);
                 var grandparentSection = parentSection.Parent;
                 if (grandparentSection?.NodeType != JsonNodeType.Object) // in order to build parent node we need a grandparent node
                     throw new InvalidOperationException("Target path too far from the ancestor");
                 grandparentSection[parentPart.Key] = int.TryParse(nPath.Key, out _) ? "[]" : "{}";
-                target = Select(path);
+                target = this.Select(path);
             }
             target.Value = value;
         }
@@ -136,7 +136,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// Gets or sets the defult property binder.
     /// </summary>
     public IPropertyBinder Binder {
-        get => _Binder ?? new PropertyBinder();
+        get => _Binder ?? new DefaultPropertyBinder();
         set => _Binder = value;
     }
 
@@ -179,96 +179,12 @@ public class JsonNodeSection : IConfigurationSection {
     }
 
     /// <summary>
-    /// Gets the node by the relative path of the configuration section.
-    /// </summary>
-    /// <param name="path">The relative path of the configuration section.</param>
-    /// <returns>
-    /// <see cref="JsonNodeSection"/> matching the <paramref name="path"/>,
-    /// or an empty section if the <paramref name="path"/> doesn't match any node.
-    /// </returns>
-    public JsonNodeSection Select(string path) {
-        if (path.Length < 1) return this;
-        if (Node is null) return Empty;
-        JsonNodeSection section = this;
-        var nodePath = new NodePath(path);
-        foreach (var part in nodePath.Parts) {
-            if (section.NodeType == JsonNodeType.Array && section.Node is JsonArray array) {
-                if (!int.TryParse(part.Key, out var index) || index < 0 || index >= array.Count) {
-                    section = new JsonNodeSection(JsonNodeType.Empty, part.Path, section);
-                    continue;
-                }
-                var value = array[index];
-                section = value is not null
-                    ? new JsonNodeSection(value)
-                    : new JsonNodeSection(JsonNodeType.Null, part.Path, section);
-                if (value is JsonArray or JsonObject) continue;
-            }
-            else if (section.NodeType == JsonNodeType.Object && section.Node is JsonObject obj) {
-                var exists = obj.TryGetPropertyValue(part.Key, out var value);
-                section = exists
-                    ? (value is not null ? new JsonNodeSection(value) : new JsonNodeSection(JsonNodeType.Null, part.Path, section))
-                    : new JsonNodeSection(JsonNodeType.Empty, part.Path, section);
-                if (value is JsonArray or JsonObject) continue;
-            }
-            else if (section.IsNullOrEmpty) {
-                section = new JsonNodeSection(JsonNodeType.Empty, part.Path);
-            }
-        }
-        return section;
-    }
-
-    /// <summary>
     /// Creates a <see cref="JsonNodeSection"/> from JSON string.
     /// </summary>
     /// <param name="json">JSON.</param>
     /// <param name="caseSensitive">Case sensitive key matching.</param>
     /// <returns>A <see cref="JsonNodeSection"/> instance.</returns>
     public static JsonNodeSection Parse(string json, bool caseSensitive = false) => new JsonNodeLoader().Parse(json, caseSensitive);
-
-    /// <summary>
-    /// Get a <typeparamref name="T"/> object built from this configuration.
-    /// </summary>
-    /// <typeparam name="T">Configuration type.</typeparam>
-    /// <returns>Configuration.</returns>
-    public T Get<T>() where T : class, new() => Binder.Get<T>(this);
-
-    /// <summary>
-    /// Gets a value of type <typeparamref name="T"/> by the section path.
-    /// </summary>
-    /// <typeparam name="T">Value type.</typeparam>
-    /// <param name="path">Section path.</param>
-    /// <returns>Configuration value or default <typeparamref name="T"/>.</returns>
-    public T GetValue<T>(string path)
-        => PropertyBinder.TryGetValue(typeof(T), GetSection(path).Value, out var value) && value is not null ? (T)value : default!;
-
-    /// <summary>
-    /// Gets a value of type <typeparamref name="T"/> by the section path.
-    /// </summary>
-    /// <typeparam name="T">Value type.</typeparam>
-    /// <param name="path">Section path.</param>
-    /// <param name="fallback">Default value in case the section doesn't exist or the conversion fails.</param>
-    /// <returns>Configuration or <paramref name="fallback"/> value.</returns>
-    public T GetValue<T>(string path, T fallback)
-        => PropertyBinder.TryGetValue(typeof(T), GetSection(path).Value, out var value) && value is not null ? (T)value : fallback;
-
-    /// <summary>
-    /// Sets a value of type <typeparamref name="T"/> by the section path.
-    /// </summary>
-    /// <typeparam name="T">Value type.</typeparam>
-    /// <param name="path">Section path.</param>
-    /// <param name="value">Value to set.</param>
-    public void SetValue<T>(string path, T value) {
-        if (value is null) return;
-        if (PropertyBinder.TryGetString(typeof(T), value, out var valueString, out var isQuoted))
-            this[path] = isQuoted ? valueString : '=' + valueString;
-    }
-
-    /// <summary>
-    /// Updates this configuration from <typeparamref name="T"/> object properties.
-    /// </summary>
-    /// <typeparam name="T">Configuration type.</typeparam>
-    /// <param name="value">Configuration.</param>
-    public void Set<T>(T value) where T : class, new() => Binder.Set(this, value);
 
     /// <summary>
     /// Gets the immediate descendant configuration sub-sections.
@@ -298,7 +214,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// the specified key, an empty Microsoft.Extensions.Configuration.IConfigurationSection
     /// will be returned.
     /// </remarks>
-    public IConfigurationSection GetSection(string key) => Select(key);
+    public IConfigurationSection GetSection(string key) => this.Select(key);
 
     /// <summary>
     /// Gets the configuration section as the JSON string.
@@ -312,7 +228,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// <param name="nodeType">The type of the node.</param>
     /// <param name="path">Section path.</param>
     /// <param name="parent">Parent section if available.</param>
-    private JsonNodeSection(JsonNodeType nodeType, string path = "", JsonNodeSection? parent = null) {
+    internal JsonNodeSection(JsonNodeType nodeType, string path = "", JsonNodeSection? parent = null) {
         NodeType = nodeType;
         Path = path;
         Parent = parent;

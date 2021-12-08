@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides extension methods for saving the <see cref="JsonNodeSection"/> type from the <see cref="JsonNodeLoader"/>.
 /// </summary>
-public static class JsonNodeSectionTraits {
+public static class JsonNodeSectionSave {
 
     /// <summary>
     /// Saves the current state of the configuration to a file.

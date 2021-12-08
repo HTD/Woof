@@ -33,6 +33,8 @@ public class ValueConversions : Dictionary<Type, (ValueParser Parse, ValueToStri
         [typeof(DateOnly)] = (value => DateOnly.Parse(value, N), value => ((DateOnly)value).ToString("yyyy-MM-dd"), true),
         [typeof(TimeOnly)] = (value => TimeOnly.Parse(value, N), value => ((TimeOnly)value).ToString("HH:mm:ss.fff"), true),
         [typeof(Uri)] = (value => new Uri(value), value => ((Uri)value).ToString(), true),
+        [typeof(IPAddress)] = (value => IPAddress.Parse(value), value => ((IPAddress)value).ToString(), true),
+        [typeof(IPEndPoint)] = (value => IPEndPoint.Parse(value), value => ((IPEndPoint)value).ToString(), true),
         [typeof(FileInfo)] = (value => new FileInfo(value), value => ((FileInfo)value).ToString(), true),
         [typeof(DirectoryInfo)] = (value => new DirectoryInfo(value), value => ((DirectoryInfo)value).ToString(), true),
         [typeof(Guid)] = (value => new Guid(value), value => ((Guid)value).ToString(), true),

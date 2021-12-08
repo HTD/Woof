@@ -1,7 +1,4 @@
 ﻿using Woof.Config;
-using Woof.Config.Internals;
-using UnitTests.TestSubjects;
-using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using UnitTests.Types;
 
@@ -9,69 +6,153 @@ namespace UnitTests {
 
     public class JsonConfigTests {
 
+        /// <summary>
+        /// Tests the <see cref="NodePath"/> processing tool.
+        /// </summary>
         [Fact]
-        public void A000_GetKeyPath() {
-            var one = NodePath.GetSectionPath("one");
-            var two = NodePath.GetSectionPath("one.two");
-            var three = NodePath.GetSectionPath("one.two.three");
-            var four = NodePath.GetSectionPath("$.one.two.three[four]");
-            Assert.Equal("one", one);
-            Assert.Equal("one:two", two);
-            Assert.Equal("one:two:three", three);
-            Assert.Equal("one:two:three:four", four);
+        public void A010_NodePath() {
+            Assert.Equal("one", NodePath.GetSectionPath("one"));
+            Assert.Equal("one", NodePath.GetSectionPath("$.one"));
+            Assert.Equal("one:two", NodePath.GetSectionPath("one.two"));
+            Assert.Equal("one:two", NodePath.GetSectionPath("one:two"));
+            Assert.Equal("one:two", NodePath.GetSectionPath("$.one.two"));
+            Assert.Equal("one:two:three", NodePath.GetSectionPath("one.two.three"));
+            Assert.Equal("one:two:three", NodePath.GetSectionPath("one:two:three"));
+            Assert.Equal("one:two:three", NodePath.GetSectionPath("$.one.two.three"));
+            Assert.Equal("one:two:three:four", NodePath.GetSectionPath("$.one.two.three[four]"));
+            var nodePath = new NodePath("$.a.b.c");
+            var parts = nodePath.Parts.ToArray();
+            Assert.Equal("a", parts[0].Key);
+            Assert.Equal("a", parts[0].Path);
+            Assert.Equal("b", parts[1].Key);
+            Assert.Equal("a:b", parts[1].Path);
+            Assert.Equal("c", parts[2].Key);
+            Assert.Equal("a:b:c", parts[2].Path);
+            Assert.Equal("b", nodePath.Parent.Key);
+            Assert.Equal("a:b", nodePath.Parent.Path);
         }
 
+        /// <summary>
+        /// Tests if the <see cref="JsonNodeSection.GetNodeSection(string)"/> returns what it should return.
+        /// </summary>
+        /// <remarks>
+        /// It is crucial that separate empty and null nodes should be returned with the correct paths and parent nodes.
+        /// </remarks>
         [Fact]
-        public void A010_Direct() {
-            var config = JsonNodeSection.Parse(@"{""b"":true,""i"":1,""f"":3.1415926535,""s"":""0""}");
-            Assert.True(config.GetValue<bool>("b"));
-            Assert.Equal(1, config.GetValue<int>("i"));
-            Assert.Equal(3.1415926535, config.GetValue<double>("f"));
-            Assert.Equal(3.1415927f, config.GetValue<float>("f"));
-            Assert.Equal(3.1415926535m, config.GetValue<decimal>("f"));
-            Assert.Equal("0", config.GetValue<string>("s"));
+        public void A020_GetNodeSection() {
+            var section = JsonNodeSection.Parse(@"{""s1"":{""n1"":null,""s2"":{""n2"":null,""a"":[1,{},[],null]}},""v1"":true}");
+            var v1 = section.GetNodeSection("v1");
+            var s1 = section.GetNodeSection("s1");
+            var s2 = section.GetNodeSection("s1:s2");
+            var s3 = section.GetNodeSection("s1:s2:s3");
+            var s4 = section.GetNodeSection("s1:s2:s3:s4");
+            var a = section.GetNodeSection("s1:s2:a");
+            var a1 = section.GetNodeSection("s1:s2:a:0");
+            var b1 = section.GetNodeSection("s1:s2").GetSection("a:0");
+            var a2 = section.GetNodeSection("s1:s2:a:1");
+            var a3 = section.GetNodeSection("s1:s2:a:2");
+            var a4 = section.GetNodeSection("s1:s2:a:3");
+            var a5 = section.GetNodeSection("s1:s2:a:4");
+            var n1 = section.GetNodeSection("s1:n1");
+            var n2 = section.GetNodeSection("s1:s2:n2");
+            var n3 = section.GetNodeSection("s3:n3");
+            Assert.Equal("true", v1.Value);
+            Assert.Equal(JsonNodeType.Object, s1.NodeType);
+            Assert.Equal(JsonNodeType.Object, s2.NodeType);
+            Assert.Equal(JsonNodeType.Empty, s3.NodeType);
+            Assert.NotNull(s3.Parent);
+            Assert.Equal(JsonNodeType.Empty, s4.NodeType);
+            Assert.Null(s4.Parent);
+            Assert.Equal(JsonNodeType.Empty, n3.NodeType);
+            Assert.Equal(JsonNodeType.Null, n1.NodeType);
+            Assert.Equal(JsonNodeType.Null, n2.NodeType);
+            Assert.Equal(JsonNodeType.Array, a.NodeType);
+            Assert.Equal(JsonNodeType.Value, a1.NodeType);
+            Assert.Equal(JsonNodeType.Object, a2.NodeType);
+            Assert.Equal(JsonNodeType.Array, a3.NodeType);
+            Assert.Equal(JsonNodeType.Null, a4.NodeType);
+            Assert.Equal(JsonNodeType.Empty, a5.NodeType);
+            Assert.Equal("n1", n1.Key);
+            Assert.Equal("s1:n1", n1.Path);
+            Assert.Equal("n2", n2.Key);
+            Assert.Equal("s1:s2:n2", n2.Path);
+            Assert.Equal("1", a1.Value);
+            Assert.Equal("1", b1.Value);
         }
 
+        /// <summary>
+        /// Tests the node building using the section setter.
+        /// </summary>
         [Fact]
-        public void A020_Nested() {
-            var config = JsonNodeSection.Parse(@"{""level1"":{""test"":1}}");
-            Assert.Equal(1, config.GetValue<int>("Level1:Test"));
+        public void A030_NodeBuilding() {
+            var section = JsonNodeSection.Parse("{}");
+            section["v1"] = "=true";
+            //section["s1"] = "{}"; // the node setter should take care of this...
+            section["s1:v1"] = "=1";
+            //section["s1:s11"] = "{}"; // ...and this...
+            section["s1:s11:v1"] = "=1";
+            //section["s1:a11"] = "[]"; // ...and this.
+            section["s1:a11:0"] = "=1";
+            section["s1:a11:1"] = "=2";
+            section["s1:a11:2"] = "=3";
+            var serialized = section.Node!.ToString();
+            var reference = JsonNodeSection.Parse(serialized);
+            Assert.True(reference.GetValue("v1", false));
+            Assert.Equal(1, reference.GetValue("s1:v1", 0));
+            Assert.Equal(1, reference.GetValue("s1:a11:0", 0));
+            Assert.Equal(2, reference.GetValue("s1:a11:1", 1));
+            Assert.Equal(3, reference.GetValue("s1:a11:2", 2));
         }
 
+        /// <summary>
+        /// Tests the basic array processing vs <see cref="JsonNodeSection.GetValue{T}(string)"/>.
+        /// </summary>
         [Fact]
-        public void A030_Array() {
-            var config = JsonNodeSection.Parse(@"{""level1"":{""test"":[1,2,3]}}");
-            Assert.Equal(1, config.GetValue<int>("Level1:Test:0"));
-            Assert.Null(config.GetValue<int?>("Level1:Test:3"));
-            Assert.Null(config.GetValue<string?>("Level1:Test:Test"));
-            Assert.Equal(-1, config.GetValue("Level1:Test:4", -1));
-            Assert.Equal(-1, config.GetValue("Level1:Error", -1));
+        public void A040_Array() {
+            var section = JsonNodeSection.Parse(@"{""level1"":{""test"":[1,2,3]}}");
+            Assert.Equal(1, section.GetValue<int>("Level1:Test:0"));
+            Assert.Null(section.GetValue<int?>("Level1:Test:3"));
+            Assert.Null(section.GetValue<string?>("Level1:Test:Test"));
+            Assert.Equal(-1, section.GetValue("Level1:Test:4", -1));
+            Assert.Equal(-1, section.GetValue("Level1:Error", -1));
         }
 
+        /// <summary>
+        /// Tests the arrays of sections vs <see cref="JsonNodeSection.GetValue{T}(string)"/>.
+        /// </summary>
         [Fact]
-        public void A040_ArrayOfSections() {
-            var config = JsonNodeSection.Parse(@"{""level1"":{""test"":[{""x"":1,""y"":2},{""z"":3},""surprise""]}}");
-            Assert.Equal(1, config.GetValue<int>("Level1:Test:0:x"));
-            Assert.Equal(2, config.GetValue<int>("Level1:Test:0:y"));
-            Assert.Equal(3, config.GetValue<int>("Level1:Test:1:z"));
-            Assert.Equal("surprise", config.GetValue<string>("Level1:Test:2"));
+        public void A050_ArrayOfSections() {
+            var section = JsonNodeSection.Parse(@"{""level1"":{""test"":[{""x"":1,""y"":2},{""z"":3},""surprise""]}}");
+            Assert.Equal(1, section.GetValue<int>("Level1:Test:0:x"));
+            Assert.Equal(2, section.GetValue<int>("Level1:Test:0:y"));
+            Assert.Equal(3, section.GetValue<int>("Level1:Test:1:z"));
+            Assert.Equal("surprise", section.GetValue<string>("Level1:Test:2"));
         }
 
+        /// <summary>
+        /// Tests the nested array feature vs <see cref="JsonNodeSection.GetValue{T}(string)"/>.
+        /// </summary>
         [Fact]
-        public void A050_NestedArrays() {
-            var config = JsonNodeSection.Parse(@"{""root"":[[1],[1,2],[1,2,3,[1,2,3,4,5]]]}");
-            Assert.Equal(5, config.GetValue<int>("root:2:3:4"));
+        public void A060_NestedArrays() {
+            var section = JsonNodeSection.Parse(@"{""root"":[[1],[1,2],[1,2,3,[1,2,3,4,5]]]}");
+            Assert.Equal(5, section.GetValue<int>("root:2:3:4"));
         }
 
+        /// <summary>
+        /// Tests the case sensitive property matching.
+        /// </summary>
         [Fact]
-        public void A060_CaseSensitiveMatching() {
-            var config = JsonNodeSection.Parse(@"{""level1"":{""test"":1}}", caseSensitive: true);
-            Assert.Equal(1, config.GetValue<int>("level1:test"));
-            Assert.Null(config.GetValue<int?>("Level1:Test"));
+        public void A070_CaseSensitiveMatching() {
+            var section = JsonNodeSection.Parse(@"{""level1"":{""test"":1}}", caseSensitive: true);
+            Assert.Equal(1, section.GetValue<int>("level1:test"));
+            Assert.Null(section.GetValue<int?>("Level1:Test"));
         }
 
+        /// <summary>
+        /// Tests the comments ignoring feature.
+        /// </summary>
         [Fact]
-        public void A070_AdvancedFeatures() {
+        public void A080_Comments() {
             var testId = Guid.NewGuid();
             var testDateString = "1986-04-26";
             var testDouble = 2.5;
@@ -91,62 +172,12 @@ namespace UnitTests {
             Assert.Equal(defaultTimeout, TimeSpan.FromSeconds(config.GetValue("timeout1", 5.0)));
         }
 
-        [Fact]
-        public void A080_Binding() {
-            var basicTypeConfig = JsonNodeSection.Parse(@"{""p1"":true,""p2"":1,""p3"":""test""}");
-            var basicTypeData = basicTypeConfig.Get<BasicRecord>();
-            Assert.True(basicTypeData.P1);
-            Assert.Equal(1, basicTypeData.P2);
-            Assert.Equal("test", basicTypeData.P3);
-            var comlexTypeConfig = JsonNodeSection.Parse(@"{""s1"":{""p1"":true,""p2"":1,""p3"":""test""},""s2"":{""p1"":false,""p2"":0,""p3"":""spam""}}");
-            var comlexTypeData = comlexTypeConfig.Get<ComplexRecord>();
-            Assert.True(comlexTypeData.S1.P1);
-            Assert.Equal(1, comlexTypeData.S1.P2);
-            Assert.Equal("test", comlexTypeData.S1.P3);
-            Assert.False(comlexTypeData.S2.P1);
-            Assert.Equal(0, comlexTypeData.S2.P2);
-            Assert.Equal("spam", comlexTypeData.S2.P3);
-        }
 
         [Fact]
-        public void A090_WriteSupport() {
-            var config = JsonNodeSection.Parse(@"{""n"":null,""b"":false,""s"":""initial"",""i"":0,""d"":0.123456789}");
-            config["b"] = "true";
-            config["s"] = "test";
-            config["i"] = "0.123456789";
-            config["d"] = "42";
-            config["n"] = "=True";
-            Assert.True(config.GetValue<bool>("b"));
-            Assert.Equal("test", config.GetValue<string>("s"));
-            Assert.Equal(0.123456789, config.GetValue<double>("i"));
-            Assert.Equal(42, config.GetValue<int>("d"));
-            Assert.True(config.GetValue<bool>("n"));
-        }
-
-        [Fact]
-        public void A100_BuildSupport() {
-            var config = JsonNodeSection.Parse(@"{}");
-            config["i"] = "=1";
-            config["d"] = "=0.1";
-            config["s"] = "{}";
-            config["a"] = "[]";
-            config.GetSection("s")["test"] = "hello";
-            config.GetSection("a")["0"] = "=1";
-            config["a:1"] = "=2";
-            config.GetSection("a")["2"] = "=3";
-            Assert.Equal(1, config.GetValue<int>("i"));
-            Assert.Equal(0.1, config.GetValue<double>("d"));
-            Assert.Equal("hello", config.GetValue<string?>("s:test"));
-            Assert.Equal(1, config.GetValue<int>("a:0"));
-            Assert.Equal(2, config.GetValue<int>("a:1"));
-            Assert.Equal(3, config.GetValue<int>("a:2"));
-        }
-
-        [Fact]
-        public void A110_BindFromObject() {
+        public void A090_SimpleBinding() {
             var config = JsonNodeSection.Parse("{}");
             var sample = DirectSupported.Default;
-            config.Set<DirectSupported>(sample);
+            config.Set(sample);
             var json = config.Node!.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
             var parsedConfig = JsonNodeSection.Parse(json);
             var parsedData = parsedConfig.Get<DirectSupported>();
@@ -154,7 +185,18 @@ namespace UnitTests {
         }
 
         [Fact]
-        public async ValueTask A200_LoadAsync() {
+        public void A100_ComplexBinding() {
+            var config = JsonNodeSection.Parse("{}");
+            var sample = ComplexBasic.Default;
+            config.Set(sample);
+            var json = config.Node!.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+            var parsedConfig = JsonNodeSection.Parse(json);
+            var parsedData = parsedConfig.Get<ComplexBasic>();
+            parsedData.AssertEqual(sample);
+        }
+
+        [Fact]
+        public async ValueTask A110_LoadAsync() {
             const string testInput = @"{""level1"":{""test"":[{""x"":1,""y"":2},{""z"":3},""surprise""]}}";
             using var testStream = new MemoryStream(Encoding.UTF8.GetBytes(testInput));
             testStream.Position = 0;
@@ -166,7 +208,7 @@ namespace UnitTests {
         }
 
         [Fact]
-        public async ValueTask A210_SaveAsync() {
+        public async ValueTask A120_SaveAsync() {
             var initial = JsonNodeSection.Parse(@"{""n"":null,""b"":false,""s"":""initial"",""i"":0,""d"":0.123456789}");
             initial["z"] = "a new value";
             initial["n"] = "not null";
@@ -190,7 +232,7 @@ namespace UnitTests {
         }
 
         [Fact]
-        public void A120_MissingPropertiesBinding() {
+        public void A130_MissingPropertiesBinding() {
             var config = JsonNodeSection.Parse(@"{""n"":null,""b"":false,""s"":""initial"",""i"":0,""d"":0.123456789}");
             Assert.Equal(1, config.GetValue("Level1:Test:0:x", 1));
             Assert.Equal(2, config.GetValue("Level1:Test:0:y", 2));
@@ -201,116 +243,3 @@ namespace UnitTests {
     }
 
 }
-
-#region Test subjects
-
-namespace UnitTests.TestSubjects {
-
-    record BasicRecord {
-
-        public bool P1 { get; init; }
-
-        public int P2 { get; init; }
-
-        public string P3 { get; init; } = string.Empty;
-
-        public DateOnly Unused { get; init; }
-
-    }
-
-    record ComplexRecord {
-
-        public BasicRecord S1 { get; } = new();
-
-        public BasicRecord S2 { get; } = new();
-
-        public TimeOnly Unused { get; init; }
-
-    }
-    record NestedRoot {
-
-        public bool R1 { get; init; } // $.R1
-
-        public NestedBranch_1 R2 { get; } = new();
-
-        public int R3 { get; init; } // $.R3
-
-        public NestedBranch_2 R4 { get; } = new();
-
-        public string? R5 { get; init; } // $.R5
-
-    }
-
-    record NestedBranch_1 {
-
-        public int B1 { get; init; } // $.R2.B1
-
-        public NestedBranch_11 B2 { get; } = new();
-
-        public Guid B3 { get; init; }
-
-    }
-
-    record NestedBranch_11 {
-
-        public int B111 { get; init; } // $.R2.B2.B111
-
-    }
-
-    record NestedBranch_2 {
-
-        public int B21 { get; init; } // $.R4.B21
-
-    }
-
-    class DirectMutable {
-
-        public string? String { get; set; }
-
-        public bool Boolean { get; set; }
-
-        public byte Byte { get; set; }
-
-        public sbyte SByte { get; set; }
-
-        public short Short { get; set; }
-
-        public ushort UShort { get; set; }
-
-        public int Int { get; set; }
-
-        public uint UInt { get; set; }
-
-        public long Long { get; set; }
-
-        public ulong ULong { get; set; }
-
-        public float Float { get; set; }
-
-        public double Double { get; set; }
-
-        public Decimal Decimal { get; set; }
-
-        public DateTime DateTime { get; set; }
-
-        public DateOnly DateOnly { get; set; }
-
-        public TimeSpan TimeSpan { get; set; }
-
-        public TimeOnly TimeOnly { get; set; }
-
-        public Guid Guid { get; set; }
-
-        public Uri? Uri { get; set; }
-
-        public FileInfo? FileInfo { get; set; }
-
-        public DirectoryInfo? DirectoryInfo { get; set; }
-
-        public byte[]? Key { get; set; }
-
-    }
-
-}
-
-#endregion

@@ -30,10 +30,22 @@ public class PropertyBinder : IPropertyBinder {
     /// <param name="value">Configuration record.</param>
     public void Set<T>(JsonNodeSection configuration, T value) where T : class, new() {
         foreach (var item in Traverse(value)) {
-            var propertyValue = item.Property.GetValue(value);
+            var propertyValue = item.Property.GetValue(item.Owner);
             if (propertyValue is null) continue;
-            if (TryGetString(item.Property.PropertyType, propertyValue, out var stringValue, out var isQuoted))
+            if (TryGetString(item.Property.PropertyType, propertyValue, out var stringValue, out var isQuoted)) {
+                //var target = configuration.GetNodeSection(item.Path);
+                //if (target.Parent is null) {
+                //    var path = new NodePath(item.Path);
+                //    var parentPart = path.Parent;
+                //    var parentSection = configuration.GetNodeSection(parentPart.Path);
+                //    var grandparentSection = parentSection.Parent;
+                //    if (grandparentSection?.NodeType != JsonNodeType.Object)
+                //        throw new InvalidOperationException("Target path too far from the ancestor");
+                //    grandparentSection[parentPart.Key] = int.TryParse(path.Key, out _) ? "[]" : "{}";
+                //    target = configuration.GetNodeSection(item.Path);
+                //}
                 configuration[item.Path] = isQuoted ? stringValue : '=' + stringValue;
+            }
         }
     }
 

@@ -3,7 +3,44 @@
 /// <summary>
 /// JSON path / <see cref="IConfiguration"/> path tools.
 /// </summary>
-public static class NodePath {
+public class NodePath {
+
+    /// <summary>
+    /// Gets the parts as (Key, Path) tuples.
+    /// </summary>
+    public IEnumerable<(string Key, string Path)> Parts {
+        get {
+            for (int i = 0, n = Keys.Length; i < n; i++) {
+                yield return i == 0
+                    ? (Keys[0], Keys[0])
+                    : (Keys[i], string.Join(':', Keys[0..(i+1)]));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets the parent path as (Key, Path) tuple.
+    /// </summary>
+    public (string Key, string Path) Parent =>
+        Keys.Length < 2 ? (string.Empty, string.Empty) :
+        Keys.Length < 3 ? (Keys[0], Keys[0]) :
+        (Keys[^2], string.Join(':', Keys[0..(Keys.Length - 1)]));
+
+    /// <summary>
+    /// Gets the key of the path (last part).
+    /// </summary>
+    public string Key => Keys[^1];
+
+    /// <summary>
+    /// Gets the full section path.
+    /// </summary>
+    public string Path => string.Join(':', Keys);
+
+    /// <summary>
+    /// Creates a path object that can be enumerated as (Key, Path) tuplets.
+    /// </summary>
+    /// <param name="path">Node path in either JSON or <see cref="IConfiguration"/> form.</param>
+    public NodePath(string path) => Keys = Split(path).ToArray();
 
     /// <summary>
     /// Splits the node path into parts.
@@ -32,5 +69,7 @@ public static class NodePath {
     /// <param name="path">JSON node path.</param>
     /// <returns>Section path.</returns>
     public static string GetSectionPath(string path) => string.Join(':', Split(path));
+
+    private readonly string[] Keys;
 
 }

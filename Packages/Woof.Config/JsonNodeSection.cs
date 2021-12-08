@@ -11,16 +11,23 @@ public class JsonNodeSection : IConfigurationSection {
     /// <remarks>
     /// To set value as boolean or number prefix the value with '=', to set object and array use '{}' and '[]'.
     /// </remarks>
-    /// <param name="key">The configuration key.</param>
+    /// <param name="path">The configuration key or path.</param>
     /// <returns>The configuration value.</returns>
-    public string? this[string key] {
-        get => GetNodeSection(key).Value;
+    public string? this[string path] {
+        get => GetNodeSection(path).Value;
         set {
-            var lastSeparatorOffset = key.LastIndexOf(':');
-            if (lastSeparatorOffset < 0) GetNodeSection(key, nullNodeIfNotExists: true).Value = value;
-            else
-                GetNodeSection(key[0..lastSeparatorOffset])
-                    .GetNodeSection(key[0..(lastSeparatorOffset + 1)], nullNodeIfNotExists: true).Value = value;
+            var target = GetNodeSection(path);
+            if (target.Parent is null) { // the case of building the parent container if possible
+                var nPath = new NodePath(path);
+                var parentPart = nPath.Parent;
+                var parentSection = GetNodeSection(parentPart.Path);
+                var grandparentSection = parentSection.Parent;
+                if (grandparentSection?.NodeType != JsonNodeType.Object) // in order to build parent node we need a grandparent node
+                    throw new InvalidOperationException("Target path too far from the ancestor");
+                grandparentSection[parentPart.Key] = int.TryParse(nPath.Key, out _) ? "[]" : "{}";
+                target = GetNodeSection(path);
+            }
+            target.Value = value;
         }
     }
 
@@ -35,6 +42,36 @@ public class JsonNodeSection : IConfigurationSection {
     public string Path { get; }
 
     /// <summary>
+    /// Contains the node used to create this section.
+    /// </summary>
+    public JsonNode? Node { get; }
+
+    /// <summary>
+    /// Gets the current JSON node as a <see cref="JsonValue"/> node.
+    /// </summary>
+    public JsonValue ValueNode => Node is JsonValue valueNode ? valueNode : throw new InvalidCastException();
+
+    /// <summary>
+    /// Gets the current JSON node as a <see cref="JsonObject"/> node.
+    /// </summary>
+    public JsonObject ObjectNode => Node is JsonObject objectNode ? objectNode : throw new InvalidCastException();
+
+    /// <summary>
+    /// Gets the current JSON node as a <see cref="JsonArray"/> node.
+    /// </summary>
+    public JsonArray ArrayNode => Node is JsonArray arrayNode ? arrayNode : throw new InvalidCastException();
+
+    /// <summary>
+    /// Contains the parent node of the node used to create this section.
+    /// </summary>
+    public JsonNodeSection? Parent { get; private set; }
+
+    /// <summary>
+    /// Gets the type of this node, one of <see cref="JsonNodeType"/> enumeration.
+    /// </summary>
+    public JsonNodeType NodeType { get; }
+
+    /// <summary>
     /// Gets or sets the section value.
     /// </summary>
     /// <remarks>
@@ -43,34 +80,45 @@ public class JsonNodeSection : IConfigurationSection {
     public string? Value {
         get => Node is JsonValue valueNode ? valueNode.ToString() : null;
         set {
-            if (IsNull) {
-                var node = value switch {
-                    "=True" or "=true" => JsonValue.Create(true),
-                    "=False" or "=false" => JsonValue.Create(false),
-                    "=Null" or "=null" => null,
-                    "{}" => JsonObject.Parse("{}"),
-                    "[]" => JsonArray.Parse("[]"),
-                    string s when s.StartsWith('=') => GetJsonNumberFromString(s[1..]),
-                    _ => JsonValue.Create(value)
-                };
-                if (Parent is JsonObject o) {
-                    try { o.Remove(Key); } catch { }
-                    o.Add(Key, node);
-                }
-                else if (Parent is JsonArray a) a.Add(node);
-                return;
-            }
-            if (Node is not JsonValue valueNode) return;
-            if (Node?.Parent is JsonObject parentObject) {
-                var propertyName = Key;
-                parentObject.Remove(propertyName);
-                parentObject.Add(propertyName, valueNode.GetValueKind() switch {
-                    JsonValueKind.String => JsonValue.Create(value),
-                    JsonValueKind.Number => value is null ? null : GetJsonNumberFromString(value),
-                    JsonValueKind.True => JsonValue.Create(value is null || bool.Parse(value)),
-                    JsonValueKind.False => JsonValue.Create(value is not null && bool.Parse(value)),
-                    _ => null
-                });
+            switch (NodeType) {
+                case JsonNodeType.Value:
+                    var newValueNode = ValueNode.GetValueKind() switch {
+                        JsonValueKind.String => JsonValue.Create(value),
+                        JsonValueKind.Number => value is null ? null : GetJsonNumberFromString(value),
+                        JsonValueKind.True => JsonValue.Create(value is null || bool.Parse(value)),
+                        JsonValueKind.False => JsonValue.Create(value is not null && bool.Parse(value)),
+                        _ => null
+                    };
+                    if (Node?.Parent is JsonObject parentObject) {
+                        var propertyName = Key;
+                        parentObject.Remove(propertyName);
+                        parentObject.Add(propertyName, newValueNode);
+                    }
+                    else if (Node?.Parent is JsonArray parentArray) {
+                        if (int.TryParse(Key, out var index)) {
+                            parentArray[index] = newValueNode;
+                        }
+                    }
+                    break;
+                case JsonNodeType.Null:
+                case JsonNodeType.Empty:
+                    if (Parent is null)
+                        throw new InvalidOperationException("Cannot set a value when there is no parent node");
+                    var node = value switch {
+                        "=True" or "=true" => JsonValue.Create(true),
+                        "=False" or "=false" => JsonValue.Create(false),
+                        "{}" => JsonNode.Parse("{}"),
+                        "[]" => JsonNode.Parse("[]"),
+                        string s when s.StartsWith('=') => GetJsonNumberFromString(s[1..]),
+                        _ => JsonValue.Create(value)
+                    };
+                    if (Parent?.Node is JsonObject obj) {
+                        try { obj.Remove(Key); } catch { }
+                        obj.Add(Key, node);
+                    }
+                    else if (Parent?.Node is JsonArray array) array.Add(node);
+                    break;
+                default: throw new InvalidOperationException($"Cannot set a value on {NodeType} node");
             }
         }
     }
@@ -91,15 +139,15 @@ public class JsonNodeSection : IConfigurationSection {
         set => _Binder = value;
     }
 
-    /// <summary>
-    /// Gets a value indicating the section is empty and the node for it does not exist.
-    /// </summary>
-    public bool IsEmpty => Key.Length < 1;
+    ///// <summary>
+    ///// Gets a value indicating the section is empty and the node for it does not exist.
+    ///// </summary>
+    //public bool IsEmpty => Key.Length < 1;
 
-    /// <summary>
-    /// Gets a value indicating the section contains a null value, but is not empty, because it has a key.
-    /// </summary>
-    public bool IsNull => Node is null && Key.Length > 0;
+    ///// <summary>
+    ///// Gets a value indicating the section contains a null value, but is not empty, because it has a key.
+    ///// </summary>
+    //public bool IsNull => Node is null && Key.Length > 0;
 
     /// <summary>
     /// Gets a value indicating the section either contains a null value or is empty.
@@ -109,15 +157,21 @@ public class JsonNodeSection : IConfigurationSection {
     /// <summary>
     /// Gets an empty <see cref="IConfigurationSection"/> value.
     /// </summary>
-    public static JsonNodeSection Empty { get; } = new();
+    public static JsonNodeSection Empty { get; } = new(JsonNodeType.Empty, "");
 
     /// <summary>
     /// Creates a new <see cref="IConfigurationSection"/> directly from <see cref="JsonNode"/>.
     /// </summary>
     /// <param name="node">A JSON token to create the configuration section.</param>
     public JsonNodeSection(JsonNode node) {
+        NodeType = node switch {
+            JsonObject => JsonNodeType.Object,
+            JsonValue => JsonNodeType.Value,
+            JsonArray => JsonNodeType.Array,
+            _ => throw new NotSupportedException("Unsupported node type")
+        };
         Node = node;
-        Parent = node?.Parent;
+        Parent = node is null || node.Parent is null ? null : new JsonNodeSection(node.Parent);
         Path =  Node is null ? String.Empty : NodePath.GetSectionPath(Node.GetPath());
         var lastSeparatorIndex = Path.LastIndexOf(':');
         Key = Path[(lastSeparatorIndex + 1)..];
@@ -174,7 +228,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// </summary>
     /// <typeparam name="T">Configuration type.</typeparam>
     /// <param name="value">Configuration.</param>
-    public void Set<T>(T value) where T : class, new() => Binder.Set<T>(this, value);
+    public void Set<T>(T value) where T : class, new() => Binder.Set(this, value);
 
     /// <summary>
     /// Gets the immediate descendant configuration sub-sections.
@@ -213,50 +267,56 @@ public class JsonNodeSection : IConfigurationSection {
     public override string? ToString() => Node?.ToJsonString();
 
     /// <summary>
-    /// Creates an empty <see cref="IConfigurationSection"/>, the node for this section does not exist.
+    /// Creates <see cref="JsonNodeSection"/> from metadata.
     /// </summary>
-    private JsonNodeSection() {
-        Key = string.Empty;
-        Path = string.Empty;
+    /// <param name="nodeType">The type of the node.</param>
+    /// <param name="path">Section path.</param>
+    /// <param name="parent">Parent section if available.</param>
+    private JsonNodeSection(JsonNodeType nodeType, string path = "", JsonNodeSection? parent = null) {
+        NodeType = nodeType;
+        Path = path;
+        Parent = parent;
+        var lastSeparatorIndex = path.LastIndexOf(':');
+        Key = path[(lastSeparatorIndex + 1)..];
     }
 
     /// <summary>
-    /// Create a new <see cref="IConfiguration"/> null node, a node that has a path and parent, but not the value.
+    /// Gets the node by the relative path of the configuration section.
     /// </summary>
-    /// <param name="node">An instance of <see cref="NullNode"/>.</param>
-    private JsonNodeSection(NullNode node) {
-        Key = node.PropertyName;
-        var prefix = node.Parent is null ? string.Empty : NodePath.GetSectionPath(node.Parent.GetPath()) + ':';
-        Path = prefix + node.PropertyName;
-        Parent = node.Parent;
-    }
-
-    /// <summary>
-    /// Gets the node by the key of the configuration section.
-    /// </summary>
-    /// <param name="key">The key of the configuration section.</param>
-    /// <param name="nullNodeIfNotExists">Returns a null node if the property doesn't exist.</param>
-    /// <returns>Token matched or null.</returns>
-    private JsonNodeSection GetNodeSection(string key, bool nullNodeIfNotExists = false) {
-        JsonNode? node = Node, parent = node;
-        if (key.Length < 1) return this;
-        foreach (var part in NodePath.Split(key)) {
-            if (node is null) return nullNodeIfNotExists ? new JsonNodeSection(new NullNode(parent, part)) : Empty;
-            else if (node is JsonArray array) {
-                parent = node;
-                node = int.TryParse(part, out var index) && index >= 0 && index < array.Count ? array[index] : null;
-                if (node is null) return nullNodeIfNotExists ? new JsonNodeSection(new NullNode(parent, part)) : Empty;
-                if (node is JsonArray or JsonObject) continue;
-                else return new JsonNodeSection(node);
+    /// <param name="path">The relative path of the configuration section.</param>
+    /// <returns>
+    /// <see cref="JsonNodeSection"/> matching the <paramref name="path"/>,
+    /// or an empty section if <paramref name="path"/> doesn't match any node.
+    /// </returns>
+    internal JsonNodeSection GetNodeSection(string path) {
+        if (path.Length < 1) return this;
+        if (Node is null) return Empty;
+        JsonNodeSection section = this;
+        var nodePath = new NodePath(path);
+        foreach (var part in nodePath.Parts) {
+            if (section.NodeType == JsonNodeType.Array && section.Node is JsonArray array) {
+                if (!int.TryParse(part.Key, out var index) || index < 0 || index >= array.Count) {
+                    section = new JsonNodeSection(JsonNodeType.Empty, part.Path, section);
+                    continue;
+                }
+                var value = array[index];
+                section = value is not null
+                    ? new JsonNodeSection(value)
+                    : new JsonNodeSection(JsonNodeType.Null, part.Path, section);
+                if (value is JsonArray or JsonObject) continue;
             }
-            else if (node is JsonObject obj) {
-                var exists = obj.TryGetPropertyValue(part, out var value);
-                if (value is null) return nullNodeIfNotExists || exists ? new JsonNodeSection(new NullNode(parent, part)) : Empty;
-                parent = node;
-                node = value;
+            else if (section.NodeType == JsonNodeType.Object && section.Node is JsonObject obj) {
+                var exists = obj.TryGetPropertyValue(part.Key, out var value);
+                section = exists
+                    ? (value is not null ? new JsonNodeSection(value) : new JsonNodeSection(JsonNodeType.Null, part.Path, section))
+                    : new JsonNodeSection(JsonNodeType.Empty, part.Path, section);
+                if (value is JsonArray or JsonObject) continue;
+            }
+            else if (section.IsNullOrEmpty) {
+                section = new JsonNodeSection(JsonNodeType.Empty, part.Path);
             }
         }
-        return new JsonNodeSection(node!);
+        return section;
     }
 
     /// <summary>
@@ -268,16 +328,6 @@ public class JsonNodeSection : IConfigurationSection {
         => json.Contains('.')
             ? JsonValue.Create(double.Parse(json, N))
             : json[0] == '-' ? JsonValue.Create(long.Parse(json, N)) : JsonValue.Create(ulong.Parse(json, N));
-
-    /// <summary>
-    /// Contains the node used to create this section.
-    /// </summary>
-    public JsonNode? Node { get; }
-
-    /// <summary>
-    /// Contains the parent node of the node used to create this section.
-    /// </summary>
-    public JsonNode? Parent { get; }
 
     /// <summary>
     /// Invariant culture format provider for JSON compatible conversions.

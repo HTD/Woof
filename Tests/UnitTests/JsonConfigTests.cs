@@ -217,7 +217,7 @@ public class JsonConfigTests {
     }
 
     /// <summary>
-    /// Test the asynchronous section saving.
+    /// Tests the asynchronous section saving.
     /// </summary>
     /// <returns>A <see cref="ValueTask"/> completed when the test is done.</returns>
     [Fact]

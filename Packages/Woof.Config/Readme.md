@@ -1,4 +1,4 @@
-﻿# Woof.Config
+# Woof.Config
 
 A part of the [**Woof Tookit**](../../Readme.md)
 by **[CodeDog](https://www.codedog.pl)**.
@@ -19,7 +19,7 @@ programs.
 The goal is to provide a dynamic configuration for the C# program that is
 easily accessible and editable either by the user or the app itself.
 
-The location of the file must be obvious. So does it's name.
+The location of the file must be obvious. So does its name.
 
 The name of the file without extension matches the main program executable name.
 
@@ -49,61 +49,119 @@ In development, the configuration should just be copied to the output
 directory, then it can be moved to user's directory either by the application
 or the application installer.
 
-Once `Woof.JsonConfig` object is loaded, it provides both pahts for that purpose.
+The file can even not exist at all, it will be created when the configuration
+is saved.
 
-In order to use the configuration the JSON file must be created first.
+To find out where exactly the file was saved, check the `FilePath` property
+of `JsonConfig.Locator`. 
 
-It provides the structure for the configuration properties.
-
-Then, to access the configuration data in program - either `IConfiguration`
-methods and properties can be used, or the object can be bound to a strong typed
-configuration `record` with `IConfiguration.Get<T>()` extension.
-
-Yes, the recommended type for the configuration section is a `record` type.
-All objects (mapped to sections) should be read-only pre-initialized getters.
-
-Each complex type must be defined as section record.
+There are 2 basic types of the configuration:
+- `IConfiguration` - a basic structure providing only string values,
+- User defined object or record - that is bound to `JsonNodeConfiguration`
+  or `JsonConfig` object. The property binding automatically convert all system
+  types to and from `JSON` values. That type of configuration is strong typed.
+  You can store values as `Guid`, `Uri`, `FileInfo`, `DirectoryInfo`, `byte[]`,
+  `DateTime`, `DateOnly`, `TimeOnly`, and `TimeSpan` and many more. More type
+  conversions can be added to the `PropertyBinder`.`Conversions`.
 
 For example, if we defined the configuration both in `JSON` file and already
 created a strong typed record for it named `Configuration`, here's an example
 usage:
 
 ```cs
-var jsonConfig = new JsonConfig();
-var config = jsonConfig.Get<Configuration>();
-```
-
-In order to modify a configuration value use `IConfiguration.SetValue<T>()`
-extension method.
-
-A modified configuration can be saved like this:
-
-```cs
-await jsonConfig.SaveAsync();
+var section = await JsonConfig.LoadAsync();
+var config = section.Get<Configuration>();
 ```
 
 or
 
 ```cs
-jsonConfig.Save();
+var section = new JsonConfig();
+var config = section.Get<Configuration>();
 ```
 
+A modified configuration can be saved like this:
+
+```cs
+await section.SaveAsync(config);
+```
+
+or
+
+```cs
+section.Save(config);
+```
 For more details see the provided examples and use built-in XML documentation.
 
-## Version 6.2 API change
+## Current version (early development) limitations
 
-This package is incompatible with older versions.
-Previous `Woof.Config` packed too many features in one module.
-It provided both `data protection`, `Azure Key Vault` access and
-`data encryption`.
+The current version of `PropertyBinder` cannot process collections.
+Do not use arrays, lists and other collection types with the binder.
+Do **please open an issue on GitHub** if you need the feature and I will add it.
 
-Those features was moved to separate packages:
+## Extensions
 
-- [`Woof.Config.AKV`](../Woof.Config.AKV/Readme.md)
-- `Woof.Config.Protected`
-- `Woof.Config.AKV.Protected`
+- The support for the data protected configuration files is in
+  [`Woof.Config.Protected`](../Woof.Config.Protected/Readme.md).
+- The support for values stored in Azure Key Vault is in
+  [`Woof.Config.AKV`](../Woof.Config.AKV/Readme.md).
 
-Read the packages documentation in order to migrate.
+## Performance
+
+The most expensive part of the configuration usage is the binding operation,
+since it uses `Reflection` to match the `JSON` properties to the bound
+object's properties. It is done on load and save operations.
+
+If you need faster and more real-time application state storage consider
+using the `Registry` on Windows and `Redis` on Linux.
+
+## Technology
+
+The main idea was to make a configuration section object that implements
+`IConfiguration` and bind it directly to `JSON` nodes.
+There already is an implementation of this using `System.Text.Json` in
+`Microsoft.Extensions.Configuration.Json`, however - it's **READ ONLY**.
+It is also tailored specifically for usage in web applications and
+`ASP.NET Core` dependency injection pattern. It doesn't solve the problem
+of locating the configuration file either in application's or user's directory.
+
+Also extending the class to support advanced data protection and
+Azure Key Vault storage was very difficult to achieve and required a lot
+of inefficient workarounds.
+
+The answer is the shiny new `System.Text.Json.Nodes` from `.NET 6.0`.
+This feature not only allows parsing the `JSON` files, but also allows
+modifying and building the `JSON` documents.
+
+The core part of the package is `JsonNodeSection` class that is a combination of
+`JsonNode` instance and a `IConfiguration` interface implementation.
+
+Node sections are searchable with `Select()` and `GetSection()` methods.
+The `Select` name is inspired by a similar method from `Newtonsoft.Json`
+package.
+
+The `JsonNodeSection` uses section paths (keys separated with `':'` character),
+but also understands `JsonNode` paths like `$.section.value[1]`.
+
+To allow building the document structure from scratch some metadata was added
+to the `JsonNodeSection` type, like special kinds of `Null` and `Empty` nodes.
+An `Empty` node is a node that not really exists in the `JSON` document.
+The `Null` node exists and its value is equal to `null`.
+
+That helps the section setter to create missing container nodes for the new
+properties and values.
+
+I made a completely new property binder to add some commonly used system types
+and simplify extending the supported conversions.
+
+The cool new features are storing `TimeSpan` values as floating point
+seconds and byte arrays as `Base64` encoded strings.
+
+The `JsonConfig` class uses several modules to implement the proper
+separation of concerns and extensibility:
+- `IFileLocator` - locates the configuration files.
+- `IJsonNodeLoader` - parses, loads and saves the configuration nodes.
+- `IPropertyBinder` - binds the configuration values to the strong types.
 
 ---
 

@@ -1,7 +1,7 @@
 ﻿namespace Woof.Config;
 
 /// <summary>
-/// An object's property tree item that allows setting the property value by it's path in <see cref="JsonNode"/> path format.
+/// An object's property tree item that allows setting the property value by its path in <see cref="IConfiguration"/> path format.
 /// </summary>
 public struct PropertyGraphItem {
 

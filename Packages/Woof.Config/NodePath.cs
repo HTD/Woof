@@ -70,6 +70,9 @@ public class NodePath {
     /// <returns>Section path.</returns>
     public static string GetSectionPath(string path) => string.Join(':', Split(path));
 
+    /// <summary>
+    /// Keys array for the instance.
+    /// </summary>
     private readonly string[] Keys;
 
 }

@@ -9,23 +9,24 @@ public class JsonNodeSection : IConfigurationSection {
     /// Gets or sets a configuration value.
     /// </summary>
     /// <remarks>
-    /// To set value as boolean or number prefix the value with '=', to set object and array use '{}' and '[]'.
+    /// To set value as boolean or number unquoted prefix the value with '='.<br/>
+    /// To create a section or array use '{}' and '[]'.
     /// </remarks>
-    /// <param name="path">The configuration key or path.</param>
+    /// <param name="path">The section path.</param>
     /// <returns>The configuration value.</returns>
     public string? this[string path] {
-        get => GetNodeSection(path).Value;
+        get => Select(path).Value;
         set {
-            var target = GetNodeSection(path);
+            var target = Select(path);
             if (target.Parent is null) { // the case of building the parent container if possible
                 var nPath = new NodePath(path);
                 var parentPart = nPath.Parent;
-                var parentSection = GetNodeSection(parentPart.Path);
+                var parentSection = Select(parentPart.Path);
                 var grandparentSection = parentSection.Parent;
                 if (grandparentSection?.NodeType != JsonNodeType.Object) // in order to build parent node we need a grandparent node
                     throw new InvalidOperationException("Target path too far from the ancestor");
                 grandparentSection[parentPart.Key] = int.TryParse(nPath.Key, out _) ? "[]" : "{}";
-                target = GetNodeSection(path);
+                target = Select(path);
             }
             target.Value = value;
         }
@@ -178,6 +179,45 @@ public class JsonNodeSection : IConfigurationSection {
     }
 
     /// <summary>
+    /// Gets the node by the relative path of the configuration section.
+    /// </summary>
+    /// <param name="path">The relative path of the configuration section.</param>
+    /// <returns>
+    /// <see cref="JsonNodeSection"/> matching the <paramref name="path"/>,
+    /// or an empty section if the <paramref name="path"/> doesn't match any node.
+    /// </returns>
+    public JsonNodeSection Select(string path) {
+        if (path.Length < 1) return this;
+        if (Node is null) return Empty;
+        JsonNodeSection section = this;
+        var nodePath = new NodePath(path);
+        foreach (var part in nodePath.Parts) {
+            if (section.NodeType == JsonNodeType.Array && section.Node is JsonArray array) {
+                if (!int.TryParse(part.Key, out var index) || index < 0 || index >= array.Count) {
+                    section = new JsonNodeSection(JsonNodeType.Empty, part.Path, section);
+                    continue;
+                }
+                var value = array[index];
+                section = value is not null
+                    ? new JsonNodeSection(value)
+                    : new JsonNodeSection(JsonNodeType.Null, part.Path, section);
+                if (value is JsonArray or JsonObject) continue;
+            }
+            else if (section.NodeType == JsonNodeType.Object && section.Node is JsonObject obj) {
+                var exists = obj.TryGetPropertyValue(part.Key, out var value);
+                section = exists
+                    ? (value is not null ? new JsonNodeSection(value) : new JsonNodeSection(JsonNodeType.Null, part.Path, section))
+                    : new JsonNodeSection(JsonNodeType.Empty, part.Path, section);
+                if (value is JsonArray or JsonObject) continue;
+            }
+            else if (section.IsNullOrEmpty) {
+                section = new JsonNodeSection(JsonNodeType.Empty, part.Path);
+            }
+        }
+        return section;
+    }
+
+    /// <summary>
     /// Creates a <see cref="JsonNodeSection"/> from JSON string.
     /// </summary>
     /// <param name="json">JSON.</param>
@@ -246,7 +286,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// </summary>
     /// <returns>Exception.</returns>
     /// <exception cref="NotImplementedException">Invoked.</exception>
-    public IChangeToken GetReloadToken() => throw new NotImplementedException();
+    public IChangeToken GetReloadToken() => throw new NotImplementedException("No automatic reloading here");
 
     /// <summary>
     /// Gets a configuration sub-section with the specified key.
@@ -258,7 +298,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// the specified key, an empty Microsoft.Extensions.Configuration.IConfigurationSection
     /// will be returned.
     /// </remarks>
-    public IConfigurationSection GetSection(string key) => GetNodeSection(key);
+    public IConfigurationSection GetSection(string key) => Select(key);
 
     /// <summary>
     /// Gets the configuration section as the JSON string.
@@ -278,45 +318,6 @@ public class JsonNodeSection : IConfigurationSection {
         Parent = parent;
         var lastSeparatorIndex = path.LastIndexOf(':');
         Key = path[(lastSeparatorIndex + 1)..];
-    }
-
-    /// <summary>
-    /// Gets the node by the relative path of the configuration section.
-    /// </summary>
-    /// <param name="path">The relative path of the configuration section.</param>
-    /// <returns>
-    /// <see cref="JsonNodeSection"/> matching the <paramref name="path"/>,
-    /// or an empty section if <paramref name="path"/> doesn't match any node.
-    /// </returns>
-    internal JsonNodeSection GetNodeSection(string path) {
-        if (path.Length < 1) return this;
-        if (Node is null) return Empty;
-        JsonNodeSection section = this;
-        var nodePath = new NodePath(path);
-        foreach (var part in nodePath.Parts) {
-            if (section.NodeType == JsonNodeType.Array && section.Node is JsonArray array) {
-                if (!int.TryParse(part.Key, out var index) || index < 0 || index >= array.Count) {
-                    section = new JsonNodeSection(JsonNodeType.Empty, part.Path, section);
-                    continue;
-                }
-                var value = array[index];
-                section = value is not null
-                    ? new JsonNodeSection(value)
-                    : new JsonNodeSection(JsonNodeType.Null, part.Path, section);
-                if (value is JsonArray or JsonObject) continue;
-            }
-            else if (section.NodeType == JsonNodeType.Object && section.Node is JsonObject obj) {
-                var exists = obj.TryGetPropertyValue(part.Key, out var value);
-                section = exists
-                    ? (value is not null ? new JsonNodeSection(value) : new JsonNodeSection(JsonNodeType.Null, part.Path, section))
-                    : new JsonNodeSection(JsonNodeType.Empty, part.Path, section);
-                if (value is JsonArray or JsonObject) continue;
-            }
-            else if (section.IsNullOrEmpty) {
-                section = new JsonNodeSection(JsonNodeType.Empty, part.Path);
-            }
-        }
-        return section;
     }
 
     /// <summary>

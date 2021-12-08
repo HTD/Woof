@@ -1,7 +1,7 @@
 ﻿namespace Woof.Config;
 
 /// <summary>
-/// Binds the compatible objects properties to <see cref="JsonNodeSection"/> instance.
+/// Binds the compatible object properties to the <see cref="JsonNodeSection"/> instance.
 /// </summary>
 public class PropertyBinder : IPropertyBinder {
 
@@ -21,41 +21,27 @@ public class PropertyBinder : IPropertyBinder {
     }
 
     /// <summary>
-    /// Updates the <see cref="JsonNodeSection"/> instance with the given configuration record value.<br/>
-    /// It will work only if the corresponding <see cref="JsonNodeSection"/> properties exist and are not nullable.<br/>
-    /// Consider making properties not nullable to be able to save them.
+    /// Updates the <see cref="JsonNodeSection"/> instance with the given configuration object value.<br/>
     /// </summary>
     /// <typeparam name="T">The type of the configuration record.</typeparam>
     /// <param name="configuration">A <see cref="JsonNodeSection"/> instance.</param>
-    /// <param name="value">Configuration record.</param>
+    /// <param name="value">Configuration object.</param>
     public void Set<T>(JsonNodeSection configuration, T value) where T : class, new() {
         foreach (var item in Traverse(value)) {
             var propertyValue = item.Property.GetValue(item.Owner);
             if (propertyValue is null) continue;
-            if (TryGetString(item.Property.PropertyType, propertyValue, out var stringValue, out var isQuoted)) {
-                //var target = configuration.GetNodeSection(item.Path);
-                //if (target.Parent is null) {
-                //    var path = new NodePath(item.Path);
-                //    var parentPart = path.Parent;
-                //    var parentSection = configuration.GetNodeSection(parentPart.Path);
-                //    var grandparentSection = parentSection.Parent;
-                //    if (grandparentSection?.NodeType != JsonNodeType.Object)
-                //        throw new InvalidOperationException("Target path too far from the ancestor");
-                //    grandparentSection[parentPart.Key] = int.TryParse(path.Key, out _) ? "[]" : "{}";
-                //    target = configuration.GetNodeSection(item.Path);
-                //}
+            if (TryGetString(item.Property.PropertyType, propertyValue, out var stringValue, out var isQuoted))
                 configuration[item.Path] = isQuoted ? stringValue : '=' + stringValue;
-            }
         }
     }
 
     /// <summary>
-    /// Tries to get the value of the specified type from string.
+    /// Tries to get the <paramref name="value"/> of the specified <paramref name="type"/> from string.
     /// </summary>
     /// <param name="type">Type to convert.</param>
     /// <param name="stringValue">String value.</param>
     /// <param name="value">Converted value.</param>
-    /// <returns>True if value was converted using available conversions.</returns>
+    /// <returns>True if the <paramref name="value"/> was converted using available conversions.</returns>
     public static bool TryGetValue(Type type, string stringValue, out object? value) {
         if (type.BaseType == typeof(Enum)) {
             value = Enum.Parse(type, stringValue);
@@ -72,7 +58,7 @@ public class PropertyBinder : IPropertyBinder {
     }
 
     /// <summary>
-    /// Tries to get the value of the specified type as string.
+    /// Tries to get the <paramref name="stringValue"/> of the specified <paramref name="type"/>.
     /// </summary>
     /// <param name="type">Type to convert.</param>
     /// <param name="value">Value to convert.</param>

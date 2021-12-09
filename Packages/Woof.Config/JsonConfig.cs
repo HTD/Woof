@@ -9,9 +9,14 @@
 public class JsonConfig : JsonNodeSection {
 
     /// <summary>
-    /// Gets the <see cref="IFileLocator"/> for the configuration.
+    /// Gets the <see cref="IFileLocator"/> instance used to locate the file used to create this configuration.
     /// </summary>
     public IFileLocator Locator { get; }
+
+    /// <summary>
+    /// Gets the <see cref="IJsonNodeLoader"/> instance used to load this configuration.
+    /// </summary>
+    public IJsonNodeLoader Loader { get; }
 
     /// <summary>
     /// Creates the configuration with a specified name or a default one, using application name.

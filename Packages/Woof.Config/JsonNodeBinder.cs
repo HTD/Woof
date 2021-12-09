@@ -199,6 +199,16 @@ public static class JsonNodeBinder {
     }
 
     /// <summary>
+    /// Gets a JSON value from string.
+    /// </summary>
+    /// <param name="json">Valid JSON string.</param>
+    /// <returns>A <see cref="JsonValue"/> instance.</returns>
+    public static JsonValue GetJsonNumberFromString(string json)
+        => json.Contains('.')
+            ? JsonValue.Create(double.Parse(json, N))
+            : json[0] == '-' ? JsonValue.Create(long.Parse(json, N)) : JsonValue.Create(ulong.Parse(json, N));
+
+    /// <summary>
     /// Traverses through the object's graph in BFS order returning all public properties
     /// that does not point to the object within the root's namespace.
     /// </summary>
@@ -284,5 +294,10 @@ public static class JsonNodeBinder {
     /// Provides supported value conversions.
     /// </summary>
     public static ValueConversions Conversions { get; } = ValueConversions.Default;
+
+    /// <summary>
+    /// Invariant culture format provider for JSON compatible conversions.
+    /// </summary>
+    private static readonly IFormatProvider N = CultureInfo.InvariantCulture;
 
 }

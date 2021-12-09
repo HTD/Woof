@@ -6,6 +6,11 @@
 public class JsonNodeLoader : IJsonNodeLoader {
 
     /// <summary>
+    /// Gets the default singleton instance of the default loader.
+    /// </summary>
+    public static JsonNodeLoader Default => _Default ??= new JsonNodeLoader();
+
+    /// <summary>
     /// Gets the default options for parsing JSON files.
     /// </summary>
     public JsonDocumentOptions DocumentOptions { get; } = new() { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip };
@@ -158,5 +163,10 @@ public class JsonNodeLoader : IJsonNodeLoader {
     /// <see cref="JsonNodeOptions"/> for case insensitive property names.
     /// </summary>
     protected readonly JsonNodeOptions CaseInsensitive = new() { PropertyNameCaseInsensitive = true };
+
+    /// <summary>
+    /// The <see cref="Default"/> property backing field.
+    /// </summary>
+    private static JsonNodeLoader? _Default;
 
 }

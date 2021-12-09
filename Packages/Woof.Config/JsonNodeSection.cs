@@ -16,20 +16,7 @@ public class JsonNodeSection : IConfigurationSection {
     /// <returns>The configuration value.</returns>
     public string? this[string path] {
         get => this.Select(path).Value;
-        set {
-            var target = this.Select(path);
-            if (target.Parent is null) { // the case of building the parent container if possible
-                var nPath = new NodePath(path);
-                var parentPart = nPath.Parent;
-                var parentSection = this.Select(parentPart.Path);
-                var grandparentSection = parentSection.Parent;
-                if (grandparentSection?.NodeType != JsonNodeType.Object) // in order to build parent node we need a grandparent node
-                    throw new InvalidOperationException("Target path too far from the ancestor");
-                grandparentSection[parentPart.Key] = int.TryParse(nPath.Key, out _) ? "[]" : "{}";
-                target = this.Select(path);
-            }
-            target.Value = value;
-        }
+        set => this.Select(path).Value = value;
     }
 
     /// <summary>
@@ -81,11 +68,12 @@ public class JsonNodeSection : IConfigurationSection {
     public string? Value {
         get => Node is JsonValue valueNode ? valueNode.ToString() : null;
         set {
+            CreateParentContainer();
             switch (NodeType) {
                 case JsonNodeType.Value:
                     var newValueNode = ValueNode.GetValueKind() switch {
                         JsonValueKind.String => JsonValue.Create(value),
-                        JsonValueKind.Number => value is null ? null : GetJsonNumberFromString(value),
+                        JsonValueKind.Number => value is null ? null : JsonNodeBinder.GetJsonNumberFromString(value),
                         JsonValueKind.True => JsonValue.Create(value is null || bool.Parse(value)),
                         JsonValueKind.False => JsonValue.Create(value is not null && bool.Parse(value)),
                         _ => null
@@ -110,7 +98,7 @@ public class JsonNodeSection : IConfigurationSection {
                         "=False" or "=false" => JsonValue.Create(false),
                         "{}" => JsonNode.Parse("{}"),
                         "[]" => JsonNode.Parse("[]"),
-                        string s when s.StartsWith('=') => GetJsonNumberFromString(s[1..]),
+                        string s when s.StartsWith('=') => JsonNodeBinder.GetJsonNumberFromString(s[1..]),
                         _ => JsonValue.Create(value)
                     };
                     if (Parent?.Node is JsonObject obj) {
@@ -123,24 +111,6 @@ public class JsonNodeSection : IConfigurationSection {
             }
         }
     }
-
-    /// <summary>
-    /// Gets or sets the default loader for the section.
-    /// </summary>
-    public IJsonNodeLoader Loader {
-        get => _Loader ?? new JsonNodeLoader();
-        set => _Loader = value;
-    }
-
-    ///// <summary>
-    ///// Gets a value indicating the section is empty and the node for it does not exist.
-    ///// </summary>
-    //public bool IsEmpty => Key.Length < 1;
-
-    ///// <summary>
-    ///// Gets a value indicating the section contains a null value, but is not empty, because it has a key.
-    ///// </summary>
-    //public bool IsNull => Node is null && Key.Length > 0;
 
     /// <summary>
     /// Gets a value indicating the section either contains a null value or is empty.
@@ -165,9 +135,23 @@ public class JsonNodeSection : IConfigurationSection {
         };
         Node = node;
         Parent = node is null || node.Parent is null ? null : new JsonNodeSection(node.Parent);
-        Path =  Node is null ? String.Empty : NodePath.GetSectionPath(Node.GetPath());
+        Path = Node is null ? String.Empty : NodePath.GetSectionPath(Node.GetPath());
         var lastSeparatorIndex = Path.LastIndexOf(':');
         Key = Path[(lastSeparatorIndex + 1)..];
+    }
+
+    /// <summary>
+    /// Creates <see cref="JsonNodeSection"/> from metadata.
+    /// </summary>
+    /// <param name="nodeType">The type of the node.</param>
+    /// <param name="path">Section path.</param>
+    /// <param name="parent">Parent section if available.</param>
+    internal JsonNodeSection(JsonNodeType nodeType, string path = "", JsonNodeSection? parent = null) {
+        NodeType = nodeType;
+        Path = path;
+        Parent = parent;
+        var lastSeparatorIndex = path.LastIndexOf(':');
+        Key = path[(lastSeparatorIndex + 1)..];
     }
 
     /// <summary>
@@ -215,37 +199,19 @@ public class JsonNodeSection : IConfigurationSection {
     public override string? ToString() => Node?.ToJsonString();
 
     /// <summary>
-    /// Creates <see cref="JsonNodeSection"/> from metadata.
+    /// Creates a parent container for this node.
+    /// Throws if the grandparent of this node is not an object node.
     /// </summary>
-    /// <param name="nodeType">The type of the node.</param>
-    /// <param name="path">Section path.</param>
-    /// <param name="parent">Parent section if available.</param>
-    internal JsonNodeSection(JsonNodeType nodeType, string path = "", JsonNodeSection? parent = null) {
-        NodeType = nodeType;
-        Path = path;
-        Parent = parent;
-        var lastSeparatorIndex = path.LastIndexOf(':');
-        Key = path[(lastSeparatorIndex + 1)..];
+    /// <exception cref="InvalidOperationException">Grandparent node is not an object node.</exception>
+    private void CreateParentContainer() {
+        if (Parent is not null) return;
+        var nPath = new NodePath(Path);
+        var parentPart = nPath.Parent;
+        var parentSection = this.Select(parentPart.Path);
+        var grandparentSection = parentSection.Parent;
+        if (grandparentSection?.NodeType != JsonNodeType.Object)
+            throw new InvalidOperationException("Target path too far from the ancestor");
+        grandparentSection[parentPart.Key] = int.TryParse(nPath.Key, out _) ? "[]" : "{}";
     }
-
-    /// <summary>
-    /// Gets a JSON value from string.
-    /// </summary>
-    /// <param name="json">Valid JSON string.</param>
-    /// <returns>A <see cref="JsonValue"/> instance.</returns>
-    private static JsonValue GetJsonNumberFromString(string json)
-        => json.Contains('.')
-            ? JsonValue.Create(double.Parse(json, N))
-            : json[0] == '-' ? JsonValue.Create(long.Parse(json, N)) : JsonValue.Create(ulong.Parse(json, N));
-
-    /// <summary>
-    /// Invariant culture format provider for JSON compatible conversions.
-    /// </summary>
-    private static readonly IFormatProvider N = CultureInfo.InvariantCulture;
-
-    /// <summary>
-    /// <see cref="Loader"/> backing field.
-    /// </summary>
-    private IJsonNodeLoader? _Loader;
 
 }

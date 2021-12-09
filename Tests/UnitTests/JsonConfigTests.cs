@@ -250,7 +250,7 @@ public class JsonConfigTests {
         initial["i"] = "0.123456789";
         initial["d"] = "42";
         await using var testStream = new MemoryStream();
-        await initial.SaveAsync(testStream);
+        await JsonNodeLoader.Default.SaveAsync(initial, testStream);
         testStream.Position = 0;
         var loaded = await new JsonNodeLoader().LoadAsync(testStream);
         Assert.Equal("not null", loaded.GetValue<string?>("n"));

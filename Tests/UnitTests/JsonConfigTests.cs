@@ -176,7 +176,7 @@ public class JsonConfigTests {
     /// Tests all supported values binding to the direct properties of an object.
     /// </summary>
     [Fact]
-    public void A090_SimpleBinding() {
+    public void A090_BindingSupported() {
         var section = JsonNodeSection.Parse("{}");
         var sample = DirectSupported.Default;
         section.Set(sample);
@@ -190,7 +190,7 @@ public class JsonConfigTests {
     /// Tests values binding to a complex object, that is an object that contains sections that contain sections.
     /// </summary>
     [Fact]
-    public void A100_ComplexBinding() {
+    public void A100_BindingComplex() {
         var section = JsonNodeSection.Parse("{}");
         var sample = ComplexBasic.Default;
         section.Set(sample);
@@ -201,7 +201,7 @@ public class JsonConfigTests {
     }
 
     [Fact]
-    public void A110_ArrayBindingValues() {
+    public void A110_BindingArrayValues() {
         var section = JsonNodeSection.Parse(@"{""A"":[1,2,3]}");
         var result = section.Get<ArrayOfValues>();
         Assert.Equal(1, result.A[0]);
@@ -210,15 +210,13 @@ public class JsonConfigTests {
     }
 
     [Fact]
-    public void A120_ArrayBindingSections() {
+    public void A120_BindingArrayOfSections() {
         var section = JsonNodeSection.Parse(@"{""a"":[{""value"":""X""},{""value"":""Y""},{""value"":""Z""}]}");
         var result = section.Get<ArrayOfSections>();
         Assert.Equal("X", result.A[0].Value);
         Assert.Equal("Y", result.A[1].Value);
         Assert.Equal("Z", result.A[2].Value);
     }
-
-
 
     /// <summary>
     /// Tests the asynchronous section loading.

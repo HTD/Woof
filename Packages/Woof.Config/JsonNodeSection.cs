@@ -132,14 +132,6 @@ public class JsonNodeSection : IConfigurationSection {
         set => _Loader = value;
     }
 
-    /// <summary>
-    /// Gets or sets the defult property binder.
-    /// </summary>
-    public IPropertyBinder Binder {
-        get => _Binder ?? new DefaultPropertyBinder();
-        set => _Binder = value;
-    }
-
     ///// <summary>
     ///// Gets a value indicating the section is empty and the node for it does not exist.
     ///// </summary>
@@ -255,10 +247,5 @@ public class JsonNodeSection : IConfigurationSection {
     /// <see cref="Loader"/> backing field.
     /// </summary>
     private IJsonNodeLoader? _Loader;
-
-    /// <summary>
-    /// <see cref="Binder"/> backing field.
-    /// </summary>
-    private IPropertyBinder? _Binder;
 
 }

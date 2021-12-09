@@ -1,16 +1,16 @@
 ﻿namespace Woof.Config;
 
 /// <summary>
-/// Provides a default two way property binder for <see cref="JsonNodeSection"/>.
+/// Provides a two way property binder for <see cref="JsonNodeSection"/>.
 /// </summary>
-public class DefaultPropertyBinder : IPropertyBinder {
+public static class JsonNodeBinder {
 
     /// <summary>
     /// Attempts to bind the given object instance to configuration values by matching property names against configuration keys recursively.
     /// </summary>
     /// <param name="localRoot">The <see cref="JsonNodeSection"/> instance to bind.</param>
     /// <param name="target">The object to bind.</param>
-    public void Bind(JsonNodeSection localRoot, object target) {
+    public static void Bind(this JsonNodeSection localRoot, object target) {
         foreach (var item in Traverse(target)) {
             var section = localRoot.Select(item.Path);
             if (section.NodeType == JsonNodeType.Array) GetCollection(section, item);
@@ -27,7 +27,7 @@ public class DefaultPropertyBinder : IPropertyBinder {
     /// <param name="localRoot">A <see cref="JsonNodeSection"/> instance to bind.</param>
     /// <param name="type">The type of the new instance to bind.</param>
     /// <returns>The new instance if successful, null otherwise.</returns>
-    public object? Get(JsonNodeSection localRoot, Type type) {
+    public static object? Get(this JsonNodeSection localRoot, Type type) {
         if (localRoot.NodeType == JsonNodeType.Value) return localRoot.GetValue(type);
         var target = Activator.CreateInstance(type);
         if (target is null) throw new InvalidOperationException($"Can't create an instance of {type.Name}");
@@ -48,7 +48,7 @@ public class DefaultPropertyBinder : IPropertyBinder {
     /// <typeparam name="T">The type of the configuration record.</typeparam>
     /// <param name="localRoot">A <see cref="JsonNodeSection"/> instance.</param>
     /// <returns>Configuration object.</returns>
-    public T Get<T>(JsonNodeSection localRoot) where T : class, new() {
+    public static T Get<T>(this JsonNodeSection localRoot) where T : class, new() {
         if (localRoot.NodeType == JsonNodeType.Value) return localRoot.GetValue<T>();
         var target = new T();
         foreach (var item in Traverse(target)) {
@@ -67,7 +67,7 @@ public class DefaultPropertyBinder : IPropertyBinder {
     /// <param name="type">The type to convert the value to.</param>
     /// <param name="path">The path of the configuration section's value to convert.</param>
     /// <returns>The converted value.</returns>
-    public object? GetValue(JsonNodeSection section, Type type, string? path = null)
+    public static object? GetValue(this JsonNodeSection section, Type type, string? path = null)
         => (path is null ? section.Value : section.GetSection(path).Value) is string stringValue &&
             TryGetValue(type, stringValue, out var value) && value is not null ? value : default;
 
@@ -79,7 +79,7 @@ public class DefaultPropertyBinder : IPropertyBinder {
     /// <param name="path">The path of the configuration section's value to convert.</param>
     /// <param name="defaultValue">The default value to use if no value is found.</param>
     /// <returns>The converted value.</returns>
-    public object GetValue(JsonNodeSection section, Type type, string? path, object defaultValue)
+    public static object GetValue(this JsonNodeSection section, Type type, string? path, object defaultValue)
         => (path is null ? section.Value : section.GetSection(path).Value) is string stringValue &&
             TryGetValue(type, stringValue, out var value) && value is not null ? value : defaultValue;
 
@@ -90,7 +90,7 @@ public class DefaultPropertyBinder : IPropertyBinder {
     /// <param name="section">The <see cref="JsonNodeSection"/> instance.</param>
     /// <param name="path">The path of the configuration section's value to convert.</param>
     /// <returns>The converted value.</returns>
-    public T GetValue<T>(JsonNodeSection section, string? path = null)
+    public static T GetValue<T>(this JsonNodeSection section, string? path = null)
         => (path is null ? section.Value : section.GetSection(path).Value) is string stringValue &&
             TryGetValue(typeof(T), stringValue, out var value) && value is not null ? (T)value! : default!;
 
@@ -102,7 +102,7 @@ public class DefaultPropertyBinder : IPropertyBinder {
     /// <param name="path">The path of the configuration section's value to convert.</param>
     /// <param name="defaultValue">The default value to use if no value is found.</param>
     /// <returns>The converted value.</returns>
-    public T GetValue<T>(JsonNodeSection section, string? path, T defaultValue)
+    public static T GetValue<T>(this JsonNodeSection section, string? path, T defaultValue)
         => (path is null ? section.Value : section.GetSection(path).Value) is string stringValue &&
             TryGetValue(typeof(T), stringValue, out var value) && value is not null ? (T)value! : defaultValue!;
 
@@ -112,7 +112,7 @@ public class DefaultPropertyBinder : IPropertyBinder {
     /// <typeparam name="T">The type of the configuration record.</typeparam>
     /// <param name="localRoot">A <see cref="JsonNodeSection"/> instance.</param>
     /// <param name="value">Configuration object.</param>
-    public void Set<T>(JsonNodeSection localRoot, T value) where T : class, new() {
+    public static void Set<T>(this JsonNodeSection localRoot, T value) where T : class, new() {
         foreach (var item in Traverse(value)) {
             if (item.Property.PropertyType != typeof(byte[]) && item.Property.PropertyType.GetInterface(nameof(ICollection)) is not null)
                 SetCollection(localRoot.Select(item.Path), item);
@@ -131,7 +131,7 @@ public class DefaultPropertyBinder : IPropertyBinder {
     /// <param name="section">The <see cref="JsonNodeSection"/> instance.</param>
     /// <param name="path">The path of the configuration section's value to update.</param>
     /// <param name="value">The new value to set.</param>
-    public void SetValue(JsonNodeSection section, string? path, object value) {
+    public static void SetValue(this JsonNodeSection section, string? path, object value) {
         if (value is null) return;
         if (TryGetString(value.GetType(), value, out var valueString, out var isQuoted))
             section[path ?? ""] = isQuoted ? valueString : '=' + valueString;
@@ -144,7 +144,7 @@ public class DefaultPropertyBinder : IPropertyBinder {
     /// <param name="section">The <see cref="JsonNodeSection"/> instance.</param>
     /// <param name="path">The path of the configuration section's value to update.</param>
     /// <param name="value">The new value to set.</param>
-    public void SetValue<T>(JsonNodeSection section, string? path, T value) {
+    public static void SetValue<T>(this JsonNodeSection section, string? path, T value) {
         if (value is null) return;
         if (TryGetString(typeof(T), value, out var valueString, out var isQuoted))
             section[path ?? ""] = isQuoted ? valueString : '=' + valueString;

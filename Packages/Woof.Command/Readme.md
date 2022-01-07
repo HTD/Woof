@@ -1,4 +1,4 @@
-﻿# [PACKAGE NAME]
+﻿# Woof.Command
 
 A part of the [**Woof Tookit**](../../Readme.md)
 by **[CodeDog](https://www.codedog.pl)**.

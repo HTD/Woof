@@ -2,14 +2,14 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.Command</Title>
-        <Version>6.2.0</Version>
+        <Version>6.2.0-alpha.10</Version>
         <PackageTags>woof;toolkit;shell;command;command-parser;cli</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>A fully customizable command line interface / shell with built-in documentation, autocomplete and history features.</Description>
         <Copyright>(c)2021 CodeDog</Copyright>
-        <PackageProjectUrl>https://github.com/HTD/Woof/Woof.Command</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.Command</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -30,12 +30,8 @@
     <ItemGroup Label="System dependencies">
     </ItemGroup>
 
-    <!-- Local project references for Debug configuration only -->
-    <ItemGroup Label="Local dependencies" Condition="'$(Configuration)'=='Debug'">
-    </ItemGroup>
-
-    <!-- Published Woof Toolkit package dependencies for Release configuration only -->
-    <ItemGroup Label="Package dependencies" Condition="'$(Configuration)'=='Release'">
+    <!-- Local project references -->
+    <ItemGroup Label="Local dependencies">
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">

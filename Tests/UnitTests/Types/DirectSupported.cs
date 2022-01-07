@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace UnitTests.Types;
+﻿namespace UnitTests.Types;
 
 public class DirectSupported {
 

@@ -2,10 +2,10 @@
 
 public class IntermediateB {
 
-    public string? Value1 { get; set; }
+    public DirectSimple[]? AB1 { get; set; }
 
-    public DirectSimple Section2 { get; } = new();
+    public List<DirectSimple> AB2 { get; } = new();
 
-    public string? Value3 { get; set; }
+    public DirectSimple? AB3 { get; set; }
 
 }

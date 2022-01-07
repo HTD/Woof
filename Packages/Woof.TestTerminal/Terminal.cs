@@ -48,7 +48,7 @@ public class Terminal {
         StringBuilder builder = new();
         if (IsMaximized) builder.Append("-M ");
         var e = Projects.GetEnumerator();
-        var r = run.AsEnumerable<string>().GetEnumerator();
+        var r = run.AsEnumerable().GetEnumerator();
         var more = e.MoveNext();
 
         if (!more) throw new InvalidOperationException("No projects added");

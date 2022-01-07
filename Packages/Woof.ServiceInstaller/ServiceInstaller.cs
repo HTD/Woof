@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace Woof.ServiceInstaller;
+﻿namespace Woof.ServiceInstaller;
 
 /// <summary>
 /// Service installer command line interface.

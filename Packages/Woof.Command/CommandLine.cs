@@ -163,7 +163,7 @@ public class CommandLine : ICommand {
     #region Conversions
 
     /// <summary>
-    /// Implicit <see cref="string"/> conversion, just returns the <see cref="CommandLine.Text"/>.
+    /// Implicit <see cref="string"/> conversion, just returns the <see cref="Text"/>.
     /// </summary>
     /// <param name="l"></param>
     public static implicit operator string(CommandLine l) => l.Text;

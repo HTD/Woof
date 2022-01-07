@@ -54,7 +54,7 @@ public sealed class WebSocketContext : IDisposable {
     public WebSocketTransport Transport { get; }
 
     /// <summary>
-    /// Cretes the context from the <see cref="System.Net.WebSockets.WebSocket"/>.
+    /// Cretes the context from the <see cref="WebSocket"/>.
     /// </summary>
     /// <param name="socket">Base socket.</param>
     public WebSocketContext(WebSocket socket) => Transport = new(socket);

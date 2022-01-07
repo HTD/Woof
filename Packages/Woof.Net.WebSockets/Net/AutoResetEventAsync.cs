@@ -20,7 +20,7 @@ public sealed class AutoResetEventAsync : IDisposable {
     /// <summary>
     /// Waits asynchronously until a signal is received or the time runs out.
     /// </summary>
-    /// <param name="millisecondsTimeout">The number of milliseconds to wait, <see cref="System.Threading.Timeout.Infinite"/>
+    /// <param name="millisecondsTimeout">The number of milliseconds to wait, <see cref="Timeout.Infinite"/>
     /// (-1) to wait indefinitely, or zero to return immediately.</param>
     /// <returns>Task completed when the event is signaled or the time runs out.</returns>
     public async ValueTask WaitAsync(int millisecondsTimeout) {
@@ -34,9 +34,9 @@ public sealed class AutoResetEventAsync : IDisposable {
     /// <summary>
     /// Waits asynchronously until a signal is received, the time runs out or the token is cancelled.
     /// </summary>
-    /// <param name="millisecondsTimeout">The number of milliseconds to wait, <see cref="System.Threading.Timeout.Infinite"/>
+    /// <param name="millisecondsTimeout">The number of milliseconds to wait, <see cref="Timeout.Infinite"/>
     /// (-1) to wait indefinitely, or zero to return immediately.</param>
-    /// <param name="cancellationToken">The <see cref="System.Threading.CancellationToken"/> to observe.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe.</param>
     /// <returns>Task completed when the event is signaled, the time runs out or the token is cancelled.</returns>
     public async ValueTask WaitAsync(int millisecondsTimeout, CancellationToken cancellationToken) {
         if (CheckSignaled()) return;
@@ -53,7 +53,7 @@ public sealed class AutoResetEventAsync : IDisposable {
     /// <summary>
     /// Waits asynchronously until a signal is received or the token is cancelled.
     /// </summary>
-    /// <param name="cancellationToken">The <see cref="System.Threading.CancellationToken"/> to observe.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe.</param>
     /// <returns>Task completed when the event is signaled or the token is cancelled.</returns>
     public async ValueTask WaitAsync(CancellationToken cancellationToken) {
         if (CheckSignaled()) return;
@@ -70,8 +70,8 @@ public sealed class AutoResetEventAsync : IDisposable {
     /// <summary>
     /// Waits asynchronously until a signal is received or the time runs out.
     /// </summary>
-    /// <param name="timeout">A <see cref="System.TimeSpan"/> that represents the number of milliseconds to wait,
-    /// a <see cref="System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely, or a System.TimeSpan
+    /// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait,
+    /// a <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely, or a System.TimeSpan
     /// that represents 0 milliseconds to return immediately.</param>
     /// <returns>Task completed when the event is signaled or the time runs out.</returns>
     public async ValueTask WaitAsync(TimeSpan timeout) {
@@ -85,10 +85,10 @@ public sealed class AutoResetEventAsync : IDisposable {
     /// <summary>
     /// Waits asynchronously until a signal is received, the time runs out or the token is cancelled.
     /// </summary>
-    /// <param name="timeout">A <see cref="System.TimeSpan"/> that represents the number of milliseconds to wait,
-    /// a <see cref="System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely, or a System.TimeSpan
+    /// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait,
+    /// a <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely, or a System.TimeSpan
     /// that represents 0 milliseconds to return immediately.</param>
-    /// <param name="cancellationToken">The <see cref="System.Threading.CancellationToken"/> to observe.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe.</param>
     /// <returns>Task completed when the event is signaled, the time runs out or the token is cancelled.</returns>
     public async ValueTask WaitAsync(TimeSpan timeout, CancellationToken cancellationToken) {
         if (CheckSignaled()) return;

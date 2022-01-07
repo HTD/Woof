@@ -140,7 +140,7 @@ public class JsonNodePath {
     /// Calculates the hash code for the path.
     /// </summary>
     /// <returns>Calculated hash code for all keys.</returns>
-    public override int GetHashCode() => Keys.Aggregate<string, int>(0, (k, h) => HashCode.Combine(k, h));
+    public override int GetHashCode() => Keys.Aggregate(0, (k, h) => HashCode.Combine(k, h));
 
     /// <summary>
     /// Tests if the other path is equal to this path.

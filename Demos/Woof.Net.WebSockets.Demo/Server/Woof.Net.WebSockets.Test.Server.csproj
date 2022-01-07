@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
+        <AssemblyName>ws-test-server</AssemblyName>
+        <Company>CodeDog</Company>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Packages\Woof.Console\Woof.Console.csproj" />
+      <ProjectReference Include="..\..\..\Packages\Woof.Settings\Woof.Settings.csproj" />
+      <ProjectReference Include="..\Api\Woof.Net.WebSockets.Test.Api.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="ws-test-server.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

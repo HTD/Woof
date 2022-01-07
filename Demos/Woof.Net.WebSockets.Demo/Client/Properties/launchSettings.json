@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Woof.WebSocket.Test.Client": {
+      "commandName": "Project",
+      "commandLineArgs": "all"
+    }
+  }
+}

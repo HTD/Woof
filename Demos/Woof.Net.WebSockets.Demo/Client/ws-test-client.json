@@ -1,0 +1,15 @@
+{ // Client settings
+    "EndPointUri": "ws://127.0.0.1:54445/",
+    "Timeout": 2,
+    "Credentials": {
+        "ClientId": "{E1187FBF-4524-4256-935A-A8870DCFC0BD}",
+        "UserId": "{4B583F7D-4317-44AB-A7EA-A1263AC32598}",
+        "ApiKey": "x5AvVKfex7b+xOPTAsKGnPqmCNj3HCPiCBUGDyg4ZJn6DHeVn8eGzGBeqLAtxKwRugsa9UEp4IMfYbCNKRrzcA==",
+        "Secret": "8fRjPaT1YsN6kwGMxeZ9SZW1Za8gcN5cQFgfG+Ooie8e3QUMpZlVrN5h/6QNvATykHaADA6gSQ5qLDDd33xAlw=="
+    },
+    "Test": {
+        "StreamId": "{0C8CB22E-AF7E-4E82-9BAA-805C0ACC55DB}",
+        "StreamLength": 1234567,
+        "StreamSeed": 42
+    }
+}

@@ -1,6 +1,14 @@
 ﻿# Woof.NPOI
 
-## About / features
+A part of the [**Woof Tookit**](../../Readme.md)
+by **[CodeDog](https://www.codedog.pl)**.
+
+Distributed under [MIT License](https://en.wikipedia.org/wiki/MIT_License).
+(c)2022 by CodeDog, All rights reserved.
+
+---
+
+## About
 
 **The easiest multi-platform "export to Excel" feature.**
 
@@ -50,13 +58,26 @@ tested both on Microsoft Excel and LibreOffice Calc.
 
 1. Add `using` directive:
 
-```cs
-using Woof.NPOI;
-```
+    ```cs
+    using Woof.NPOI;
+    ```
 
 2. [Optional] Create export type by setting `XSheet` and `XCell` attributes.
 
-3. Convert directly to Excel file with `ToExcel()` extension method, convert to `XSSFWorkbook` with `ToXSSFWorkbook()` extension method 
-or return new `XWorkbookResult` created from collection in your web application controller.
+3. Convert directly to Excel file with `ToExcel()` extension method, convert
+   to `XSSFWorkbook` with `ToXSSFWorkbook()` extension method or return new
+   `XWorkbookResult` created from collection in your web application controller.
 
 See the attached `Woof.NPOI.Test` project for a simple example.
+
+---
+
+## Disclaimer
+
+Woof Toolkit is a work in progress in constant development,
+however it's carefully maintained with production code quality.
+
+**PLEASE report all issues on GitHub!**
+
+Describe how to reproduce an issue.
+Also feel free to suggest new features or improvements.

@@ -31,12 +31,8 @@
     <ItemGroup Label="System dependencies">
     </ItemGroup>
 
-    <!-- Local project references for Debug configuration only -->
+    <!-- Local project references -->
     <ItemGroup Label="Local dependencies" Condition="'$(Configuration)'=='Debug'">
-    </ItemGroup>
-
-    <!-- Published Woof Toolkit package dependencies for Release configuration only -->
-    <ItemGroup Label="Package dependencies" Condition="'$(Configuration)'=='Release'">
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">

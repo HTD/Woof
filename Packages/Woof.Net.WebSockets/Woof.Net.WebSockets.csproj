@@ -1,16 +1,15 @@
-<!-- Paste the content into the new package .csproj file -->
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.Net.WebSockets</Title>
-        <Version>6.2.0</Version>
+        <Version>6.2.0-alpha.20</Version>
         <PackageTags>woof;toolkit;net;networking;api;websocket;websockets;client;server</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>Provides package metadata and common project settings.</Description>
-        <Copyright>(c)2021 CodeDog</Copyright>
-        <PackageProjectUrl>https://github.com/HTD/Woof/Woof.Net.WebSockets</PackageProjectUrl>
+        <Copyright>(c)2022 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.Net.WebSockets</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -27,17 +26,8 @@
         <None Include="Readme.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
-    <!-- Microsoft and 3rd party packages -->
     <ItemGroup Label="System dependencies">
         <PackageReference Include="protobuf-net" Version="3.0.101" />
-    </ItemGroup>
-
-    <!-- Local project references for Debug configuration only -->
-    <ItemGroup Label="Local dependencies" Condition="'$(Configuration)'=='Debug'">
-    </ItemGroup>
-
-    <!-- Published Woof Toolkit package dependencies for Release configuration only -->
-    <ItemGroup Label="Package dependencies" Condition="'$(Configuration)'=='Release'">
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">
@@ -56,4 +46,3 @@
     </PropertyGroup>
 
 </Project>
-<!-- Make sure to update ALL the package metadata! -->

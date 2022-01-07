@@ -2,14 +2,14 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.CommandLine</Title>
-        <Version>6.2.0</Version>
+        <Version>6.2.0-alpha.20</Version>
         <PackageTags>woof;toolkit;command;parser;cli;shell;posix</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>Advanced command line parser using POSIX, PowerShell and DOS command line arguments formatting guidelines. Automatically generates console documentation from options and assembly metadata.</Description>
-        <Copyright>(c)2021 CodeDog</Copyright>
-        <PackageProjectUrl>https://github.com/HTD/Woof/Woof.Template</PackageProjectUrl>
+        <Copyright>(c)2022 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.CommandLine</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>

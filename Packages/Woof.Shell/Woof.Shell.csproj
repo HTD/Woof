@@ -2,14 +2,14 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.Shell</Title>
-        <Version>6.2.0</Version>
+        <Version>6.2.0-alpha.20</Version>
         <PackageTags>woof;toolkit</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>Provides fast shell commands execution on both Linux and Windows.</Description>
-        <Copyright>(c)2021 CodeDog</Copyright>
-        <PackageProjectUrl>https://github.com/HTD/Woof/Woof.Shell</PackageProjectUrl>
+        <Copyright>(c)2022 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.Shell</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>

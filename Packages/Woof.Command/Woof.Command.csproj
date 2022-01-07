@@ -8,7 +8,7 @@
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>A fully customizable command line interface / shell with built-in documentation, autocomplete and history features.</Description>
-        <Copyright>(c)2021 CodeDog</Copyright>
+        <Copyright>(c)2022 CodeDog</Copyright>
         <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.Command</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -24,14 +24,6 @@
     <ItemGroup Label="Embedded files">
         <None Include="..\..\Icon.png" Pack="true" PackagePath="" />
         <None Include="Readme.md" Pack="true" PackagePath="" />
-    </ItemGroup>
-
-    <!-- Microsoft and 3rd party packages -->
-    <ItemGroup Label="System dependencies">
-    </ItemGroup>
-
-    <!-- Local project references -->
-    <ItemGroup Label="Local dependencies">
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">

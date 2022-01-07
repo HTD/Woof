@@ -1,16 +1,15 @@
-<!-- Paste the content into the new package .csproj file -->
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.Console</Title>
-        <Version>6.2.0</Version>
+        <Version>6.2.0-alpha.20</Version>
         <PackageTags>woof;toolkit;console;color-console;terminal</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>Advanced console display in color.</Description>
-        <Copyright>(c)2021 CodeDog</Copyright>
-        <PackageProjectUrl>https://github.com/HTD/Woof/Woof.Console</PackageProjectUrl>
+        <Copyright>(c)2022 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.Console</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -43,4 +42,3 @@
     </PropertyGroup>
 
 </Project>
-<!-- Make sure to update ALL the package metadata! -->

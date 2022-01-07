@@ -3,7 +3,7 @@
 **.NET** programming toolkit by **[CodeDog](https://www.codedog.pl)**.
 
 Distributed under [MIT License](https://en.wikipedia.org/wiki/MIT_License).
-(c)2021 by CodeDog, All rights reserved.
+(c)2022 by CodeDog, All rights reserved.
 
 ---
 
@@ -84,13 +84,12 @@ Released versions are fully tested, however - expect the unexpected.
   - Woof.Shell
 - Woof.DataProtection.Linux
   - Woof.LinuxAdmin
-- Woof.Config.AKV
-  - Woof.Config
-- Woof.Config.Protected
+- Woof.Settings.AKV
+  - Woof.Settings
+  - Woof.Settings.Protected
+- Woof.Settings.Protected
+  - Woof.Settings
   - Woof.DataProtection
-  - *Woof.DataProtection.Linux (optional)*
-- Woof.Config.AKV.Protected
-  - Woof.Config.AKV
   - *Woof.DataProtection.Linux (optional)*
 - Woof.ServiceInstaller
   - Woof.CommandLine
@@ -152,7 +151,7 @@ Each package is tested on both Windows and Linux.
 
 `Woof` is here to stay. In 2022 you can count on very intense active
 development. The 6.2.0 version will be rock solid, as the `.NET 6.0`
-itself. The release deadline for it is 2022-01-01.
+itself.
 
 The whole toolkit is developed by just one person by now.
 Join me any time.

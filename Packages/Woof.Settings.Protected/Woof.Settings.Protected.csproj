@@ -1,60 +1,49 @@
-<!-- Paste the content into the new package .csproj file -->
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Label="Package metadata">
-      <Title>Woof.Settings.Protected</Title>
-      <Version>6.2.0</Version>
-      <PackageTags>woof;toolkit</PackageTags>
-      <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
-      <Authors>Adam Łyskawa</Authors>
-      <Company>CodeDog</Company>
-      <Description>Provides application settings in a JSON file, uses data protection to encrypt file contents.</Description>
-      <Copyright>(c)2022 CodeDog</Copyright>
-      <PackageProjectUrl>https://github.com/HTD/Woof/Woof.Settings.Protected</PackageProjectUrl>
-      <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
-      <RepositoryType>git</RepositoryType>
-      <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-      <IncludeSymbols>True</IncludeSymbols>
-      <SignAssembly>True</SignAssembly>
-      <AssemblyOriginatorKeyFile>..\..\..\CodeDog\Keys\Woof.snk</AssemblyOriginatorKeyFile>
-      <PackageLicenseExpression>MIT</PackageLicenseExpression>
-      <PackageReadmeFile>Readme.md</PackageReadmeFile>
-      <PackageIcon>Icon.png</PackageIcon>
-  </PropertyGroup>
+    <PropertyGroup Label="Package metadata">
+        <Title>Woof.Settings.Protected</Title>
+        <Version>6.2.0-alpha.20</Version>
+        <PackageTags>woof;toolkit</PackageTags>
+        <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
+        <Authors>Adam Łyskawa</Authors>
+        <Company>CodeDog</Company>
+        <Description>Provides application settings in a JSON file, uses data protection to encrypt file contents.</Description>
+        <Copyright>(c)2022 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.Settings.Protected</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <IncludeSymbols>True</IncludeSymbols>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\..\..\CodeDog\Keys\Woof.snk</AssemblyOriginatorKeyFile>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <PackageIcon>Icon.png</PackageIcon>
+    </PropertyGroup>
 
-  <ItemGroup Label="Embedded files">
-      <None Include="..\..\Icon.png" Pack="true" PackagePath="" />
-      <None Include="Readme.md" Pack="true" PackagePath="" />
-  </ItemGroup>
+    <ItemGroup Label="Embedded files">
+        <None Include="..\..\Icon.png" Pack="true" PackagePath="" />
+        <None Include="Readme.md" Pack="true" PackagePath="" />
+    </ItemGroup>
 
-  <!-- Microsoft and 3rd party packages -->
-  <ItemGroup Label="System dependencies">
-  </ItemGroup>
+    <ItemGroup Label="Local dependencies">
+        <ProjectReference Include="..\Woof.DataProtection\Woof.DataProtection.csproj" />
+        <ProjectReference Include="..\Woof.Settings\Woof.Settings.csproj" />
+    </ItemGroup>
 
-  <!-- Local project references for Debug configuration only -->
-  <ItemGroup Label="Local dependencies" Condition="'$(Configuration)'=='Debug'">
-      <ProjectReference Include="..\Woof.DataProtection\Woof.DataProtection.csproj" />
-      <ProjectReference Include="..\Woof.Settings\Woof.Settings.csproj" />
-  </ItemGroup>
+    <PropertyGroup Label="Project settings">
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DebugType>embedded</DebugType>
+    </PropertyGroup>
 
-  <!-- Published Woof Toolkit package dependencies for Release configuration only -->
-  <ItemGroup Label="Package dependencies" Condition="'$(Configuration)'=='Release'">
-  </ItemGroup>
+    <PropertyGroup Label="Code quality">
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    </PropertyGroup>
 
-  <PropertyGroup Label="Project settings">
-      <TargetFramework>net6.0</TargetFramework>
-      <ImplicitUsings>enable</ImplicitUsings>
-      <DebugType>embedded</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Code quality">
-      <Nullable>enable</Nullable>
-      <GenerateDocumentationFile>True</GenerateDocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Code quality: Release" Condition="'$(Configuration)'=='Release'">
-      <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-  </PropertyGroup>
+    <PropertyGroup Label="Code quality: Release" Condition="'$(Configuration)'=='Release'">
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    </PropertyGroup>
 
 </Project>
-<!-- Make sure to update ALL the package metadata! -->

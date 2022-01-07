@@ -2,14 +2,14 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.Linux.Admin</Title>
-        <Version>6.2.0</Version>
+        <Version>6.2.0-alpha.20</Version>
         <PackageTags>woof;toolkit;linux;cross-platform;system;libc</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>Provides Linux administration tools using native libc platform invoke.</Description>
-        <Copyright>(c)2021 CodeDog</Copyright>
-        <PackageProjectUrl>https://github.com/HTD/Woof/Woof.LinuxAdmin</PackageProjectUrl>
+        <Copyright>(c)2022 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.LinuxAdmin</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -26,14 +26,9 @@
         <None Include="Readme.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
-    <!-- Local project references for Debug configuration only -->
-    <ItemGroup Label="Local dependencies" Condition="'$(Configuration)'=='Debug'">
+    <ItemGroup Label="Local dependencies">
         <ProjectReference Include="..\Woof.Internals\Woof.Internals.csproj" />
         <ProjectReference Include="..\Woof.Shell\Woof.Shell.csproj" />
-    </ItemGroup>
-
-    <!-- Published Woof Toolkit package dependencies for Release configuration only -->
-    <ItemGroup Label="Package dependencies" Condition="'$(Configuration)'=='Release'">
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">

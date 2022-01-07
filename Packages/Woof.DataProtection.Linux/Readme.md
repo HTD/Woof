@@ -4,13 +4,13 @@ A part of the [**Woof Tookit**](../../Readme.md)
 by **[CodeDog](https://www.codedog.pl)**.
 
 Distributed under [MIT License](https://en.wikipedia.org/wiki/MIT_License).
-(c)2021 by CodeDog, All rights reserved.
+(c)2022 by CodeDog, All rights reserved.
 
 ---
 
 ## About
 
-Provides data protection api for Linux applications.
+Provides the data protection API for Linux applications.
 
 ## Usage
 

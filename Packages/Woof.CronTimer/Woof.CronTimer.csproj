@@ -1,9 +1,8 @@
-<!-- Paste the content into the new package .csproj file -->
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.CronTimer</Title>
-        <Version>6.2.0</Version>
+        <Version>6.2.0-alpha.20</Version>
         <PackageTags>woof;toolkit;cron;timer</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
@@ -14,8 +13,8 @@
     - The [year] field is NOT SUPPORTED.
 
 Use ScheduledEvent.Data to pass additional information about the job to be done on the schedule.</Description>
-        <Copyright>(c)2021 CodeDog</Copyright>
-        <PackageProjectUrl>https://github.com/HTD/Woof/Woof.CronTimer</PackageProjectUrl>
+        <Copyright>(c)2022 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.CronTimer</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -32,17 +31,8 @@ Use ScheduledEvent.Data to pass additional information about the job to be done 
         <None Include="Readme.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
-    <!-- Microsoft and 3rd party packages -->
     <ItemGroup Label="System dependencies">
         <PackageReference Include="NCrontab.Signed" Version="3.3.2" />
-    </ItemGroup>
-
-    <!-- Local project references for Debug configuration only -->
-    <ItemGroup Label="Local dependencies" Condition="'$(Configuration)'=='Debug'">
-    </ItemGroup>
-
-    <!-- Published Woof Toolkit package dependencies for Release configuration only -->
-    <ItemGroup Label="Package dependencies" Condition="'$(Configuration)'=='Release'">
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">
@@ -61,4 +51,3 @@ Use ScheduledEvent.Data to pass additional information about the job to be done 
     </PropertyGroup>
 
 </Project>
-<!-- Make sure to update ALL the package metadata! -->

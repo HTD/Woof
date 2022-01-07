@@ -1,9 +1,5 @@
-﻿// TODO: 0.6 - MAKE Woof.Config.Protected as new implementation of the above.
-// TODO: 0.8 - MAKE Woof.Config.AKV as implementation of the above
-// TODO: 0.9 - Add collections to property binder.
-
-// TODO: 1. Test the service installer for the data protection usage.
-// TODO: 2. Set all package versions to 6.2.0-beta.1
+﻿// TODO: 1. Test the service installer for the data protection usage.
+// TODO: 2. Set all package versions to 6.2.0-alpha.20
 // TODO: 3. Fix documentation issues (internal / external links).
 // TODO: 4. Fix projects metadata:
 // TODO: 5.1. Publish packages with no dependencies.

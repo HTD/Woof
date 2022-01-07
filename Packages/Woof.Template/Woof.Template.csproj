@@ -9,8 +9,8 @@
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>Provides package metadata and common project settings.</Description>
-        <Copyright>(c)2021 CodeDog</Copyright>
-        <PackageProjectUrl>https://github.com/HTD/Woof/Woof.Template</PackageProjectUrl>
+        <Copyright>(c)2022 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.Template</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -32,7 +32,7 @@
     </ItemGroup>
 
     <!-- Local project references -->
-    <ItemGroup Label="Local dependencies" Condition="'$(Configuration)'=='Debug'">
+    <ItemGroup Label="Local dependencies">
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">

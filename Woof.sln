@@ -54,9 +54,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.Internals", "Packages\Woof.Internals\Woof.Internals.csproj", "{5A638729-2713-476D-BBC7-7E3AC9DF739D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{C0E809CA-D73D-4AFF-B92A-4E2F456B92FF}"
-	ProjectSection(SolutionItems) = preProject
-		Scripts\ClearBinaries.ps1 = Scripts\ClearBinaries.ps1
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.ServiceInstaller.TestService", "Demos\Woof.ServiceInstaller.TestService\Woof.ServiceInstaller.TestService.csproj", "{217EF03D-F4B8-452B-BDBA-23ABD392462F}"
 EndProject

@@ -2,7 +2,7 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.Command</Title>
-        <Version>6.2.0-alpha.10</Version>
+        <Version>6.2.0-alpha.20</Version>
         <PackageTags>woof;toolkit;shell;command;command-parser;cli</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>

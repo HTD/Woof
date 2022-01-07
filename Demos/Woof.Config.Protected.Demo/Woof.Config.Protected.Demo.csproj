@@ -10,7 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Packages\Woof.Config.Protected\Woof.Config.Protected.csproj" />
     <ProjectReference Include="..\..\Packages\Woof.DataProtection.Linux\Woof.DataProtection.Linux.csproj" />
   </ItemGroup>
 

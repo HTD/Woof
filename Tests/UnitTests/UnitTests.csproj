@@ -49,6 +49,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Packages\Woof.DataProtection\Woof.DataProtection.csproj" />
     <ProjectReference Include="..\..\Packages\Woof.LinuxAdmin\Woof.LinuxAdmin.csproj" />
+    <ProjectReference Include="..\..\Packages\Woof.Settings\Woof.Settings.csproj" />
     <ProjectReference Include="..\..\Packages\Woof.Shell\Woof.Shell.csproj" />
     <ProjectReference Include="..\..\Packages\Woof.Template\Woof.Template.csproj" />
   </ItemGroup>

@@ -11,7 +11,7 @@ internal class SystemDServiceInstaller {
     /// <param name="serviceMetadata">Service medatada.</param>
     /// <exception cref="ArgumentException">Metadata Name property is null.</exception>
     /// <exception cref="ArgumentNullException">Argument is null.</exception>
-    public SystemDServiceInstaller(ServiceMetadata serviceMetadata) {
+    public SystemDServiceInstaller(ServiceMetadataSystemd serviceMetadata) {
         if (!OS.IsLinux) throw new PlatformNotSupportedException();
         if (serviceMetadata is null) throw new ArgumentNullException(nameof(serviceMetadata));
         if (serviceMetadata.Name is null || serviceMetadata.Name.Length < 1)
@@ -27,11 +27,11 @@ internal class SystemDServiceInstaller {
     public async ValueTask RegisterSystemDServiceAsync() {
         if (!OS.IsLinux) throw new PlatformNotSupportedException();
         var targetDirectory = $"/srv/{Metadata.Name}";
-        var bundleExtractDirectory = $"/var/tmp/{Metadata.LinuxUser}-bundle-extract";
-        if (Metadata.LinuxUser is null) throw new InvalidOperationException(E.LinuxUserRequired);
+        var bundleExtractDirectory = $"/var/tmp/{Metadata.User}-bundle-extract";
+        if (Metadata.User is null) throw new InvalidOperationException(E.LinuxUserRequired);
         const string serviceBaseDir = "/srv";
-        var serviceUserName = Metadata.LinuxUser;
-        var serviceGroupName = Metadata.LinuxGroup ?? Metadata.LinuxUser;
+        var serviceUserName = Metadata.User;
+        var serviceGroupName = Metadata.Group ?? Metadata.User;
         await Linux.AddSystemUserAsync(serviceUserName, serviceGroupName, serviceBaseDir);
         Linux.AddSystemDirectory(targetDirectory, serviceUserName, serviceGroupName);
         Linux.AddSystemDirectory(bundleExtractDirectory, serviceUserName, serviceGroupName);
@@ -71,9 +71,9 @@ internal class SystemDServiceInstaller {
         await new ShellCommand($"systemctl disable {Metadata.Name}.service").ExecAndForgetAsync();
         try { File.Delete($"/etc/systemd/system/{Metadata.Name}.service"); } catch { }
         try { Directory.Delete($"/srv/{Metadata.Name}", recursive: true); } catch { }
-        try { Directory.Delete($"/var/tmp/{Metadata.LinuxUser}-bundle-extract/{Metadata.Name}"); } catch { }
+        try { Directory.Delete($"/var/tmp/{Metadata.User}-bundle-extract/{Metadata.Name}"); } catch { }
     }
 
-    private readonly ServiceMetadata Metadata;
+    private readonly ServiceMetadataSystemd Metadata;
 
 }

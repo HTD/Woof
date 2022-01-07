@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System.Diagnostics;
 
 namespace Woof.ServiceInstaller;
 
@@ -16,9 +15,9 @@ public static class ServiceInstaller {
     /// Use <see cref="CommandLine.Help"/> or <see cref="CommandLine.OptionsSummary"/> to get automatic documentation of the options.
     /// </summary>
     /// <typeparam name="TService">Service type.</typeparam>
-    /// <param name="config">Configuration containing "Service" section or the "Service" section itself that have <see cref="ServiceMetadata"/> properties set.</param>
-    public static void Configure<TService>(IConfiguration config) where TService : class, IHostedService {
-        ServiceMetadata = ServiceMetadata.Load<TService>(config);
+    /// <param name="settings">Configuration containing "Service" section or the "Service" section itself that have <see cref="Settings"/> properties set.</param>
+    public static void Configure<TService>(ServiceMetadata settings) where TService : class, IHostedService {
+        Settings = settings;
         var c = CommandLine.Default;
         c.Map<Options>();
         c.Delegates.Add(Options.Install, InstallAsync);
@@ -27,20 +26,34 @@ public static class ServiceInstaller {
     }
 
     /// <summary>
+    /// Runs the service host for the settings.
+    /// </summary>
+    /// <typeparam name="TService">A type of the class implementing the <see cref="IHostedService"/> interface.</typeparam>
+    /// <returns>A <see cref="Task"/> completed when the Shutdown event is triggered.</returns>
+    /// <exception cref="InvalidOperationException">Invalid settings.</exception>
+    public static Task RunHostAsync<TService>() where TService : class, IHostedService
+        => Settings is ServiceMetadataWindows wsSettings
+            ? wsSettings.RunHostAsync<TService>() : Settings is ServiceMetadataSystemd sdSettings
+            ? sdSettings.RunHostAsync<TService>() : throw new InvalidOperationException();
+
+    /// <summary>
     /// Performs the service installation, displays the installation messages to the console.
     /// </summary>
     /// <returns><see cref="ValueTask"/> completed when the installer completes.</returns>
     private static async ValueTask InstallAsync() {
-        if (ServiceMetadata is null) throw new NullReferenceException();
-        if (await ServiceMetadata.IsRunningAsync()) {
+        if (Settings is null) throw new NullReferenceException();
+        if (await Settings.IsRunningAsync()) {
             await UninstallAsync();
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 do await Task.Delay(1000);
-                while (await ServiceMetadata.IsRunningAsync());
+                while (await Settings.IsRunningAsync());
         }
-        Console.WriteLine($"Installing {ServiceMetadata.Name} service...");
+        Console.WriteLine($"Installing {Settings.Name} service...");
         try {
-            await ServiceInstallerCore.InstallAsync(ServiceMetadata);
+            if (Settings is ServiceMetadataWindows windowsService)
+                await windowsService.InstallAsync();
+            else if (Settings is ServiceMetadataSystemd systemDaemon)
+                await systemDaemon.InstallAsync();
             Console.WriteLine(Done);
         }
         catch (Exception installerException) {
@@ -54,10 +67,13 @@ public static class ServiceInstaller {
     /// </summary>
     /// <returns><see cref="ValueTask"/> completed when the installer completes.</returns>
     private static async ValueTask UninstallAsync() {
-        if (ServiceMetadata is null) throw new NullReferenceException();
-        Console.WriteLine($"Uninstalling {ServiceMetadata.Name} service...");
+        if (Settings is null) throw new NullReferenceException();
+        Console.WriteLine($"Uninstalling {Settings.Name} service...");
         try {
-            await ServiceInstallerCore.UninstallAsync(ServiceMetadata);
+            if (Settings is ServiceMetadataWindows wsSettings)
+                await wsSettings.UninstallAsync();
+            else if (Settings is ServiceMetadataSystemd sdSettings)
+                await sdSettings.UninstallAsync();
             Console.WriteLine(Done);
         }
         catch (Exception installerException) {
@@ -70,22 +86,21 @@ public static class ServiceInstaller {
     /// Deletes the service log.
     /// </summary>
     private static void DeleteLog() {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
-        if (ServiceMetadata is null) throw new NullReferenceException();
+        if (Settings is not ServiceMetadataWindows wsSettings || !RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
         try {
-            Console.WriteLine($"Deleting log ({ServiceMetadata.EventLogName})...");
-            EventLog.Delete(ServiceMetadata.EventLogName);
-            Console.WriteLine($"Deleting event source ({ServiceMetadata.EventSourceName})...");
-            EventLog.DeleteEventSource(ServiceMetadata.EventSourceName);
+            Console.WriteLine($"Deleting log ({wsSettings.EventLogName})...");
+            EventLog.Delete(wsSettings.EventLogName);
+            Console.WriteLine($"Deleting event source ({wsSettings.EventSourceName})...");
+            EventLog.DeleteEventSource(wsSettings.EventSourceName);
         }
         catch { }
         Console.WriteLine(Done);
     }
 
     /// <summary>
-    /// Stores data of the currenc service configuration. Call <see cref="Configure{TService}(IConfiguration)"/> to set.
+    /// Gets or sets the current service settings.
     /// </summary>
-    public static ServiceMetadata? ServiceMetadata { get; set; }
+    public static ServiceMetadata? Settings { get; set; }
 
     /// <summary>
     /// Installation options.

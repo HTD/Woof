@@ -8,7 +8,7 @@ internal class WindowsServiceInstaller {
     /// <param name="serviceMetadata">Service medatada.</param>
     /// <exception cref="ArgumentException">Metadata Name property is null.</exception>
     /// <exception cref="ArgumentNullException">Argument is null.</exception>
-    public WindowsServiceInstaller(ServiceMetadata serviceMetadata) {
+    public WindowsServiceInstaller(ServiceMetadataWindows serviceMetadata) {
         if (!OS.IsWindows) throw new PlatformNotSupportedException();
         if (serviceMetadata is null) throw new ArgumentNullException(nameof(serviceMetadata));
         if (serviceMetadata.Name is null || serviceMetadata.Name.Length < 1)
@@ -33,6 +33,6 @@ internal class WindowsServiceInstaller {
         if (Metadata.Description != null) await new ShellCommand($"sc description {Metadata.Name} {Metadata.Description}").ExecVoidAsync();
     }
 
-    private readonly ServiceMetadata Metadata;
+    private readonly ServiceMetadataWindows Metadata;
 
 }

@@ -11,6 +11,26 @@
     <SignAssembly>True</SignAssembly>
 
     <AssemblyOriginatorKeyFile>..\..\..\CodeDog\Keys\Woof.snk</AssemblyOriginatorKeyFile>
+
+    <OutputType>Library</OutputType>
+
+    <DebugType>embedded</DebugType>
+
+    <Authors>Adam Łyskawa</Authors>
+
+    <Company>CodeDog</Company>
+
+    <Description>Unit tests for the Woof Toolkit.</Description>
+
+    <Copyright>(c)2021 CodeDog</Copyright>
+
+    <PackageProjectUrl>https://github.com/HTD/Woof</PackageProjectUrl>
+
+    <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
+
+    <PackageTags>tests</PackageTags>
+
+    <PackageReleaseNotes>Current</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Packages\Woof.Config.AKV\Woof.Config.AKV.csproj" />
     <ProjectReference Include="..\..\Packages\Woof.DataProtection\Woof.DataProtection.csproj" />
     <ProjectReference Include="..\..\Packages\Woof.LinuxAdmin\Woof.LinuxAdmin.csproj" />
     <ProjectReference Include="..\..\Packages\Woof.Shell\Woof.Shell.csproj" />

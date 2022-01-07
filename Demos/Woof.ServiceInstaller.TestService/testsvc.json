@@ -1,13 +1,17 @@
 {
-    "Service": {
-        "Name": "TestSvc",
-        "DisplayName": "Woof Service Installer Test",
-        "Description": "Tests the Woof.ServiceInstaller.",
-        "EventLogName": "Woof.ServiceInstaller",
-        "EventSourceName": "Woof.ServiceInstaller.Test",
-        "EventLogLevelMinimal": "debug",
-        "LinuxName": "testsvc",
-        "LinuxUser": "service",
-        "LinuxGroup": "service"
+    "windowsService": {
+        "name": "testsvc",
+        "displayName": "Woof Service Installer Test",
+        "description": "Tests the Woof.ServiceInstaller.",
+        "eventLogName": "Woof.ServiceInstaller",
+        "eventSourceName": "Woof.ServiceInstaller.Test",
+        "eventLogLevelMinimal": "debug"
+    },
+    "systemDaemon": {
+        "name": "testsvc",
+        "displayName": "Woof Service Installer Test",
+        "eventLogLevelMinimal": "debug",
+        "user": "service",
+        "group": "service"
     }
 }

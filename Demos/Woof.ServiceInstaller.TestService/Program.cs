@@ -1,14 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿await Settings.Default.LoadAsync();
+ServiceMetadata serviceSettings = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+    ? Settings.Default.WindowsService : RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+    ? Settings.Default.SystemDaemon : throw new PlatformNotSupportedException();
 
-using Woof;
-using Woof.Config.Protected;
-using Woof.ServiceInstaller;
-
-var config = new JsonConfigProtected().Protect();
 var commandLine = CommandLine.Default;
-
-ServiceInstaller.Configure<TestService.TestService>(config);
+ServiceInstaller.Configure<TestService.TestService>(serviceSettings);
 if (args?.Length > 0) {
     commandLine.Map<Options>();
     commandLine.Delegates.Add(Options.Help, Help);
@@ -19,7 +15,7 @@ if (args?.Length > 0) {
     if (errors is not null) Error(errors);
     else await commandLine.RunDelegatesAsync();
 }
-else await ServiceInstaller.ServiceMetadata!.RunHostAsync<TestService.TestService>();
+else await ServiceInstaller.RunHostAsync<TestService.TestService>();
 
 static void Help() => Console.WriteLine(CommandLine.Help);
 
@@ -29,10 +25,10 @@ static void Error(string? errorText) {
 }
 
 static async ValueTask IsRunningAsync()
-    => Console.WriteLine((await ServiceInstaller.ServiceMetadata!.IsRunningAsync()) ? "RUNNING" : "NOT RUNNING");
+    => Console.WriteLine((await ServiceInstaller.Settings!.IsRunningAsync()) ? "RUNNING" : "NOT RUNNING");
 
 static async ValueTask QueryAsync()
-    => Console.WriteLine(await ServiceInstaller.ServiceMetadata!.QueryAsync());
+    => Console.WriteLine(await ServiceInstaller.Settings!.QueryAsync());
 
 [Usage("(sudo) {command} [--install|--uninstall|--help]")]
 enum Options {

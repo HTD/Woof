@@ -1,6 +1,4 @@
-﻿global using System.Diagnostics;
-global using System.Diagnostics.CodeAnalysis;
-global using System.Security.Cryptography;
+﻿global using System.Diagnostics.CodeAnalysis;
 global using Microsoft.AspNetCore.DataProtection;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.AspNetCore.DataProtection.KeyManagement;

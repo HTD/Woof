@@ -1,8 +1,4 @@
-﻿using System;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
-
-namespace Woof.NPOI;
+﻿namespace Woof.NPOI;
 
 /// <summary>
 /// Data format processor for NPOI.

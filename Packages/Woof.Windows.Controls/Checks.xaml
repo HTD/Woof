@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="Woof.Windows.Controls.Checks"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Menu VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
+        <Menu.ItemsPanel>
+            <ItemsPanelTemplate>
+                <UniformGrid Rows="1"/>
+            </ItemsPanelTemplate>
+        </Menu.ItemsPanel>
+        <MenuItem Name="MenuContent" />
+    </Menu>
+</UserControl>

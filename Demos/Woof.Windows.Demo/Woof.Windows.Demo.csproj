@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Linq.Async" Version="5.1.0" />
+        <PackageReference Include="ModernWpfUis" Version="1.2.0" />
+        <ProjectReference Include="..\..\Packages\Woof.Windows.Controls\Woof.Windows.Controls.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.Windows.MVVM\Woof.Windows.MVVM.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -2,7 +2,7 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.CronTimer</Title>
-        <Version>6.2.0-alpha.20</Version>
+        <Version>6.2.0-beta.1</Version>
         <PackageTags>woof;toolkit;cron;timer</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
@@ -48,6 +48,10 @@ Use ScheduledEvent.Data to pass additional information about the job to be done 
 
     <PropertyGroup Label="Code quality: Release" Condition="'$(Configuration)'=='Release'">
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <BaseOutputPath>..\bin\</BaseOutputPath>
     </PropertyGroup>
 
 </Project>

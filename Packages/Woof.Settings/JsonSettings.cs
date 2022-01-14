@@ -7,6 +7,11 @@
 public abstract class JsonSettings<T> : ISettings<T> where T : class {
 
     /// <summary>
+    /// Gets a value indicating the settings file is loaded.
+    /// </summary>
+    public bool IsLoaded { get; private set; }
+
+    /// <summary>
     /// Loads the program configuration file.
     /// </summary>
     /// <returns>Configuration data.</returns>
@@ -15,6 +20,7 @@ public abstract class JsonSettings<T> : ISettings<T> where T : class {
         if (!fileExists) return _Data;
         _Metadata.Root = _Metadata.Loader.Load(_Metadata.FilePath);
         _Metadata.Root.Bind(_Data!);
+        IsLoaded = true;
         return _Data;
     }
 
@@ -27,6 +33,7 @@ public abstract class JsonSettings<T> : ISettings<T> where T : class {
         if (!fileExists) return _Data;
         _Metadata.Root = await _Metadata.Loader.LoadAsync(_Metadata.FilePath);
         _Metadata.Root.Bind(_Data!);
+        IsLoaded = true;
         return _Data;
     }
 

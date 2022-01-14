@@ -20,6 +20,11 @@ public class ShellCommand {
     }
 
     /// <summary>
+    /// Gets the configuration of the process to start.
+    /// </summary>
+    public ProcessStartInfo StartInfo { get; }
+
+    /// <summary>
     /// Sets UTF-8 encoding on Windows cmd.
     /// </summary>
     static ShellCommand() {
@@ -27,6 +32,7 @@ public class ShellCommand {
         var psi = new ProcessStartInfo {
             UseShellExecute = false,
             RedirectStandardOutput = true,
+            CreateNoWindow = true,
             StandardOutputEncoding = Encoding.UTF8,
             FileName = "cmd",
             Arguments = "/C chcp 65001"
@@ -45,7 +51,7 @@ public class ShellCommand {
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ("cmd", "/C") :
             throw new PlatformNotSupportedException();
         var arguments = new[] { exec, command };
-        StartInfo = new ProcessStartInfo(shell, new SpaceDelimitedStringParser().Join(arguments));
+        StartInfo = new ProcessStartInfo(shell, new SpaceDelimitedStringParser().Join(arguments)) { CreateNoWindow = true };
     }
 
     /// <summary>
@@ -194,12 +200,6 @@ public class ShellCommand {
     /// <returns>Command line.</returns>
     private static string Join(string command, IEnumerable<string> arguments)
         => new SpaceDelimitedStringParser().Join(Enumerable.Empty<string>().Append(command).Concat(arguments));
-
-    #endregion
-
-    #region Data
-
-    private readonly ProcessStartInfo StartInfo;
 
     #endregion
 

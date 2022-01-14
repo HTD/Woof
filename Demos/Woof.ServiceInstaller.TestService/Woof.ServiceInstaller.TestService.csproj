@@ -16,9 +16,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="publish\**" />
-      <EmbeddedResource Remove="publish\**" />
-      <None Remove="publish\**" />
+        <Compile Remove="publish\**" />
+        <EmbeddedResource Remove="publish\**" />
+        <None Remove="publish\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,5 +31,9 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+
+    <PropertyGroup>
+        <BaseOutputPath>..\bin\</BaseOutputPath>
+    </PropertyGroup>
 
 </Project>

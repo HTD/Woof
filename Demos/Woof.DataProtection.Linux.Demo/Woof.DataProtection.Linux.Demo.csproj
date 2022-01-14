@@ -1,17 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AssemblyName>dpapi</AssemblyName>
-    <DebugType>embedded</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>dpapi</AssemblyName>
+        <DebugType>embedded</DebugType>
+        <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Packages\Woof.DataProtection.Linux\Woof.DataProtection.Linux.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Packages\Woof.DataProtection.Linux\Woof.DataProtection.Linux.csproj" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <BaseOutputPath>..\bin\</BaseOutputPath>
+    </PropertyGroup>
 
 </Project>

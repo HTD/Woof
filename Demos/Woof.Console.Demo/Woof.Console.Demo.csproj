@@ -6,7 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Packages\Woof.Console\Woof.Console.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.Console\Woof.Console.csproj" />
     </ItemGroup>
+
+    <PropertyGroup>
+        <BaseOutputPath>..\bin\</BaseOutputPath>
+    </PropertyGroup>
 
 </Project>

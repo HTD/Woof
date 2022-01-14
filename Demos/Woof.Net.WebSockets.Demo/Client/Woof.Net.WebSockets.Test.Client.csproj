@@ -15,9 +15,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Packages\Woof.Console\Woof.Console.csproj" />
-      <ProjectReference Include="..\..\..\Packages\Woof.Settings\Woof.Settings.csproj" />
-      <ProjectReference Include="..\Api\Woof.Net.WebSockets.Test.Api.csproj" />
+        <ProjectReference Include="..\..\..\Packages\Woof.Console\Woof.Console.csproj" />
+        <ProjectReference Include="..\..\..\Packages\Woof.Settings\Woof.Settings.csproj" />
+        <ProjectReference Include="..\Api\Woof.Net.WebSockets.Test.Api.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,5 +25,9 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+
+    <PropertyGroup>
+        <BaseOutputPath>..\..\bin\</BaseOutputPath>
+    </PropertyGroup>
 
 </Project>

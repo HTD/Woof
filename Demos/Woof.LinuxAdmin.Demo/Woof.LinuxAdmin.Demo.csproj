@@ -22,20 +22,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="publish\**" />
-      <EmbeddedResource Remove="publish\**" />
-      <None Remove="publish\**" />
+        <Compile Remove="publish\**" />
+        <EmbeddedResource Remove="publish\**" />
+        <None Remove="publish\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Packages\Woof.LinuxAdmin\Woof.LinuxAdmin.csproj" />
-      <ProjectReference Include="..\..\Packages\Woof.Shell\Woof.Shell.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.LinuxAdmin\Woof.LinuxAdmin.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.Shell\Woof.Shell.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="File name with spaces.txt">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+        <None Update="File name with spaces.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
+
+    <PropertyGroup>
+        <BaseOutputPath>..\bin\</BaseOutputPath>
+    </PropertyGroup>
 
 </Project>

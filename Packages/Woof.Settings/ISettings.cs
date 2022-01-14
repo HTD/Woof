@@ -7,6 +7,11 @@
 public interface ISettings<TData> {
 
     /// <summary>
+    /// Gets a value indicating the settings file is loaded.
+    /// </summary>
+    bool IsLoaded { get; }
+
+    /// <summary>
     /// Loads the data from file.
     /// </summary>
     TData Load();

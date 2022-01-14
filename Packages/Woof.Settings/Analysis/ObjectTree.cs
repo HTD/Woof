@@ -83,7 +83,7 @@ public class ObjectTree {
                     .FirstOrDefault(i => i.Name.Equals(part.Key, StringComparison.OrdinalIgnoreCase));
                 currentTarget = currentProperty?.GetValue(currentTarget);
             }
-            if (currentTarget is null) return new Property(currentProperty, currentOwner, currentTarget);
+            //if (currentTarget is null) return new Property(currentProperty, currentOwner, currentTarget);
         }
         return
             currentProperty is not null
@@ -140,10 +140,7 @@ public class ObjectTree {
         EnsureParentExists(node.Path.Parent!, node.Root!);
         var property = GetPropertyByPath(node.Path);
         var index = node.Path.Index;
-        var value =
-            property.Type is Type type &&
-            node.Value is JsonValue jsonValue &&
-            jsonValue.TryConvert(type, out var converted) ? converted : null;
+        var value = property.Type is Type type && node.Value is JsonValue jsonValue && jsonValue.TryConvert(type, out var converted) ? converted : null;
         if (index < 0) {
             property.SetValue(value);
             return;

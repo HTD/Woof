@@ -6,6 +6,7 @@ global using System.Text.Json;
 global using System.Text.Json.Nodes;
 global using System.Text.RegularExpressions;
 global using Woof.CSV;
+global using Woof.Internals;
 global using Woof.NPOI;
 global using Woof.Settings;
 global using Woof.Settings.Analysis;

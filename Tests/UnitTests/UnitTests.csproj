@@ -1,68 +1,59 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\..\..\CodeDog\Keys\Woof.snk</AssemblyOriginatorKeyFile>
+        <OutputType>Library</OutputType>
+        <DebugType>embedded</DebugType>
+        <Authors>Adam Łyskawa</Authors>
+        <Company>CodeDog</Company>
+        <Description>Unit tests for the Woof Toolkit.</Description>
+        <Copyright>(c)2021 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
+        <PackageTags>tests</PackageTags>
+        <PackageReleaseNotes>Current</PackageReleaseNotes>
+    </PropertyGroup>
 
-    <IsPackable>false</IsPackable>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="3.1.0">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
 
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Packages\Woof.CSV\Woof.CSV.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.DataProtection\Woof.DataProtection.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.Internals\Woof.Internals.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.LinuxAdmin\Woof.LinuxAdmin.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.NPOI\Woof.NPOI.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.Settings\Woof.Settings.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.Shell\Woof.Shell.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.Template\Woof.Template.csproj" />
+    </ItemGroup>
 
-    <SignAssembly>True</SignAssembly>
+    <ItemGroup>
+        <None Update="Samples\Test1.csv">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Samples\Test2.csv">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
-    <AssemblyOriginatorKeyFile>..\..\..\CodeDog\Keys\Woof.snk</AssemblyOriginatorKeyFile>
-
-    <OutputType>Library</OutputType>
-
-    <DebugType>embedded</DebugType>
-
-    <Authors>Adam Łyskawa</Authors>
-
-    <Company>CodeDog</Company>
-
-    <Description>Unit tests for the Woof Toolkit.</Description>
-
-    <Copyright>(c)2021 CodeDog</Copyright>
-
-    <PackageProjectUrl>https://github.com/HTD/Woof</PackageProjectUrl>
-
-    <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
-
-    <PackageTags>tests</PackageTags>
-
-    <PackageReleaseNotes>Current</PackageReleaseNotes>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="3.1.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Packages\Woof.CSV\Woof.CSV.csproj" />
-    <ProjectReference Include="..\..\Packages\Woof.DataProtection\Woof.DataProtection.csproj" />
-    <ProjectReference Include="..\..\Packages\Woof.LinuxAdmin\Woof.LinuxAdmin.csproj" />
-    <ProjectReference Include="..\..\Packages\Woof.NPOI\Woof.NPOI.csproj" />
-    <ProjectReference Include="..\..\Packages\Woof.Settings\Woof.Settings.csproj" />
-    <ProjectReference Include="..\..\Packages\Woof.Shell\Woof.Shell.csproj" />
-    <ProjectReference Include="..\..\Packages\Woof.Template\Woof.Template.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Samples\Test1.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Samples\Test2.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <PropertyGroup>
+        <BaseOutputPath>..\bin\</BaseOutputPath>
+    </PropertyGroup>
 
 </Project>

@@ -50,5 +50,9 @@
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <BaseOutputPath>..\bin\</BaseOutputPath>
+    </PropertyGroup>
+
 </Project>
 <!-- Make sure to update ALL the package metadata! -->

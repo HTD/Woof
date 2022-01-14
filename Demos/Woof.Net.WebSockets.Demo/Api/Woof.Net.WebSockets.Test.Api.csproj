@@ -1,19 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-      <LangVersion>latest</LangVersion>
-    <BaseOutputPath></BaseOutputPath>
-    <BaseIntermediateOutputPath></BaseIntermediateOutputPath>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <BaseOutputPath></BaseOutputPath>
+        <BaseIntermediateOutputPath></BaseIntermediateOutputPath>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <NoWarn>1701;1702;CA1016</NoWarn>
-    <AssemblyName>ws-test-api</AssemblyName>
-  </PropertyGroup>
+    <PropertyGroup>
+        <NoWarn>1701;1702;CA1016</NoWarn>
+        <AssemblyName>ws-test-api</AssemblyName>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Packages\Woof.Net.WebSockets\Woof.Net.WebSockets.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Packages\Woof.Net.WebSockets\Woof.Net.WebSockets.csproj" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <BaseOutputPath>..\..\bin\</BaseOutputPath>
+    </PropertyGroup>
 
 </Project>

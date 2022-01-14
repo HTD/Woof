@@ -364,3 +364,7 @@ FodyWeavers.xsd
 
 !Packages/*
 /desktop.ini
+
+!Tools/Publish
+Repo/
+.nuget.key

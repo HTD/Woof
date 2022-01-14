@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <BaseOutputPath>..\bin\</BaseOutputPath>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Views\Icon.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ModernWpfUis" Version="1.4.0" />
+      <PackageReference Include="NuGet.Packaging" Version="6.0.0" />
+      <PackageReference Include="NuGet.Protocol" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Packages\Woof.DataProtection\Woof.DataProtection.csproj" />
+      <ProjectReference Include="..\..\Packages\Woof.Settings\Woof.Settings.csproj" />
+      <ProjectReference Include="..\..\Packages\Woof.Shell\Woof.Shell.csproj" />
+      <ProjectReference Include="..\..\Packages\Woof.Windows.Controls\Woof.Windows.Controls.csproj" />
+      <ProjectReference Include="..\..\Packages\Woof.Windows.MVVM\Woof.Windows.MVVM.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Views\Icon.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Publish.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>

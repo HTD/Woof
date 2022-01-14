@@ -1,0 +1,13 @@
+{
+	"Paths": {
+		"Root": "..\\..\\..\\..",
+		"Repo": "Repo",
+		"PackageBinaries": "Packages\\bin\\Release"
+	},
+	"Prefix": "Woof",
+	"DotNetFrameworkName": ".NETCoreApp,Version=v6.0",
+	"Targets": [
+		"http://localhost:5000/v3/index.json",
+		"https://api.nuget.org/v3/index.json"
+	]
+}

@@ -31,5 +31,4 @@ public class NugetCli {
         await responseStream.CopyToAsync(fileStream);
     }
 
-
 }

@@ -26,10 +26,9 @@ public record PackageNode : PackageItem, INotifyPropertyChanged {
 
     public PackageNode(string name, string version, ObservableList<PackageNode>? dependencies) : base(name, version) => Dependencies = dependencies;
 
-    public PackageNode(PackageNode node) : base(node) { Dependencies = node.Dependencies; }
+    public PackageNode(PackageNode node) : base(node) => Dependencies = node.Dependencies;
 
     private bool _IsChecked;
     private bool _IsExpanded;
-
 
 }

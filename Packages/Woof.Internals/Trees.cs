@@ -92,17 +92,17 @@ public static class Trees {
         Stack<(TNode node, bool isVisited)> stack = tree is IList list ? new(list.Count) : new();
         foreach (var node in tree.Reverse()) stack.Push((node, false));
         while (stack.Count > 0) {
-            var current = stack.Pop();
-            if (current.isVisited) {
-                yield return current.node;
+            var (node, isVisited) = stack.Pop();
+            if (isVisited) {
+                yield return node;
                 continue;
             }
-            var items = children(current.node);
+            var items = children(node);
             if (items is null) {
-                yield return current.node;
+                yield return node;
                 continue;
             }
-            stack.Push((current.node, true));
+            stack.Push((node, true));
             foreach (var item in items.Reverse()) stack.Push((item, false));
         }
     }

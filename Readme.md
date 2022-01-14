@@ -64,7 +64,7 @@ The solution file contains all current toolkit packages.
 
 ## Versioning
 
-The current toolkit version is 6.2.0-alpha.1.
+The current toolkit version is 6.2.0-beta.1.
 
 That means the toolkit is in major redesign.
 
@@ -80,21 +80,14 @@ Released versions are fully tested, however - expect the unexpected.
 
 ## Dependencies (internal)
 
-- Woof.LinuxAdmin
-  - Woof.Shell
-- Woof.DataProtection.Linux
-  - Woof.LinuxAdmin
-- Woof.Settings.AKV
-  - Woof.Settings
-  - Woof.Settings.Protected
-- Woof.Settings.Protected
-  - Woof.Settings
-  - Woof.DataProtection
-  - *Woof.DataProtection.Linux (optional)*
-- Woof.ServiceInstaller
-  - Woof.CommandLine
-  - Woof.LinuxAdmin
-  - Woof.DataProtection.Linux
+Use the `Publish` tool to show detailed package dependencies.
+
+## Building system
+
+All packages are built to a common directory that is used to build the local
+package repository.
+
+To publish to external feeds like nuget.org use the `Publish` tool.
 
 ## Template
 

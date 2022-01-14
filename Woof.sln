@@ -81,13 +81,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.NPOI", "Packages\Woof.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{C19814B1-8940-4FD4-9503-3A551C34849B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Woof.CSV", "Packages\Woof.CSV\Woof.CSV.csproj", "{E68CFB0B-F9C8-4E5E-B794-19AAA940C479}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.CSV", "Packages\Woof.CSV\Woof.CSV.csproj", "{E68CFB0B-F9C8-4E5E-B794-19AAA940C479}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Woof.Windows.MVVM", "Packages\Woof.Windows.MVVM\Woof.Windows.MVVM.csproj", "{DB099CA5-2BF1-4981-B922-23645F57FD5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.Windows.MVVM", "Packages\Woof.Windows.MVVM\Woof.Windows.MVVM.csproj", "{DB099CA5-2BF1-4981-B922-23645F57FD5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Woof.Windows.Controls", "Packages\Woof.Windows.Controls\Woof.Windows.Controls.csproj", "{1B55BA0D-DD81-46A8-A524-9F41CE91C55F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.Windows.Controls", "Packages\Woof.Windows.Controls\Woof.Windows.Controls.csproj", "{1B55BA0D-DD81-46A8-A524-9F41CE91C55F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Woof.Windows.Demo", "Demos\Woof.Windows.Demo\Woof.Windows.Demo.csproj", "{95A92428-F5BD-4BD2-A584-420270AD33AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.Windows.Demo", "Demos\Woof.Windows.Demo\Woof.Windows.Demo.csproj", "{95A92428-F5BD-4BD2-A584-420270AD33AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Publish", "Tools\Publish\Publish.csproj", "{44A3A17D-8D2D-404F-B420-698EE452F65B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.ServiceInstaller.TestService.Terminal", "Demos\Woof.ServiceInstaller.TestService.Terminal\Woof.ServiceInstaller.TestService.Terminal.csproj", "{12B21BBF-35CB-4303-8B17-20C457896A5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -219,6 +223,14 @@ Global
 		{95A92428-F5BD-4BD2-A584-420270AD33AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95A92428-F5BD-4BD2-A584-420270AD33AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95A92428-F5BD-4BD2-A584-420270AD33AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44A3A17D-8D2D-404F-B420-698EE452F65B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44A3A17D-8D2D-404F-B420-698EE452F65B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44A3A17D-8D2D-404F-B420-698EE452F65B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44A3A17D-8D2D-404F-B420-698EE452F65B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12B21BBF-35CB-4303-8B17-20C457896A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12B21BBF-35CB-4303-8B17-20C457896A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12B21BBF-35CB-4303-8B17-20C457896A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12B21BBF-35CB-4303-8B17-20C457896A5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -258,6 +270,8 @@ Global
 		{DB099CA5-2BF1-4981-B922-23645F57FD5D} = {C19814B1-8940-4FD4-9503-3A551C34849B}
 		{1B55BA0D-DD81-46A8-A524-9F41CE91C55F} = {C19814B1-8940-4FD4-9503-3A551C34849B}
 		{95A92428-F5BD-4BD2-A584-420270AD33AA} = {939A05DB-484D-4F93-8A87-99D98486B020}
+		{44A3A17D-8D2D-404F-B420-698EE452F65B} = {92B29DCB-1157-4F21-AA8A-3B8C4384EB96}
+		{12B21BBF-35CB-4303-8B17-20C457896A5D} = {939A05DB-484D-4F93-8A87-99D98486B020}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3151199D-4569-4768-93BA-473FE0CDBC6F}

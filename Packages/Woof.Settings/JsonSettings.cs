@@ -9,6 +9,7 @@ public abstract class JsonSettings<T> : ISettings<T> where T : class {
     /// <summary>
     /// Gets a value indicating the settings file is loaded.
     /// </summary>
+    [Internal]
     public bool IsLoaded { get; private set; }
 
     /// <summary>

@@ -139,6 +139,7 @@ public class ObjectTree {
     public void SetProperty(JsonNodeTreeNode node) {
         EnsureParentExists(node.Path.Parent!, node.Root!);
         var property = GetPropertyByPath(node.Path);
+        if (property.Info?.GetCustomAttribute<SpecialAttribute>() is not null) return;
         var index = node.Path.Index;
         var value = property.Type is Type type && node.Value is JsonValue jsonValue && jsonValue.TryConvert(type, out var converted) ? converted : null;
         if (index < 0) {

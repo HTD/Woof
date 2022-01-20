@@ -39,8 +39,9 @@ public class JsonNodeTree {
     public void SetProperty(ObjectTreeNode node, object rootContext) {
         var special = node.Info?.GetCustomAttribute<SpecialAttribute>();
         if (special is not null) return;
+        if (node.Content is null) return;
         EnsureParentExists(node, rootContext);
-        Target.Root.SetValue(node.Path, node.Content!);
+        Target.Root.SetValue(node.Path, node.Content);
     }
 
     /// <summary>

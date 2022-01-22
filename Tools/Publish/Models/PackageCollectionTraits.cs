@@ -6,7 +6,7 @@ public static class PackageCollectionTraits {
 
     public static async ValueTask GetAsync(this ObservableList<PackageNode> items) {
         await foreach (var package in new LocalRepository().GetPackagesAsync()) {
-            var lastVersion = (await package.GetVersionsAsync())?.Max()?.Version.ToString();
+            var lastVersion = (await package.GetVersionsAsync())?.Max(i => i.Version)?.ToString();
             var name = package.Identity.Id;
             var version = lastVersion;
             ObservableList<PackageNode>? dependencies = null;

@@ -39,11 +39,11 @@ internal class SystemDServiceInstaller {
         var serviceGroup = GroupInfo.FromName(serviceGroupName)!;
         var dpapi = ApiResolver.GetNonWindowsDPAPI<IAcceptMessage>();
         dpapi?.Message((serviceUserName, serviceGroupName)); // configures DPAPI for the service user if applicable
-        var isDll = Application.Path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase);
-        FileSystem.CopyDirectoryContent(Application.Directory, targetDirectory);
+        var isDll = Executable.FilePath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase);
+        FileSystem.CopyDirectoryContent(Executable.Directory.FullName, targetDirectory);
         Linux.ChownR(targetDirectory, serviceUser, serviceGroup);
         Linux.ChmodR(targetDirectory, "o-wX");
-        var binaryPath = Path.Combine(targetDirectory, Application.Info.Name);
+        var binaryPath = Path.Combine(targetDirectory, Executable.FileInfo.Name);
         if (!isDll) Linux.Chmod(binaryPath, "+x,o-wx");
         File.WriteAllLines($"/etc/systemd/system/{Metadata.Name}.service", new string[] {
             "[Unit]",

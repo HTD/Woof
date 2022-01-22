@@ -25,7 +25,7 @@ internal class WindowsServiceInstaller {
         var argsList = new List<string> {
                 "create",
                 Metadata.Name!,
-                $"binPath={Application.Path}"
+                $"binPath={Executable.FilePath}"
             };
         if (Metadata.DisplayName is not null) argsList.Add($"DisplayName={Metadata.DisplayName}");
         if (Metadata.Start != null) argsList.Add($"start={Metadata.Start}");

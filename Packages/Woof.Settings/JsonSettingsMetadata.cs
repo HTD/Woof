@@ -18,7 +18,7 @@ public class JsonSettingsMetadata : ISettingsMetadata<JsonNode> {
     /// <summary>
     /// Gets or sets the configuration file base name (no extension). Defaults to the application name.
     /// </summary>
-    public string Name { get; set; } = Application.Name;
+    public string Name { get; set; } = Executable.FileName;
 
     /// <summary>
     /// Gets the path to the configuration file if it's loaded or saved. Null otherwise.

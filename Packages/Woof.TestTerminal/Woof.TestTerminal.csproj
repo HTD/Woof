@@ -26,6 +26,10 @@
         <None Include="Readme.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Woof.Internals\Woof.Internals.csproj" />
+    </ItemGroup>
+
     <PropertyGroup Label="Project settings">
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>

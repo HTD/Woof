@@ -40,13 +40,13 @@ public class JsonSettingsLocator : ILocator {
         get {
             if (_LocalAppDataTarget is not null) return _LocalAppDataTarget;
             var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var executable = Assembly.GetEntryAssembly()!;
+            var executable = Executable.Assembly;
             var company = executable.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
             var product = executable.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
             return _LocalAppDataTarget =
                 company is not null && product is not null && company != product ? Path.Combine(localAppData, company, product) :
                 product is not null ? Path.Combine(localAppData, product) :
-                Path.Combine(localAppData, Application.Name);
+                Path.Combine(localAppData, Executable.FileName);
         }
     }
 
@@ -55,7 +55,7 @@ public class JsonSettingsLocator : ILocator {
     /// </summary>
     public static string HomeDirectoryTarget
         => _UserHomeDirectoryTarget ??=
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), '.' + Application.Name);
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), '.' + Executable.FileName);
 
     /// <summary>
     /// Gets the target directory for user files, platform dependent.<br/>
@@ -74,7 +74,7 @@ public class JsonSettingsLocator : ILocator {
     /// <returns>A tuple with the full path to the file and a flag indicating whether the file exists.</returns>
     public virtual (string path, bool exists) Locate(string name) {
         if (name is null) throw new ArgumentNullException(nameof(name));
-        var programDirectory = Application.Directory;
+        var programDirectory = Executable.Directory.FullName;
         var userDirectory = UserTarget;
         var targets =
             PreferUserDirectory
@@ -105,7 +105,7 @@ public class JsonSettingsLocator : ILocator {
     /// </returns>
     public virtual (string primaryPath, string secondaryPath) LocateNew(string name) {
         if (name is null) throw new ArgumentNullException(nameof(name));
-        var programDirectory = Application.Directory;
+        var programDirectory = Executable.Directory.FullName;
         var userDirectory = UserTarget;
         var extension = Extensions.First();
         return (

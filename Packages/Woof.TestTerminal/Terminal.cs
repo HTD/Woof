@@ -1,7 +1,4 @@
-﻿
-using Woof.Internals;
-
-namespace Woof.TestTerminal;
+﻿namespace Woof.TestTerminal;
 
 /// <summary>
 /// Configures and runs Windows Terminal to test one or more projects in the solution.
@@ -56,7 +53,7 @@ public class Terminal {
             var name = e.Current.Key;
             var project = GetProject(e.Current.Value);
             var runCommand = r.MoveNext() ? r.Current : null;
-            var command = GetCommand(project.OutputDirectory, name, $"{name} $G ", runCommand);
+            var command = GetCommand(project.OutputDirectory.FullName, name, $"{name} $G ", runCommand);
             builder.Append(command);
             more = e.MoveNext();
             if (more) builder.Append(" ; split-pane ");
@@ -70,7 +67,8 @@ public class Terminal {
         Process.Start(processStartInfo);
     }
 
-    private readonly string SolutionDirectory = DotNetSolution.CurrentSolutionDirectory;
-    private readonly string CurrentConfiguration = DotNetSolution.CurrentConfiguration;
+    private readonly string SolutionDirectory = DotNetSolution.CurrentSolutionDirectory?.FullName
+        ?? throw new InvalidOperationException("Can't get the current solution directory");
+    private readonly string CurrentConfiguration = Executable.CurrentBuildConfiguration;
 
 }

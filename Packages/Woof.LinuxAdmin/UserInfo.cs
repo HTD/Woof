@@ -38,7 +38,7 @@ public class UserInfo {
     /// <summary>
     /// Gets the current main executable owner user information.
     /// </summary>
-    public static UserInfo CurrentExecutableOwner => FromUid((int)Linux.Stat(Application.Path)!.Uid)!;
+    public static UserInfo CurrentExecutableOwner => FromUid((int)Linux.Stat(Executable.FilePath)!.Uid)!;
 
     /// <summary>
     /// Creates the <see cref="UserInfo"/> instance from <see cref="Syscall.Passwd"/>.

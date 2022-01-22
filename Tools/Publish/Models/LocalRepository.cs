@@ -24,7 +24,7 @@ public class LocalRepository {
     /// Creates the new local repository instance.
     /// </summary>
     public LocalRepository() {
-        if (!Settings.Default.IsLoaded) Settings.Default.Load();
+        if (!Settings.Default.IsLoaded) throw new InvalidOperationException("Repository settings not loaded");
         Root = System.IO.Path.GetFullPath(Settings.Default.Paths.Root);
         Path = System.IO.Path.Combine(Root, Settings.Default.Paths.Repo);
         Prefix = Settings.Default.Prefix;

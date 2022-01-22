@@ -299,7 +299,7 @@ public abstract class Server<TCodec> : WebSocketEndpoint<TCodec>, IDisposable, I
             await OnUserSignInFailAsync(new WebSocketSessionEventArgs(context, session));
             if (DisconnectOnAuthenticationFailed)
                 await context.Transport.CloseAsync(
-                System.Net.WebSockets.WebSocketCloseStatus.PolicyViolation,
+                WebSocketCloseStatus.PolicyViolation,
                 "Client authorization failed",
                 CancellationToken
             );

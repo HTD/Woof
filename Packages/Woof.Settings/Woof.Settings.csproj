@@ -2,7 +2,7 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.Settings</Title>
-        <Version>6.2.0-beta.2</Version>
+        <Version>6.2.0-beta.1</Version>
         <PackageTags>woof;toolkit</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>

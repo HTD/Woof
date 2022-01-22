@@ -133,7 +133,7 @@ public abstract class SubProtocolCodec {
     /// </summary>
     /// <returns>64 bytes (256 bits).</returns>
     public virtual byte[] GetKey() {
-        using var hmac = HMACSHA256.Create("HMACSHA256");
+        using var hmac = HMAC.Create("HMACSHA256");
         return hmac is null ? throw new NullReferenceException() : hmac.Key;
     }
 

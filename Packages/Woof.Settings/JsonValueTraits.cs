@@ -108,7 +108,7 @@ public static class JsonValueTraits {
     /// <summary>
     /// Hidden "Value" property of the <see cref="JsonValue"/> underlying type.
     /// </summary>
-    private static readonly PropertyInfo ValueProperty = JsonValue.Parse("0")!.GetType().GetProperty("Value")!;
+    private static readonly PropertyInfo ValueProperty = JsonNode.Parse("0")!.GetType().GetProperty("Value")!;
 
     /// <summary>
     /// Invariant culture format provider for JSON compatible conversions.

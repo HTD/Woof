@@ -15,7 +15,7 @@ Contains some basic tools shared by many `Woof Toolkit` packages.
 1. `ApiResolver`
    A static class used to load implementations from other referenced modules
    that are optional for the package.
-2. `Application`
+2. `Executable`
    A static class providing information about the current executable file,
    including its location and file name.
 
@@ -32,10 +32,10 @@ In order to do so it uses the `ApiResolver` class.
 
 Many packages use access to file paths relative to the main executable file.
 They also use application executable name, with or without extension.
-In order to make it simple, the `Application` class exists.
+In order to make it simple, the `Executable` class exists.
 
 It is important that the `Assembly.Location` property does not work with
-builds published as a single file. The `Application` class solves this problem.
+builds published as a single file. The `Executable` class solves this problem.
 
 It doesn't do much, but it replaces really next to impossible to remember 
 invocations with simple, obvious names that doesn't require refering

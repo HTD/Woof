@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace Publish;
+﻿namespace Publish;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>

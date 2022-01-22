@@ -1,4 +1,4 @@
-﻿namespace Publish.Models;
+﻿namespace WoofRepositoryManager.Models;
 
 /// <summary>
 /// Local package repository.

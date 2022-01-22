@@ -89,7 +89,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.Windows.Controls", "Pa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.Windows.Demo", "Demos\Woof.Windows.Demo\Woof.Windows.Demo.csproj", "{95A92428-F5BD-4BD2-A584-420270AD33AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Publish", "Tools\Publish\Publish.csproj", "{44A3A17D-8D2D-404F-B420-698EE452F65B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WoofRepositoryManager", "Tools\WoofRepositoryManager\WoofRepositoryManager.csproj", "{44A3A17D-8D2D-404F-B420-698EE452F65B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.ServiceInstaller.TestService.Terminal", "Demos\Woof.ServiceInstaller.TestService.Terminal\Woof.ServiceInstaller.TestService.Terminal.csproj", "{12B21BBF-35CB-4303-8B17-20C457896A5D}"
 EndProject

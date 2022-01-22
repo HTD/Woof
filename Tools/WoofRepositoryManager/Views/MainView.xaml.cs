@@ -1,4 +1,4 @@
-﻿namespace Publish.Views;
+﻿namespace WoofRepositoryManager.Views;
 /// <summary>
 /// Interaction logic for MainView.xaml
 /// </summary>

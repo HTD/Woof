@@ -1,4 +1,4 @@
-﻿namespace Publish.Models;
+﻿namespace WoofRepositoryManager.Models;
 
 public record PackageItem {
 

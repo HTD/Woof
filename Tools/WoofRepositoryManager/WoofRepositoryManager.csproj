@@ -35,7 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Publish.json">
+      <None Update="Repository.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

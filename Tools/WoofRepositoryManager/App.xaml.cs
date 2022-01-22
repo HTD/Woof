@@ -1,4 +1,4 @@
-﻿namespace Publish;
+﻿namespace WoofRepositoryManager;
 
 /// <summary>
 /// Interaction logic for App.xaml

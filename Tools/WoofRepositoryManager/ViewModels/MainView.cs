@@ -1,4 +1,4 @@
-﻿namespace Publish.ViewModels;
+﻿namespace WoofRepositoryManager.ViewModels;
 
 /// <summary>
 /// Main view model.

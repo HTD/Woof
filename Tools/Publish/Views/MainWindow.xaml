@@ -11,6 +11,6 @@
         Title="Woof - publish packages" Height="720" Width="960" WindowStartupLocation="CenterScreen" WindowState="Normal" Icon="/Views/Icon.png"
         >
     <Grid>
-        <v:MainView Visibility="Visible"/>
+        <v:MainView/>
     </Grid>
 </Window>

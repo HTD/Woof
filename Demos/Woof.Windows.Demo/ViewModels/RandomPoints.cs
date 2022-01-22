@@ -29,7 +29,7 @@ internal class RandomPoints : ViewModelBase, IGetAsync {
         return (!x || item.X > 0) && (!y || item.Y > 0) && (!z || item.Z > 0);
     }
 
-    private void Checks_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) => Items.Refresh();
+    private void Checks_PropertyChanged(object? sender, PropertyChangedEventArgs e) => Items.Refresh();
 
     private void Clear() => Items.Clear();
 
@@ -91,7 +91,7 @@ internal class RandomPoints : ViewModelBase, IGetAsync {
         OnCanExecuteChanged();
     }
 
-    private void Item_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
+    private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e) {
         if (IsLoading) return;
         MessageBox.Show($"Data point change detected:\r\n{sender}", "Hey!", MessageBoxButton.OK, MessageBoxImage.Information);
     }

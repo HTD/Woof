@@ -232,7 +232,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// Sorts the elements in the entire <see cref="ObservableList{T}"/> using the default comparer.
     /// </summary>
     /// <exception cref="InvalidOperationException">
-    /// The default comparer <see cref="System.Collections.Generic.Comparer{T}.Default"/> cannot find
+    /// The default comparer <see cref="Comparer{T}.Default"/> cannot find
     /// an implementation of the <see cref="IComparable{T}"/> generic interface
     /// or the <see cref="IComparable"/> interface for type <typeparamref name="T"/>.
     /// </exception>
@@ -245,11 +245,11 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// <summary>
     /// Sorts the elements in the entire <see cref="ObservableList{T}"/> using the specified comparer.
     /// </summary>
-    /// <param name="comparer">The <see cref="System.Collections.Generic.IComparer{T}"/> implementation to use when comparing
-    /// elements, or null to use the default comparer <see cref="System.Collections.Generic.Comparer{T}.Default"/>.</param>
+    /// <param name="comparer">The <see cref="IComparer{T}"/> implementation to use when comparing
+    /// elements, or null to use the default comparer <see cref="Comparer{T}.Default"/>.</param>
     /// <exception cref="InvalidOperationException">
     /// <paramref name="comparer"/> is null, and the default comparer
-    /// <see cref="System.Collections.Generic.Comparer{T}.Default"/>
+    /// <see cref="Comparer{T}.Default"/>
     /// cannot find implementation of the <see cref="IComparable{T}"/> generic interface or the
     /// <see cref="IComparable"/> interface for type <typeparamref name="T"/>.
     /// </exception>
@@ -283,8 +283,8 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// </summary>
     /// <param name="index">The zero-based starting index of the range to sort.</param>
     /// <param name="count">The length of the range to sort.</param>
-    /// <param name="comparer">The <see cref="System.Collections.Generic.IComparer{T}"/> implementation to use when comparing
-    /// elements, or null to use the default comparer <see cref="System.Collections.Generic.Comparer{T}.Default"/>.</param>
+    /// <param name="comparer">The <see cref="IComparer{T}"/> implementation to use when comparing
+    /// elements, or null to use the default comparer <see cref="Comparer{T}.Default"/>.</param>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="index"/> is less than 0. -or- <paramref name="count"/> is less than 0.
     /// </exception>
@@ -295,7 +295,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// </exception>
     /// <exception cref="InvalidOperationException">
     /// <paramref name="comparer"/> is null, and the default comparer
-    /// <see cref="System.Collections.Generic.Comparer{T}.Default"/>
+    /// <see cref="Comparer{T}.Default"/>
     /// cannot find implementation of the <see cref="IComparable{T}"/> generic interface or the
     /// <see cref="IComparable"/> interface for type <typeparamref name="T"/>.
     /// </exception>
@@ -343,7 +343,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     #region IList implementation
 
     /// <summary>
-    /// Invokes <see cref="System.Collections.IList.Add"/> on the base class.
+    /// Invokes <see cref="IList.Add"/> on the base class.
     /// </summary>
     /// <param name="value">The object to add to the <see cref="IList"/>.</param>
     /// <returns>The position into which the new element was inserted, or -1 to indicate that
@@ -351,7 +351,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     private int BaseIListAdd(object? value) => (int)BaseIListAddMethodInfo.Invoke(this, new object?[] { value })!;
 
     /// <summary>
-    /// Invokes <see cref="System.Collections.IList.Insert(int, object?)"/> on the base class.
+    /// Invokes <see cref="IList.Insert(int, object?)"/> on the base class.
     /// </summary>
     /// <param name="index">The zero-based index at which item should be inserted.</param>
     /// <param name="value">The object to insert into the <see cref="ObservableList{T}"/>.</param>
@@ -423,7 +423,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     private static readonly Type BaseType = typeof(ObservableList<T>).BaseType!;
 
     /// <summary>
-    /// <see cref="System.Collections.IList.Add(object?)"/> from the base class method info.
+    /// <see cref="IList.Add(object?)"/> from the base class method info.
     /// </summary>
     private static readonly MethodInfo BaseIListAddMethodInfo = BaseType.GetMethod(
             "System.Collections.IList.Add",
@@ -431,7 +431,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
         )!;
 
     /// <summary>
-    /// <see cref="System.Collections.IList.Insert(int, object?)"/> from the base class method info.
+    /// <see cref="IList.Insert(int, object?)"/> from the base class method info.
     /// </summary>
     private static readonly MethodInfo BaseIListInsertMethodInfo = BaseType.GetMethod(
             "System.Collections.IList.Insert",

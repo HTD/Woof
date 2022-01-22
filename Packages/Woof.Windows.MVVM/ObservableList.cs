@@ -195,7 +195,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// <exception cref="ArgumentException"><paramref name="index"/> and <paramref name="count"/> do not denote a valid range of elements in the <see cref="ObservableList{T}"/>.</exception>
     public new void RemoveRange(int index, int count) {
         base.RemoveRange(index, count);
-        for (int i = index; i < count && i < base.Count; i++) RemoveAt(index);
+        for (int i = index; i < count && i < Count; i++) RemoveAt(index);
     }
 
     /// <summary>

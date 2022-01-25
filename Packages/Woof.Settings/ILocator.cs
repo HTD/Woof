@@ -6,6 +6,11 @@
 public interface ILocator {
 
     /// <summary>
+    /// Gets or sets a value indicating that the user directory will be preferred over the application directory.
+    /// </summary>
+    bool PreferUserDirectory { get; set; }
+
+    /// <summary>
     /// Locates a settings file for the specified settings name.
     /// </summary>
     /// <param name="name">Settings file base name (no extension).</param>

@@ -1,4 +1,6 @@
-﻿namespace WoofRepositoryManager;
+﻿using Woof.Settings.Protected;
+
+namespace WoofRepositoryManager;
 
 #pragma warning disable CS8618 // no null values when the settings are loaded, without settings loaded.
 /// <summary>
@@ -37,7 +39,7 @@ public class Settings : JsonSettings<Settings> {
     /// <summary>
     /// Gets the feed targets.
     /// </summary>
-    public string[] Targets { get; init; }
+    public NuGetFeed[] Feeds { get; init; }
 
     /// <summary>
     /// Defines the paths used by the application.
@@ -61,5 +63,31 @@ public class Settings : JsonSettings<Settings> {
 
     }
 
+    /// <summary>
+    /// Defines a NuGet feed.
+    /// </summary>
+    public record NuGetFeed {
+
+        /// <summary>
+        /// Gets the display name of the feed.
+        /// </summary>
+        public string? Name { get; init; }
+
+        /// <summary>
+        /// Gets the URI of the feed.
+        /// </summary>
+        public Uri Uri { get; init; }
+
+        /// <summary>
+        /// Gets the API key if configured.
+        /// </summary>
+        public ProtectedString? ApiKey { get; init; }
+
+    }
+
+    public override ValueTask<Settings> LoadAsync() {
+
+        return base.LoadAsync();
+    }
 }
 #pragma warning restore CS8618

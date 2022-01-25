@@ -1,4 +1,4 @@
-﻿namespace Woof.Internals;
+﻿namespace Woof.DotNet;
 
 /// <summary>
 /// Visual Studio simple solution helpers.

@@ -1,4 +1,3 @@
-<!-- Paste the content into the new package .csproj file -->
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup Label="Package metadata">
@@ -47,4 +46,3 @@
     </PropertyGroup>
 
 </Project>
-<!-- Make sure to update ALL the package metadata! -->

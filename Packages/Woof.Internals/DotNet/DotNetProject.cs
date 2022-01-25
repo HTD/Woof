@@ -1,9 +1,11 @@
-﻿namespace Woof.Internals;
+﻿namespace Woof.DotNet;
 
 /// <summary>
 /// Metadata for .NET project files.
 /// </summary>
 public sealed class DotNetProject {
+
+    #region Properties
 
     /// <summary>
     /// Gets the project directory information.
@@ -50,6 +52,10 @@ public sealed class DotNetProject {
     /// </summary>
     public DirectoryInfo OutputDirectory { get; }
 
+    #endregion
+
+    #region Public API
+
     /// <summary>
     /// Creates the metadata instance for the project file.
     /// </summary>
@@ -86,6 +92,10 @@ public sealed class DotNetProject {
             ? new DotNetProject(projectFile.FullName)
             : null;
 
+    #endregion
+
+    #region Implementation details
+
     /// <summary>
     /// Gets the text content of the first matched tag in the Project XML element.
     /// </summary>
@@ -107,5 +117,7 @@ public sealed class DotNetProject {
     /// Supported SDK type.
     /// </summary>
     private const string SupportedSdk = "Microsoft.NET.Sdk";
+
+    #endregion
 
 }

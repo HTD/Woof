@@ -64,7 +64,7 @@ public static class Executable {
     /// <typeparam name="T">A type contain in the main application assembly.</typeparam>
     /// <param name="sourceFilePath">A path to the caller file provided automatically by the compiler if debug symbols are available. Do not set.</param>
     /// <exception cref="InvalidOperationException">Anything goes wrong.</exception>
-    public static void ResetAssembly<T>([System.Runtime.CompilerServices.CallerFilePath] string? sourceFilePath = default) {
+    public static void ResetAssembly<T>([CallerFilePath] string? sourceFilePath = default) {
         var target = Assembly.GetAssembly(typeof(T)) ?? throw new InvalidOperationException($"Can't get assembly for type {typeof(T).Name}");
         if (target.FullName == Assembly.FullName) return;
         Assembly = target;

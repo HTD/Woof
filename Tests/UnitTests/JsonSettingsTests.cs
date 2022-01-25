@@ -64,8 +64,6 @@ public class JsonSettingsTests {
         Assert.Null(leaves[3].Content);
         Assert.Equal("$.p1.p11[2]", leaves[4].Path.ToString());
         Assert.Equal(2, leaves[4].Content as int?);
-        var leaves2 = ObjectTree.Traverse(ComplexBasic.Default).ToArray();
-
     }
 
     /// <summary>

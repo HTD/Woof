@@ -13,7 +13,7 @@ public class MainView : ViewModelBase, IGetAsync {
     /// <summary>
     /// Gets the targets for the view.
     /// </summary>
-    public ObservableList<string> Targets { get; } = new();
+    public ObservableList<Settings.NuGetFeed> Feeds { get; } = new();
 
     /// <summary>
     /// Gets the packages for the view.
@@ -30,9 +30,9 @@ public class MainView : ViewModelBase, IGetAsync {
     /// </summary>
     /// <returns>A <see cref="ValueTask"/> completed when the view data is loaded.</returns>
     public async ValueTask GetAsync() {
-        Executable.ResetAssembly<MainView>(); // a hack for the designer to work!
+        Executable.ResetAssembly<Settings>(); // a hack for the designer to work!
         await Settings.Default.LoadAsync();
-        Targets.AddRange(Settings.Default.Targets);
+        Feeds.AddRange(Settings.Default.Feeds);
         await Packages.GetAsync();
         IsLoaded = true;
     }
@@ -75,6 +75,12 @@ public class MainView : ViewModelBase, IGetAsync {
                 break;
             case "Delete":
                 await DeletePackagesAsync(Packages.GetChecked());
+                break;
+            case "Settings":
+                var settingsDirectory = UserFiles.UserDirectory;
+                if (!settingsDirectory.Exists) settingsDirectory.Create();
+                var showSettingsDirectoryCommand = new ShellCommand($"explorer \"{settingsDirectory}\"");
+                await showSettingsDirectoryCommand.ExecAndForgetAsync();
                 break;
         }
     }

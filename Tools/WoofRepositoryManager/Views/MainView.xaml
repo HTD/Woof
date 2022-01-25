@@ -8,55 +8,74 @@
     xmlns:vm="clr-namespace:WoofRepositoryManager.ViewModels"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     mc:Ignorable="d"
-    d:DesignHeight="450" d:DesignWidth="800">
+    d:DesignHeight="320" d:DesignWidth="960">
     <wm:AutoLoadView.DataContext>
         <vm:MainView/>
     </wm:AutoLoadView.DataContext>
-    <Grid>
+    <Grid Style="{StaticResource AppBar}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Background="#1c1c1c">
-            <ui:AppBarButton Icon="Refresh" Label="Reload" Command="{Binding}" CommandParameter="Reload" ToolTip="Reload the local repository">
-                <ui:FontIcon Glyph="&#xE72C;" />
-            </ui:AppBarButton>
-            <ui:AppBarButton Icon="Clear" Label="Reset" Command="{Binding}" CommandParameter="Reset" ToolTip="Clear the local repository">
-                <ui:FontIcon Glyph="&#xE72C;" />
-            </ui:AppBarButton>
-            <ui:AppBarButton Label="Expand all" Command="{Binding}" CommandParameter="Expand">
-                <ui:AppBarButton.Icon>
-                    <ui:FontIcon Glyph="&#xF164;" />
-                </ui:AppBarButton.Icon>
-            </ui:AppBarButton>
-            <ui:AppBarButton Label="Collapse all" Command="{Binding}" CommandParameter="Collapse">
-                <ui:AppBarButton.Icon>
-                    <ui:FontIcon Glyph="&#xF165;" />
-                </ui:AppBarButton.Icon>
-            </ui:AppBarButton>
-            <ui:AppBarButton Label="Select none" Command="{Binding}" CommandParameter="None">
-                <ui:AppBarButton.Icon>
-                    <ui:FontIcon Glyph="&#xE739;" />
-                </ui:AppBarButton.Icon>
-            </ui:AppBarButton>
-            <ui:AppBarButton Label="Select all" Command="{Binding}" CommandParameter="All">
-                <ui:AppBarButton.Icon>
-                    <ui:FontIcon Glyph="&#xE73A;" />
-                </ui:AppBarButton.Icon>
-            </ui:AppBarButton>
-            <ui:AppBarButton Label="Publish" Command="{Binding}" CommandParameter="Publish" ToolTip="Publish to the selected target">
-                <ui:AppBarButton.Icon>
-                    <ui:FontIcon Glyph="&#xE72D;" />
-                </ui:AppBarButton.Icon>
-            </ui:AppBarButton>
-            <ui:AppBarButton Label="Delete" Command="{Binding}" CommandParameter="Delete" Foreground="#cc0000" ToolTip="Delete or unlist from the selected target">
-                <ui:AppBarButton.Icon>
-                    <ui:FontIcon Glyph="&#xECC9;" />
-                </ui:AppBarButton.Icon>
-            </ui:AppBarButton>
-            <ComboBox ItemsSource="{Binding Targets}" SelectedIndex="0" VerticalAlignment="Center" />
-        </StackPanel>
-        <TreeView Grid.Row="1" ItemsSource="{Binding Packages}" Background="#151715">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <ui:AppBarButton Icon="Refresh" Label="Reload" Command="{Binding}" CommandParameter="Reload" ToolTip="Reload the local repository">
+                    <ui:FontIcon Glyph="&#xE72C;" />
+                </ui:AppBarButton>
+                <ui:AppBarButton Icon="Clear" Label="Reset" Command="{Binding}" CommandParameter="Reset" ToolTip="Clear the local repository">
+                    <ui:FontIcon Glyph="&#xE72C;" />
+                </ui:AppBarButton>
+                <ui:AppBarButton Label="Expand all" Command="{Binding}" CommandParameter="Expand">
+                    <ui:AppBarButton.Icon>
+                        <ui:FontIcon Glyph="&#xF164;" />
+                    </ui:AppBarButton.Icon>
+                </ui:AppBarButton>
+                <ui:AppBarButton Label="Collapse all" Command="{Binding}" CommandParameter="Collapse">
+                    <ui:AppBarButton.Icon>
+                        <ui:FontIcon Glyph="&#xF165;" />
+                    </ui:AppBarButton.Icon>
+                </ui:AppBarButton>
+                <ui:AppBarButton Label="Select none" Command="{Binding}" CommandParameter="None">
+                    <ui:AppBarButton.Icon>
+                        <ui:FontIcon Glyph="&#xE739;" />
+                    </ui:AppBarButton.Icon>
+                </ui:AppBarButton>
+                <ui:AppBarButton Label="Select all" Command="{Binding}" CommandParameter="All">
+                    <ui:AppBarButton.Icon>
+                        <ui:FontIcon Glyph="&#xE73A;" />
+                    </ui:AppBarButton.Icon>
+                </ui:AppBarButton>
+                <ui:AppBarButton Label="Publish" Command="{Binding}" CommandParameter="Publish" ToolTip="Publish to the selected target">
+                    <ui:AppBarButton.Icon>
+                        <ui:FontIcon Glyph="&#xE72D;" />
+                    </ui:AppBarButton.Icon>
+                </ui:AppBarButton>
+                <ui:AppBarButton Label="Delete" Command="{Binding}" CommandParameter="Delete" Foreground="{StaticResource CautionBrush}" ToolTip="Delete or unlist from the selected target">
+                    <ui:AppBarButton.Icon>
+                        <ui:FontIcon Glyph="&#xECC9;" />
+                    </ui:AppBarButton.Icon>
+                </ui:AppBarButton>
+                <ComboBox ItemsSource="{Binding Feeds}" SelectedIndex="0" VerticalAlignment="Center">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:AppBarButton Label="Settings" Command="{Binding}" CommandParameter="Settings" ToolTip="Opens application settings directory">
+                    <ui:AppBarButton.Icon>
+                        <ui:FontIcon Glyph="&#xE713;" />
+                    </ui:AppBarButton.Icon>
+                </ui:AppBarButton>
+            </StackPanel>
+        </Grid>
+        <TreeView Grid.Row="1" ItemsSource="{Binding Packages}" Style="{StaticResource PackagesTree}">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
@@ -67,7 +86,7 @@
                     <StackPanel>
                         <CheckBox IsChecked="{Binding IsChecked}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Name}" Style="{StaticResource PackageName}"/>
+                                <TextBlock Text="{Binding Name}" Style="{StaticResource PackageId}"/>
                                 <TextBlock Text="{Binding Version}" Style="{StaticResource PackageVersion}"/>
                             </StackPanel>
                         </CheckBox>
@@ -76,6 +95,6 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <wc:Spinner Visibility="{Binding SpinnerVisibility}" Grid.Row="1" Foreground="#00ff00" />
+        <wc:Spinner Visibility="{Binding SpinnerVisibility}" Grid.Row="1" Foreground="{StaticResource SpinnerBrush}" />
     </Grid>
 </wm:AutoLoadView>

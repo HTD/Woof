@@ -8,7 +8,8 @@
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:TitleBar.IsIconVisible="True"
         mc:Ignorable="d"
-        Title="Woof - publish packages" Height="720" Width="960" WindowStartupLocation="CenterScreen" WindowState="Normal" Icon="/Views/Icon.png"
+        Height="720" Width="960" WindowStartupLocation="CenterScreen" WindowState="Normal" Icon="/Views/Icon.png"
+        Title="Woof Repository Manager"
         >
     <Grid>
         <v:MainView/>

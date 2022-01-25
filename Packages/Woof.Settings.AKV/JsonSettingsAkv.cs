@@ -53,9 +53,7 @@ public abstract class JsonSettingsAkv<T> : JsonSettings<T> where T : class {
     private void SpecialAttributeResolver(object? sender, SpecialAttributeEventArgs e) {
         if (sender is not AKVAttribute akv || akv.Name is null) return;
         var akvString = AccessProvider.GetString(akv.Name);
-        e.Value = ValueConversions.Default.ContainsKey(e.Type)
-            ? ValueConversions.Default[e.Type].Parse(akvString)
-            : akvString;
+        e.Value = ValueConversions.Parse(akvString, e.Type);
     }
 
     /// <summary>

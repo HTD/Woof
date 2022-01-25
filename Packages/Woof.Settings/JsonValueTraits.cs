@@ -57,7 +57,7 @@ public static class JsonValueTraits {
             return true;
         }
         try {
-            value = ValueConversions.Default[type].Parse(valueNode.ToString());
+            value = ValueConversions.Parse(valueNode.ToString(), type);
             return true;
         }
         catch {
@@ -79,7 +79,7 @@ public static class JsonValueTraits {
             return true;
         }
         try {
-            value = (T)ValueConversions.Default[type].Parse(valueNode.ToString());
+            value = (T)ValueConversions.Parse(valueNode.ToString(), type);
             return true;
         }
         catch {
@@ -98,7 +98,7 @@ public static class JsonValueTraits {
         var type = typeof(T);
         if (type.BaseType == typeof(Enum)) return (T)Enum.Parse(type, valueNode.ToString());
         try {
-            return (T)ValueConversions.Default[type].Parse(valueNode.ToString());
+            return (T)ValueConversions.Parse(valueNode.ToString(), type);
         }
         catch {
             return default;

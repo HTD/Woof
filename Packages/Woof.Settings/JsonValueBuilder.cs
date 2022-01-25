@@ -22,9 +22,8 @@ public class JsonValueBuilder {
             return true;
         }
         try {
-            var (Parse, GetString, IsQuoted) = ValueConversions.Default[type];
-            var valueString = GetString(value);
-            valueNode = IsQuoted ? JsonValue.Create(valueString) : valueString switch {
+            var valueString = ValueConversions.GetString(value, out var isQuoted);
+            valueNode = isQuoted ? JsonValue.Create(valueString) : valueString switch {
                 "True" or "true" => JsonValue.Create(true),
                 "False" or "false" => JsonValue.Create(false),
                 _ => JsonValueTraits.GetJsonNumberFromString(valueString),
@@ -55,9 +54,8 @@ public class JsonValueBuilder {
             return true;
         }
         try {
-            var (Parse, GetString, IsQuoted) = ValueConversions.Default[type];
-            var valueString = GetString(value);
-            valueNode = IsQuoted ? JsonValue.Create(valueString) : valueString switch {
+            var valueString = ValueConversions.GetString(value, out var isQuoted);
+            valueNode = isQuoted ? JsonValue.Create(valueString) : valueString switch {
                 "True" or "true" => JsonValue.Create(true),
                 "False" or "false" => JsonValue.Create(false),
                 _ => JsonValueTraits.GetJsonNumberFromString(valueString),

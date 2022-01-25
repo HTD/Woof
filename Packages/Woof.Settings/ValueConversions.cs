@@ -43,8 +43,55 @@ public class ValueConversions : Dictionary<Type, (ValueParser Parse, ValueToStri
         [typeof(IPEndPoint)] = (value => IPEndPoint.Parse(value), value => ((IPEndPoint)value).ToString(), true),
         [typeof(FileInfo)] = (value => new FileInfo(value), value => ((FileInfo)value).ToString(), true),
         [typeof(DirectoryInfo)] = (value => new DirectoryInfo(value), value => ((DirectoryInfo)value).ToString(), true),
-        [typeof(Guid)] = (value => new Guid(value), value => ((Guid)value).ToString(), true),
+        [typeof(Guid)] = (value => new Guid(value), value => ((Guid)value).ToString(), true)
     };
+
+    /// <summary>
+    /// Tests if the type serialization is supported.
+    /// </summary>
+    /// <param name="type">Type to test.</param>
+    /// <returns>True if it is supported.</returns>
+    public static bool IsSupported(Type type) => Default.ContainsKey(type) || typeof(ISerializableSettingsValue).IsAssignableFrom(type);
+
+    /// <summary>
+    /// Gets the serialized value from object.
+    /// </summary>
+    /// <param name="value">Value to serialize.</param>
+    /// <param name="isQuoted">True if the string representation needs quoting.</param>
+    /// <returns>Serialized value.</returns>
+    /// <exception cref="InvalidCastException">Unsupported type.</exception>
+    public static string GetString(object value, out bool isQuoted) {
+        var type = value.GetType();
+        if (Default.ContainsKey(type)) {
+            var (Parse, GetString, IsQuoted) = Default[type];
+            isQuoted = IsQuoted;
+            if (value is IProtectedSettingsValue pValue) pValue.Protect();
+            return GetString(value);
+        }
+        if (value is ISerializableSettingsValue sValue) {
+            isQuoted = true;
+            if (value is IProtectedSettingsValue pValue) pValue.Protect();
+            return sValue.GetString();
+        }
+        throw new InvalidCastException();
+    }
+
+    /// <summary>
+    /// Gets the deserialized object from string.
+    /// </summary>
+    /// <param name="value">Serialized string.</param>
+    /// <param name="type">Target type.</param>
+    /// <returns>Deserialized object.</returns>
+    /// <exception cref="InvalidCastException">Unsupported type.</exception>
+    public static object Parse(string value, Type type) {
+        if (Default.ContainsKey(type)) return Default[type].Parse(value);
+        if (typeof(ISerializableSettingsValue).IsAssignableFrom(type)) {
+            var instance = (ISerializableSettingsValue)Activator.CreateInstance(type)!;
+            instance.Parse(value);
+            return instance;
+        }
+        throw new InvalidCastException();
+    }
 
     /// <summary>
     /// Invariant culture format provider for JSON compatible conversions.

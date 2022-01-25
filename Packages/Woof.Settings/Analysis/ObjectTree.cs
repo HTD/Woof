@@ -176,7 +176,7 @@ public class ObjectTree {
         type is not null && // is not null
         type.BaseType != typeof(Enum) && // is not an enumeration
         !typeof(ICollection).IsAssignableFrom(type) && // is not a collection
-        !ValueConversions.Default.ContainsKey(type); // is not convertible to a single value
+        !ValueConversions.IsSupported(type); // is not convertible to a single value
 
     /// <summary>
     /// Gets or sets the property binding flags. The public instance members are searched.

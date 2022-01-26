@@ -20,5 +20,4 @@ public interface ISerializableSettingsValue {
     /// <param name="value">Serialized string.</param>
     void Parse(string value);
 
-
 }

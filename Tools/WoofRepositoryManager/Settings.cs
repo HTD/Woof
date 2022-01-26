@@ -16,10 +16,22 @@ public class Settings : JsonSettings<Settings> {
     /// <summary>
     /// Gets a value indicating that the configuration is loaded and all required properties are set.
     /// </summary>
+    [Internal]
     public bool OK
         => IsLoaded &&
         DotNetFrameworkName is not null &&
         Paths.PackageBinaries is not null && Paths.Repo is not null && Paths.Root is not null;
+
+    /// <summary>
+    /// Gets the settings file path.
+    /// </summary>
+    [Internal]
+    public string File => _Metadata.FilePath!;
+
+    /// <summary>
+    /// Editor command.
+    /// </summary>
+    public string? Editor { get; init; }
 
     /// <summary>
     /// Gets the toolkit's paths.
@@ -81,13 +93,31 @@ public class Settings : JsonSettings<Settings> {
         /// <summary>
         /// Gets the API key if configured.
         /// </summary>
-        public ProtectedString? ApiKey { get; init; }
+        public ProtectedString? ApiKey { get; set; }
 
     }
 
-    public override ValueTask<Settings> LoadAsync() {
+    private Settings() => _Metadata.Locator.PreferUserDirectory = true;
 
-        return base.LoadAsync();
+    /// <summary>
+    /// Loads the settings and saves the protected version if there are any unprotected API keys in it.
+    /// </summary>
+    /// <returns>Settings instance.</returns>
+    public override Settings Load() {
+        base.Load();
+        if (Feeds.Any(feed => feed.ApiKey?.Value.Length > 0 && !feed.ApiKey.IsProtected)) Save();
+        return this;
     }
+
+    /// <summary>
+    /// Loads the settings and saves the protected version if there are any unprotected API keys in it.
+    /// </summary>
+    /// <returns>A <see cref="ValueTask"/> returning settings instance.</returns>
+    public override async ValueTask<Settings> LoadAsync() {
+        await base.LoadAsync();
+        if (Feeds.Any(feed => feed.ApiKey?.Value.Length > 0 && !feed.ApiKey.IsProtected)) await SaveAsync();
+        return this;
+    }
+
 }
 #pragma warning restore CS8618

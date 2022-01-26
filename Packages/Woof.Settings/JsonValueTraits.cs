@@ -53,7 +53,7 @@ public static class JsonValueTraits {
     /// <returns>True if the <paramref name="value"/> was converted using supported value conversions.</returns>
     public static bool TryConvert(this JsonValue valueNode, Type type, out object? value) {
         if (type.BaseType == typeof(Enum)) {
-            value = Enum.Parse(type, valueNode.ToString());
+            value = Enum.Parse(type, valueNode.ToString(), ignoreCase: true);
             return true;
         }
         try {

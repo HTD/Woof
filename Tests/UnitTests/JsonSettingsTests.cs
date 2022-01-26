@@ -129,6 +129,34 @@ public class JsonSettingsTests {
         Assert.Equal(2, data.Special);
     }
 
+    [Fact]
+    public void A007_BindTricky() {
+        var direct = @"""Regular"":1,""Private"":1,""Static"":1,""Init"":1,""Internal"":1,""Internal1"":1,""Field"":1,""ReadOnly"":1,""Unknown"":1";
+        var nested = @"""Nested"":{""Level1A"":1,""Level1B"":{""Level2"":1}}";
+        var json = @$"{{{direct},{nested}}}";
+        var node = JsonNodeLoader.Default.Parse(json);
+        var instance = new Tricky();
+        node.Bind(instance);
+        Assert.Equal(1, instance.Regular);
+        Assert.Equal(1, instance.Init);
+        Assert.Equal(0, Tricky.Static);
+        Assert.Equal(0, instance.Internal);
+        Assert.Equal(0, instance.Internal1);
+        Assert.Equal(0, instance.Field);
+        Assert.Equal(0, instance.ReadOnly);
+    }
+
+    [Fact]
+    public void A008_Utf8DecodeStream() {
+        var test = Encoding.UTF8.GetBytes(@"\uD83D\uDC15 \uD83D\uDC15 \uD83D\uDC15");
+        using var stream = new MemoryStream();
+        var decoding = new Utf8DecodeStream(stream);
+        decoding.Write(test);
+        decoding.Flush();
+        var result = Encoding.UTF8.GetString(stream.ToArray());
+        Assert.Equal("🐕 🐕 🐕", result);
+    }
+
     /// <summary>
     /// Tests the complex binding.
     /// </summary>

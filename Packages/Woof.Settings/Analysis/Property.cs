@@ -62,12 +62,15 @@ public struct Property {
     /// </summary>
     /// <param name="value">A value to set.</param>
     /// <exception cref="NullReferenceException"><see cref="Info"/> or <see cref="Owner"/> is null.</exception>
-    public void SetValue(object? value) => Info!.SetValue(Owner, Value = value);
+    public void SetValue(object? value) {
+        if (Info is null || Info.SetMethod is null) return;
+        Info.SetValue(Owner, Value = value);
+    }
 
     /// <summary>
     /// Creates the default instance for the property.
     /// </summary>
-    public void CreateContainer() => Info!.SetValue(Owner, Value = Activator.CreateInstance(Info!.PropertyType));
+    public void CreateContainer() => Info?.SetValue(Owner, Value = Activator.CreateInstance(Info!.PropertyType));
 
     /// <summary>
     /// Creates the collection for the specified path.

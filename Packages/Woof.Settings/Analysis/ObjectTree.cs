@@ -126,6 +126,7 @@ public class ObjectTree {
             if (index >= 0) GetPropertyByPath(part.Parent!).EnsureInitializedAtIndex(part.Index);
             else {
                 var property = GetPropertyByPath(part);
+                if (property.Info is null) return;
                 if (property.Value is null) property.CreateInstance(part, jsonRoot);
                 else if (property.Value is Array or IList) property.InitializeCollection(part, jsonRoot);
             }
@@ -137,7 +138,8 @@ public class ObjectTree {
     /// </summary>
     /// <param name="node">Property node.</param>
     public void SetProperty(JsonNodeTreeNode node) {
-        EnsureParentExists(node.Path.Parent!, node.Root!);
+        if (node.Path is not null && node.Path.Parent is JsonNodePath parent && node.Root is JsonNode root) EnsureParentExists(parent, root);
+        if (node.Path is null) return;
         var property = GetPropertyByPath(node.Path);
         if (property.Info?.GetCustomAttribute<SpecialAttribute>() is not null) return;
         var index = node.Path.Index;

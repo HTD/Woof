@@ -5,6 +5,8 @@ public class Tricky {
 
     public int Regular { get; set; }
 
+    public int Default { get; set; } = 1;
+
     private int Private { get; set; }
 
     public static int Static { get; set; }

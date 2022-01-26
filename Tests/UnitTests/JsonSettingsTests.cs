@@ -138,6 +138,7 @@ public class JsonSettingsTests {
         var instance = new Tricky();
         node.Bind(instance);
         Assert.Equal(1, instance.Regular);
+        Assert.Equal(1, instance.Default);
         Assert.Equal(1, instance.Init);
         Assert.Equal(0, Tricky.Static);
         Assert.Equal(0, instance.Internal);

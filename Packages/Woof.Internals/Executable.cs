@@ -49,7 +49,7 @@ public static class Executable {
     static Executable() {
         Assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
         CurrentBuildConfiguration = Assembly.GetCustomAttribute<AssemblyConfigurationAttribute>()!.Configuration;
-        Directory = new DirectoryInfo(AppDomain.CurrentDomain.SetupInformation.ApplicationBase!);
+        Directory = new DirectoryInfo(AppDomain.CurrentDomain.SetupInformation.ApplicationBase!.TrimEnd(Path.DirectorySeparatorChar));
         FilePath = Process.GetCurrentProcess()?.MainModule?.FileName!;
         FileInfo = new(FilePath);
         FileName = Path.GetFileNameWithoutExtension(FileInfo.Name);
@@ -72,7 +72,7 @@ public static class Executable {
         var currentProject = DotNetProject.GetFromSource(sourceFilePath);
         Directory = currentProject is not null
             ? currentProject.OutputDirectory
-            : new DirectoryInfo(Path.GetDirectoryName(Assembly.Location)!);
+            : new DirectoryInfo(Path.GetDirectoryName(Assembly.Location)!.TrimEnd(Path.DirectorySeparatorChar));
         FilePath = Path.Combine(Directory.FullName, Path.GetFileName(Assembly.Location));
         FileInfo = new(FilePath);
         FileName = Path.GetFileNameWithoutExtension(FileInfo.Name);

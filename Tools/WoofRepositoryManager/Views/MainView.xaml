@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -23,43 +24,15 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <ui:AppBarButton Icon="Refresh" Label="Reload" Command="{Binding}" CommandParameter="Reload" ToolTip="Reload the local repository">
-                    <ui:FontIcon Glyph="&#xE72C;" />
-                </ui:AppBarButton>
-                <ui:AppBarButton Icon="Clear" Label="Reset" Command="{Binding}" CommandParameter="Reset" ToolTip="Clear the local repository">
-                    <ui:FontIcon Glyph="&#xE72C;" />
-                </ui:AppBarButton>
-                <ui:AppBarButton Label="Expand all" Command="{Binding}" CommandParameter="Expand">
-                    <ui:AppBarButton.Icon>
-                        <ui:FontIcon Glyph="&#xF164;" />
-                    </ui:AppBarButton.Icon>
-                </ui:AppBarButton>
-                <ui:AppBarButton Label="Collapse all" Command="{Binding}" CommandParameter="Collapse">
-                    <ui:AppBarButton.Icon>
-                        <ui:FontIcon Glyph="&#xF165;" />
-                    </ui:AppBarButton.Icon>
-                </ui:AppBarButton>
-                <ui:AppBarButton Label="Select none" Command="{Binding}" CommandParameter="None">
-                    <ui:AppBarButton.Icon>
-                        <ui:FontIcon Glyph="&#xE739;" />
-                    </ui:AppBarButton.Icon>
-                </ui:AppBarButton>
-                <ui:AppBarButton Label="Select all" Command="{Binding}" CommandParameter="All">
-                    <ui:AppBarButton.Icon>
-                        <ui:FontIcon Glyph="&#xE73A;" />
-                    </ui:AppBarButton.Icon>
-                </ui:AppBarButton>
-                <ui:AppBarButton Label="Publish" Command="{Binding}" CommandParameter="Publish" ToolTip="Publish to the selected target">
-                    <ui:AppBarButton.Icon>
-                        <ui:FontIcon Glyph="&#xE72D;" />
-                    </ui:AppBarButton.Icon>
-                </ui:AppBarButton>
-                <ui:AppBarButton Label="Delete" Command="{Binding}" CommandParameter="Delete" Foreground="{StaticResource CautionBrush}" ToolTip="Delete or unlist from the selected target">
-                    <ui:AppBarButton.Icon>
-                        <ui:FontIcon Glyph="&#xECC9;" />
-                    </ui:AppBarButton.Icon>
-                </ui:AppBarButton>
-                <ComboBox ItemsSource="{Binding Feeds}" SelectedIndex="0" VerticalAlignment="Center">
+                <ui:AppBarButton Icon="{StaticResource UpdateIcon}" Label="Update" Command="{Binding}" CommandParameter="Update" ToolTip="Update the local repository"/>
+                <ui:AppBarButton Icon="{StaticResource ResetIcon}" Label="Reset" Command="{Binding}" CommandParameter="Reset" ToolTip="Clear the local repository"/>
+                <ui:AppBarButton Icon="{StaticResource ExpandAllIcon}" Label="Expand all" Command="{Binding}" CommandParameter="Expand"/>
+                <ui:AppBarButton Icon="{StaticResource CollapseAllIcon}" Label="Collapse all" Command="{Binding}" CommandParameter="Collapse"/>
+                <ui:AppBarButton Icon="{StaticResource SelectNoneIcon}" Label="Select none" Command="{Binding}" CommandParameter="None"/>
+                <ui:AppBarButton Icon="{StaticResource SelectAllIcon}" Label="Select all" Command="{Binding}" CommandParameter="All"/>
+                <ui:AppBarButton Icon="{StaticResource PublishIcon}" Label="Publish" Command="{Binding}" CommandParameter="Publish" ToolTip="Publish to the selected target"/>
+                <ui:AppBarButton Icon="{StaticResource DeleteIcon}" Label="Delete" Command="{Binding}" CommandParameter="Delete" Style="{StaticResource DangerButton}" ToolTip="Delete or unlist from the selected target"/>
+                <ComboBox ItemsSource="{Binding Feeds}" VerticalAlignment="Center" SelectedValue="{Binding CurrentFeed}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}"/>
@@ -68,10 +41,21 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                <ui:AppBarButton Label="Settings" Command="{Binding}" CommandParameter="Settings" ToolTip="Opens application settings directory">
-                    <ui:AppBarButton.Icon>
-                        <ui:FontIcon Glyph="&#xE713;" />
-                    </ui:AppBarButton.Icon>
+                <ui:AppBarButton Label="Settings" Width="90" Icon="{StaticResource SettingsIcon}">
+                    <ui:AppBarButton.Flyout>
+                        <ui:MenuFlyout Placement="Bottom">
+                            <MenuItem
+                                    Header="Open..."
+                                    ToolTip="Opens application settings"
+                                    Command="{Binding}"
+                                    CommandParameter="OpenSettings" />
+                            <MenuItem
+                                    Header="Reload"
+                                    ToolTip="Reloads the application settings"
+                                    Command="{Binding}"
+                                    CommandParameter="ReloadSettings" />
+                        </ui:MenuFlyout>
+                    </ui:AppBarButton.Flyout>
                 </ui:AppBarButton>
             </StackPanel>
         </Grid>
@@ -95,6 +79,7 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
+        <TextBlock Text="{Binding Status}" Grid.Row="2" Style="{StaticResource StatusBar}"/>
         <wc:Spinner Visibility="{Binding SpinnerVisibility}" Grid.Row="1" Foreground="{StaticResource SpinnerBrush}" />
     </Grid>
 </wm:AutoLoadView>

@@ -12,7 +12,7 @@ public class ProtectedString : ISerializableSettingsValue, IProtectedSettingsVal
     /// <summary>
     /// Gets a value indicating that the string is protected.
     /// </summary>
-    public bool IsProtected => Serialized.Length > 1 && Serialized[0..2] == "🐕"; // the Unicode dogo is the data protection ID sequence.
+    public bool IsProtected => Serialized.Length > 1 && Serialized[0..2] == ProtectedData.LockSymbol;
 
     /// <summary>
     /// Gets or sets the unprotected string.
@@ -36,7 +36,7 @@ public class ProtectedString : ISerializableSettingsValue, IProtectedSettingsVal
     public void Protect() {
         if (Serialized is null || Serialized.Length < 1 || IsProtected) return;
         var data = Encoding.UTF8.GetBytes(Serialized);
-        Serialized = "🐕" + Convert.ToBase64String(DP.Protect(data, ProtectedData.DefaultDataProtectionScope));
+        Serialized = ProtectedData.LockSymbol + Convert.ToBase64String(DP.Protect(data, ProtectedData.DefaultDataProtectionScope));
     }
 
     /// <summary>

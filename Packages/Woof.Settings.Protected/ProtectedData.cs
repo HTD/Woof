@@ -10,6 +10,11 @@
 public class ProtectedData : ISerializableSettingsValue, IProtectedSettingsValue {
 
     /// <summary>
+    /// A Unicode lock symbol used to mark protected data.
+    /// </summary>
+    public const string LockSymbol = "🔒";
+
+    /// <summary>
     /// Gets or sets the data protection scope for the instances. Default is <see cref="DataProtectionScope.CurrentUser"/>.
     /// </summary>
     public static DataProtectionScope DefaultDataProtectionScope { get; set; }
@@ -17,7 +22,7 @@ public class ProtectedData : ISerializableSettingsValue, IProtectedSettingsValue
     /// <summary>
     /// Gets a value indicating that the data is protected.
     /// </summary>
-    public bool IsProtected => Serialized?.Length > 1 && Serialized[0..2] == "🐕"; // the Unicode dogo is the data protection ID sequence.
+    public bool IsProtected => Serialized?.Length > 1 && Serialized[0..2] == LockSymbol;
 
     /// <summary>
     /// Gets or sets the unprotected data.
@@ -42,7 +47,7 @@ public class ProtectedData : ISerializableSettingsValue, IProtectedSettingsValue
     public void Protect() {
         if (Serialized.Length < 1 || IsProtected) return;
         var data = Convert.FromBase64String(Serialized);
-        Serialized = "🐕" + Convert.ToBase64String(DP.Protect(data, DefaultDataProtectionScope));
+        Serialized = LockSymbol + Convert.ToBase64String(DP.Protect(data, DefaultDataProtectionScope));
     }
 
     /// <summary>

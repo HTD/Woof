@@ -5,11 +5,32 @@
 /// </summary>
 public static class NugetCli {
 
+    #region Configuration
+
     /// <summary>
-    /// Creates or reloads the local NuGet package repository.
+    /// Gets the solution's root path.
+    /// </summary>
+    private static string Root => Path.GetFullPath(Settings.Default.Paths.Root);
+
+    /// <summary>
+    /// Gets the directory where the packages for the repository are built.
+    /// </summary>
+    private static string Source => Path.Combine(Root, Settings.Default.Paths.PackageBinaries);
+
+    /// <summary>
+    /// Gets the local NuGet repository.
+    /// </summary>
+    private static string Target => Path.Combine(Root, Settings.Default.Paths.Repo);
+
+    #endregion
+
+    #region API
+
+    /// <summary>
+    /// Creates or updates the local NuGet package repository.
     /// </summary>
     /// <returns>A <see cref="ValueTask"/> completed when the repository is created or updated.</returns>
-    public static async ValueTask ReloadRepositoryAsync() {
+    public static async ValueTask UpdateRepositoryAsync() {
         Directory.CreateDirectory(Target);
         var command = new ShellCommand($"nuget init \"{Source}\" \"{Target}\"");
         await EnsureAvailableAsync();
@@ -23,6 +44,10 @@ public static class NugetCli {
         Directory.Delete(Target, recursive: true);
         Directory.CreateDirectory(Target);
     }
+
+    #endregion
+
+    #region Helpers
 
     /// <summary>
     /// Ensures the NuGet CLI tool is available. If not, it's downloaded.
@@ -50,22 +75,19 @@ public static class NugetCli {
         await responseStream.CopyToAsync(fileStream);
     }
 
-    #region Static configuration
+    #endregion
+
+    #region Data / initialization
 
     /// <summary>
-    /// Gets the necessary configuration values from the program settings on first access.
+    /// Throws if settings not loaded.
     /// </summary>
-    static NugetCli() {
-        if (!Settings.Default.IsLoaded) Settings.Default.Load();
-        Root = Path.GetFullPath(Settings.Default.Paths.Root);
-        Source = Path.Combine(Root, Settings.Default.Paths.PackageBinaries);
-        Target = Path.Combine(Root, Settings.Default.Paths.Repo);
-    }
+    static NugetCli() => Settings.Default.Assert();
 
+    /// <summary>
+    /// NuGet.exe download link.
+    /// </summary>
     private const string DownloadLink = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe";
-    private static readonly string Root;
-    private static readonly string Source;
-    private static readonly string Target;
 
     #endregion
 

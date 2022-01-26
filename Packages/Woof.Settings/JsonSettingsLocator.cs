@@ -35,12 +35,22 @@ public class JsonSettingsLocator : ILocator {
             ? new[] { userDirectory, programDirectory }
             : new[] { programDirectory, userDirectory };
         var extensions = IsDebug ? GetDebugExtensions() : Extensions;
-        foreach (var target in targets) {
+        var matches = new List<FileInfo>();
+        foreach (var target in targets) { // we search all targets to find the most recent configuration.
             foreach (var extension in extensions) {
-                string? path = Path.Combine(target, name + extension);
-                if (File.Exists(path)) return (path, true);
+                var file = new FileInfo(Path.Combine(target, name + extension));
+                if (file.Exists) {
+                    if (PreferUserDirectory && file.Directory!.FullName.Equals(programDirectory, StringComparison.OrdinalIgnoreCase)) {
+                        var userTarget = new FileInfo(Path.Combine(userDirectory, file.Name));
+                        if (!userTarget.Exists || file.LastWriteTime > userTarget.LastWriteTime)
+                            File.Copy(file.FullName, userTarget.FullName, true);
+                    }
+                    matches.Add(file); break;
+                }
             }
         }
+        var bestMatch = matches.OrderByDescending(m => m.LastWriteTime).FirstOrDefault()?.FullName;
+        if (bestMatch is not null) return (bestMatch, true);
         {
             var extension = Extensions.First();
             if (!Directory.Exists(userDirectory)) Directory.CreateDirectory(userDirectory);

@@ -34,7 +34,12 @@ public class Terminal {
     /// </summary>
     /// <param name="name">Project name.</param>
     /// <returns>Project metadata.</returns>
-    private DotNetProject GetProject(string name) => new(Path.Combine(SolutionDirectory, name, name) + ".csproj");
+    private static DotNetProject GetProject(string name) {
+        var solutionFile = DotNetSolution.CurrentSolutionFile;
+        if (solutionFile is null) throw new FileNotFoundException();
+        var solution = new DotNetSolution(solutionFile);
+        return new(solution.Projects.First(p => p.Name == name).Path);
+    }
 
     /// <summary>
     /// Starts the configured Windows Terminal.
@@ -47,7 +52,6 @@ public class Terminal {
         var e = Projects.GetEnumerator();
         var r = run.AsEnumerable().GetEnumerator();
         var more = e.MoveNext();
-
         if (!more) throw new InvalidOperationException("No projects added");
         while (more) {
             var name = e.Current.Key;
@@ -67,7 +71,7 @@ public class Terminal {
         Process.Start(processStartInfo);
     }
 
-    private readonly string SolutionDirectory = DotNetSolution.CurrentSolutionDirectory?.FullName
+    private readonly string SolutionDirectory = DotNetSolution.CurrentSolutionFile?.Directory?.FullName
         ?? throw new InvalidOperationException("Can't get the current solution directory");
     private readonly string CurrentConfiguration = Executable.CurrentBuildConfiguration;
 

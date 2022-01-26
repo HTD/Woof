@@ -1,13 +1,21 @@
-{
+﻿{
+	"DotNetFrameworkName": ".NETCoreApp,Version=v6.0",
+	"Editor": null, // system default
+	"Feeds": [
+		{
+			"Name": "BaGet (Local)",
+			"Uri": "http://localhost:5000/v3/index.json"
+		},
+		{
+			"Name": "NuGet.org (PUBLIC!)",
+			"Uri": "https://api.nuget.org/v3/index.json",
+			"ApiKey": "🔒AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAaAKTQ/tRmUi1ZYg+S2M2IQAAAAACAAAAAAAQZgAAAAEAACAAAADa7vWijFbodjAp4Zg8YA+BqKBCS6OU9/IHP6Vk3JAkeAAAAAAOgAAAAAIAACAAAACb1iAfSz4wKhlgMkcw3XjPkQ+LrL5TDoVqAqtSMCVq2jAAAAAAFyBTpK4YBdqCm5eWY8zNlPoiADs+KOtAYPrzdpSvZVfWHPJHHhEbiKz0FpTpMt5AAAAAjs+LTNNAVlAMCJ+jRIc7s303XCAlKTQXgpbIWoTar1OOdnj+dSlDnwLArnjTKVMFhycsHf7QudK/3aGcjnRGOw=="
+		}
+	],
 	"Paths": {
 		"Root": "..\\..\\..\\..",
 		"Repo": "Repo",
 		"PackageBinaries": "Packages\\bin\\Release"
 	},
-	"Prefix": "Woof",
-	"DotNetFrameworkName": ".NETCoreApp,Version=v6.0",
-	"Feeds": [
-		{ "Name": "Test", "Uri": "http://localhost:5000/v3/index.json" },
-		{ "Name": "NuGet.org", "Uri": "https://api.nuget.org/v3/index.json" }
-	]
+	"Prefix": "Woof"
 }

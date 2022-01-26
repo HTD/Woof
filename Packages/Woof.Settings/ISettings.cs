@@ -12,6 +12,12 @@ public interface ISettings<TData> {
     bool IsLoaded { get; }
 
     /// <summary>
+    /// Assert the settings to be loaded.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Settings not loaded.</exception>
+    void Assert();
+
+    /// <summary>
     /// Loads the data from file.
     /// </summary>
     TData Load();

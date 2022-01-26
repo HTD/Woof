@@ -13,6 +13,14 @@ public abstract class JsonSettings<T> : ISettings<T> where T : class {
     public bool IsLoaded { get; private set; }
 
     /// <summary>
+    /// Throws an <see cref="InvalidOperationException"/> if <see cref="IsLoaded"/> is false.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Settings not loaded.</exception>
+    public void Assert() {
+        if (!IsLoaded) throw new InvalidOperationException("Load settings first");
+    }
+
+    /// <summary>
     /// Loads the program configuration file.
     /// </summary>
     /// <returns>Configuration data.</returns>

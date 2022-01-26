@@ -108,8 +108,13 @@ public class ObjectTree {
         if (info?.SetMethod is null) return;
         Property? parent = node.Path.Parent is null ? null : GetPropertyByPath(node.Path.Parent);
         if (parent is null) return;
-        object? defaultValue = info.PropertyType.IsValueType ? Activator.CreateInstance(info.PropertyType) : null;
-        info.SetValue(parent.Value.Value, defaultValue);
+        var parentObject = parent.Value!.Value!;
+        var parentType = parentObject.GetType();
+        var defaultInstance = parentType.GetConstructor(Type.EmptyTypes)?.Invoke(null);
+        object? defaultValue = defaultInstance is null
+            ? (info.PropertyType.IsValueType ? Activator.CreateInstance(info.PropertyType) : null)
+            : info.GetValue(defaultInstance);
+        info.SetValue(parentObject, defaultValue);
     }
 
     /// <summary>

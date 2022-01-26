@@ -91,7 +91,7 @@ public class JsonNodeLoader : ILoader<JsonNode> {
     /// <param name="stream">Writeable stream.</param>
     public virtual void Save(JsonNode node, Stream stream) {
         if (node is null) return;
-        using var writer = new Utf8JsonWriter(stream, WriterOptions);
+        using var writer = new Utf8JsonWriter(new Utf8DecodeStream(stream), WriterOptions);
         node.WriteTo(writer, SerializerOptions);
     }
 
@@ -112,7 +112,7 @@ public class JsonNodeLoader : ILoader<JsonNode> {
     /// <param name="stream">Writeable stream.</param>
     public virtual async ValueTask SaveAsync(JsonNode node, Stream stream) {
         if (node is null) return;
-        await using var writer = new Utf8JsonWriter(stream, WriterOptions);
+        await using var writer = new Utf8JsonWriter(new Utf8DecodeStream(stream), WriterOptions);
         node.WriteTo(writer, SerializerOptions);
     }
 

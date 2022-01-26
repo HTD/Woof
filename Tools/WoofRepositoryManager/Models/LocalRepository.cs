@@ -3,38 +3,33 @@
 /// <summary>
 /// Local package repository.
 /// </summary>
-public class LocalRepository {
-
-    /// <summary>
-    /// Gets a full path to the local repository.
-    /// </summary>
-    public string Path { get; }
-
-    /// <summary>
-    /// Gets the repository prefix.
-    /// </summary>
-    public string Prefix { get; }
+public static class LocalRepository {
 
     /// <summary>
     /// Gets the toolkit root.
     /// </summary>
-    public string Root { get; }
+    public static string Root => System.IO.Path.GetFullPath(Settings.Default.Paths.Root);
 
     /// <summary>
-    /// Creates the new local repository instance.
+    /// Gets a full path to the local repository.
     /// </summary>
-    public LocalRepository() {
-        if (!Settings.Default.IsLoaded) throw new InvalidOperationException("Repository settings not loaded");
-        Root = System.IO.Path.GetFullPath(Settings.Default.Paths.Root);
-        Path = System.IO.Path.Combine(Root, Settings.Default.Paths.Repo);
-        Prefix = Settings.Default.Prefix;
-    }
+    public static string Path => System.IO.Path.Combine(Root, Settings.Default.Paths.Repo);
+
+    /// <summary>
+    /// Gets the repository prefix.
+    /// </summary>
+    public static string Prefix => Settings.Default.Prefix;
+
+    /// <summary>
+    /// Asserts the settings loaded.
+    /// </summary>
+    static LocalRepository() => Settings.Default.Assert();
 
     /// <summary>
     /// Gets all packages metadata from the configured local repository.
     /// </summary>
     /// <returns>Asynchronous collection of <see cref="IPackageSearchMetadata"/>.</returns>
-    public async IAsyncEnumerable<IPackageSearchMetadata> GetPackagesAsync() {
+    public static async IAsyncEnumerable<IPackageSearchMetadata> GetPackagesAsync() {
         var listResource = await Repository
             .CreateSource(Repository.Provider.GetCoreV3(), new PackageSource(Path), FeedType.FileSystemV3)
             .GetResourceAsync<ListResource>();

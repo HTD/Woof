@@ -8,14 +8,9 @@ public class MainView : ViewModelBase, IGetAsync {
     /// <summary>
     /// Gets or sets a value indicating the view model is busy processing the data.
     /// </summary>
-    private bool IsBusy {
-        get => _IsBusy;
-        set {
-            if (value != _IsBusy) {
-                _IsBusy = value;
-                OnPropertyChanged(nameof(SpinnerVisibility));
-            }
-        }
+    public bool IsBusy {
+        get => GetValue(nameof(IsBusy), false);
+        set => SetValue(nameof(IsBusy), value);
     }
 
     /// <summary>
@@ -39,21 +34,11 @@ public class MainView : ViewModelBase, IGetAsync {
     public ObservableList<PackageNode> Packages { get; } = new();
 
     /// <summary>
-    /// Gets or sets the visibility value for the view busy spinner.
-    /// </summary>
-    public Visibility SpinnerVisibility => IsBusy ? Visibility.Visible : Visibility.Hidden;
-
-    /// <summary>
     /// Gets or sets the status text.
     /// </summary>
     public string? Status {
-        get => _Status;
-        set {
-            if (value != _Status) {
-                _Status = value;
-                OnPropertyChanged(nameof(Status));
-            }
-        }
+        get => GetValue<string>(nameof(Status), null);
+        set => SetValue(nameof(Status), value);
     }
 
     /// <summary>
@@ -237,7 +222,5 @@ public class MainView : ViewModelBase, IGetAsync {
     }
 
     private bool IsInitialized;
-    private bool _IsBusy;
-    private string? _Status;
 
 }

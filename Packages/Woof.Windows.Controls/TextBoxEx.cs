@@ -1,12 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-
-namespace Woof.Windows.Controls;
+﻿namespace Woof.Windows.Controls;
 
 /// <summary>
 /// Text box with "water-marked" label inside.
-/// Also MVVM friendly, Text is bound two-way by default and updates in real time.
 /// </summary>
 public class TextBoxEx : TextBox {
 

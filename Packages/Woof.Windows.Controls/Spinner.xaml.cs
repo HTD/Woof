@@ -1,62 +1,69 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Animation;
-
-namespace Woof.Windows.Controls;
+﻿namespace Woof.Windows.Controls;
 
 /// <summary>
 /// Windows-style spinner with optional percent display.
 /// </summary>
 public partial class Spinner : UserControl {
 
+    #region API
+
+    /// <summary>
+    /// Shows or hides the spinner, used to bind spinner to boolean view model property.
+    /// </summary>
+    public bool IsOn {
+        get => (bool)GetValue(IsOnProperty);
+        set => SetValue(IsOnProperty, value);
+    }
+
     /// <summary>
     /// Gets or sets percentage value, set -1 to hide percent display.
     /// </summary>
-    public int Percent {
-        get => _Percent; set {
-            if (value < 0) {
-                PercentBox.Visibility = Visibility.Hidden;
-            }
-            else {
-                PercentBox.Visibility = Visibility.Visible;
-                PercentAmount.Text = value.ToString();
-            }
-            _Percent = value;
-        }
+    public double Percent {
+        get => (double)GetValue(PercentProperty);
+        set => SetValue(PercentProperty, value);
     }
 
     /// <summary>
-    /// Gets or sets the number of items processed. If <see cref="Total"/> value is set, percent display is shown.
-    /// </summary>
-    public int Done {
-        get => _Done; set {
-            if (Total > 0) {
-                double percentValue = value / (double)Total * 100;
-                PercentBox.Visibility = Visibility.Visible;
-                PercentAmount.Text = ((int)Math.Round(percentValue)).ToString();
-            }
-            else {
-                PercentBox.Visibility = Visibility.Hidden;
-                PercentAmount.Text = "E1/0";
-            }
-            _Done = value;
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets total elements to process for percentage display.
-    /// </summary>
-    public int Total { get; set; }
-
-    /// <summary>
-    /// Initializes spinner with percentage diplay off.
+    /// Initializes spinner.
     /// </summary>
     public Spinner() {
         InitializeComponent();
-        Percent = -1;
         StartAnimation();
         SuspendAnimation();
     }
+
+    #endregion
+
+    #region Dependency properties
+
+    private static readonly DependencyProperty IsOnProperty = DependencyProperty.Register(
+        nameof(IsOn), typeof(bool), typeof(Spinner), new PropertyMetadata(false, OnIsOnChanged)
+    );
+
+    private static readonly DependencyProperty PercentProperty = DependencyProperty.Register(
+        nameof(Percent), typeof(double), typeof(Spinner), new PropertyMetadata(0d, OnPercentChanged)
+    );
+
+    private static void OnIsOnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        var value = (bool)e.NewValue;
+        if (value != (bool)e.OldValue && d is Spinner spinner) {
+            spinner.PercentBox.Visibility = Visibility.Hidden;
+            spinner.Visibility = value ? Visibility.Visible : Visibility.Hidden;
+        }
+    }
+
+    private static void OnPercentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        var value = (double)e.NewValue;
+        if (value == (double)e.OldValue) return;
+        var spinner = (Spinner)d;
+        if (value < 0) spinner.Visibility = spinner.IsOn ? Visibility.Visible : Visibility.Hidden;
+        else {
+            spinner.Visibility = Visibility.Visible;
+            spinner.PercentAmount.Text = value.ToString();
+        }
+    }
+
+    #endregion
 
     #region Animation control
 
@@ -140,8 +147,6 @@ public partial class Spinner : UserControl {
 
     #region Private data
 
-    int _Percent;
-    int _Done;
     Storyboard? _A0;
     Storyboard? _A1;
     Storyboard? _A2;

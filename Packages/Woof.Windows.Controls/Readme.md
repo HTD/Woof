@@ -15,11 +15,13 @@ This package contains some tiny but useful WPF controls.
   *A kind of `Menu` having a label containing a list of selected options or
   a fallback text for nothing selected or available*.
 - **Spinner**:
-  *A Windows 8 / 10 style loading animation with optional percentage label*,
+  *A Windows 8 / 10 / 11 style loading animation with optional percentage label*,
 - **TextBoxEx**:
   *A `TextBox` extension diplaying a label placeholder when it's empty*.
 
 ## Usage
+
+### Checks
 
 This controls uses `Woof.Windows.MVM` because it's designed for MVVM.
 The control's `ItemsSource` should be bound to an observable collection,
@@ -37,6 +39,18 @@ if it implements `INotifyPropertyChanged` interface.
 
 Handle the event in order to apply changes to your view model depending
 on the items selection state.
+
+### Spinner
+
+Place anywhere. If `IsOn` property is set, it will be displayed and spin.
+
+When the `Percent` value is set to a positive value, the spinner will spin and display
+the value set. Set `Percent` to a negative value to hide the spinner.
+
+### TextBoxEx
+
+Works as a regular checkbox. Set the `Label` property to show description
+inside the text box.
 
 See the provided demo project and refer to built-in XML documentation
 for more details.

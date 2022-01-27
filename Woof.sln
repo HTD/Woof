@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Woof Tookit", "Woof Tookit", "{FE1C68B2-5C0C-40F8-9F5E-05D23EADEA12}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		CodeDog.ico = CodeDog.ico
 		CodingStyle.vssettings = CodingStyle.vssettings
 		Icon.png = Icon.png
 		Readme.md = Readme.md

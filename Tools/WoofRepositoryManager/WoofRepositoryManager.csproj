@@ -10,10 +10,15 @@
     <PropertyGroup>
         <BaseOutputPath>..\bin\</BaseOutputPath>
         <ImplicitUsings>enable</ImplicitUsings>
+        <ApplicationIcon>CodeDog.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
       <None Remove="Views\Icon.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="CodeDog.ico" />
     </ItemGroup>
 
     <ItemGroup>

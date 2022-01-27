@@ -80,6 +80,6 @@
             </TreeView.ItemTemplate>
         </TreeView>
         <TextBlock Text="{Binding Status}" Grid.Row="2" Style="{StaticResource StatusBar}"/>
-        <wc:Spinner Visibility="{Binding SpinnerVisibility}" Grid.Row="1" Foreground="{StaticResource SpinnerBrush}" />
+        <wc:Spinner IsOn="{Binding IsBusy}" Grid.Row="1" Foreground="{StaticResource SpinnerBrush}" />
     </Grid>
 </wm:AutoLoadView>

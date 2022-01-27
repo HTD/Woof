@@ -1,20 +1,12 @@
-﻿using System.Collections;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
-
-using Woof.Windows.Mvvm;
-
-namespace Woof.Windows.Controls;
+﻿namespace Woof.Windows.Controls;
 
 /// <summary>
 /// A control that displays checkable items as dropdown menu.<br/>
 /// Bind to an observable collection of <see cref="Check"/> items.
 /// </summary>
 public partial class Checks : UserControl {
+
+    #region API
 
     /// <summary>
     /// Gets or sets the empty selection placeholder value.
@@ -34,6 +26,15 @@ public partial class Checks : UserControl {
         get => (IEnumerable)GetValue(ItemsSourceProperty);
         set => SetValue(ItemsSourceProperty, value);
     }
+
+    /// <summary>
+    /// Initializes the control.
+    /// </summary>
+    public Checks() => InitializeComponent();
+
+    #endregion
+
+    #region Dependency properties
 
     /// <summary>
     /// <see cref="DependencyProperty"/> definition for <see cref="Empty"/> property.
@@ -56,11 +57,6 @@ public partial class Checks : UserControl {
             typeof(Checks),
             new PropertyMetadata(new PropertyChangedCallback(OnItemsSourcePropertyChanged))
         );
-
-    /// <summary>
-    /// Initializes the control.
-    /// </summary>
-    public Checks() => InitializeComponent();
 
     private static void OnEmptyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is Checks control && control.ItemsSource is not null && e.NewValue != e.OldValue)
@@ -114,6 +110,10 @@ public partial class Checks : UserControl {
                 break;
         }
     }
+
+    #endregion
+
+    #region Helpers
 
     private void UpdateHeader() {
         string?[]? labels = ItemsSource
@@ -169,6 +169,8 @@ public partial class Checks : UserControl {
         NotifySourceItemChanged(sourceItem);
     }
 
+    #endregion
+
     #region ItemsSource notifier
 
     private void NotifySourceItemChanged(object item) => ItemsSourceOnPropertyChanged(item, new PropertyChangedEventArgs("IsChecked"));
@@ -190,8 +192,5 @@ public partial class Checks : UserControl {
     private MethodInfo? ItemsSourceOnPropertyChangedMethod;
 
     #endregion
-
-    //private readonly Menu MenuContainer;
-    //private readonly MenuItem MenuContent;
 
 }

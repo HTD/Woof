@@ -30,6 +30,31 @@ public abstract class ViewModelBase : INotifyPropertyChanged, ICommand {
     virtual public void Execute(object? parameter) { }
 
     /// <summary>
+    /// Gets a bound property value.
+    /// </summary>
+    /// <typeparam name="T">Type of the bound property.</typeparam>
+    /// <param name="propertyName">Name of the property.</param>
+    /// <param name="defaultValue">Default value, if not set.</param>
+    /// <returns>Property value.</returns>
+    protected T? GetValue<T>(string propertyName, T? defaultValue = default)
+        => Properties.ContainsKey(propertyName) ? (T?)Properties[propertyName] : defaultValue;
+
+    /// <summary>
+    /// Sets a bound property value.
+    /// </summary>
+    /// <typeparam name="T">Type of the bound property.</typeparam>
+    /// <param name="propertyName">Name of the property.</param>
+    /// <param name="value">Value to set.</param>
+    /// <param name="defaultValue">Default value to test if the value changed.</param>
+    protected void SetValue<T>(string propertyName, T? value, T? defaultValue = default) {
+        var oldValue = GetValue(propertyName, defaultValue);
+        if ((value is not null && !value.Equals(oldValue)) || oldValue is not null) {
+            Properties[propertyName] = value;
+            OnPropertyChanged(propertyName);
+        }
+    }
+
+    /// <summary>
     /// Notifies the view the property has changed and it needs to update.
     /// </summary>
     /// <param name="propertyName"></param>
@@ -39,5 +64,10 @@ public abstract class ViewModelBase : INotifyPropertyChanged, ICommand {
     /// Trigger to enable or disable a control bound to a command.
     /// </summary>
     protected virtual void OnCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+
+    /// <summary>
+    /// Automatic bound properties dictionary to provide backing fields for the properties.
+    /// </summary>
+    private readonly Dictionary<string, object?> Properties = new();
 
 }

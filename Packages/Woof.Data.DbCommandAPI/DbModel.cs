@@ -3,6 +3,7 @@
 /// <summary>
 /// Base class for simple SQL data models.
 /// </summary>
+/// <typeparam name="TParam">A parameter type for the <see cref="DbCommand"/>, database specific.</typeparam>
 public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TParam : DbParameter, new() {
 
     /// <summary>
@@ -11,14 +12,14 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     public DbConnection Connection { get; }
 
     /// <summary>
-    /// Gets or sets the SQL command timeout.
+    /// Gets or sets the SQL command timeout, in seconds.
     /// </summary>
-    public int Timeout { get; set; } = 10;
+    public int Timeout { get; set; } = 5;
 
     /// <summary>
     /// Creates the model with a connection.
     /// </summary>
-    /// <param name="connection"></param>
+    /// <param name="connection">Any database connection.</param>
     public DbModel(DbConnection connection) => Connection = connection;
 
     /// <summary>
@@ -32,7 +33,7 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     public async ValueTask BeginTransactionAsync() => Transaction = await Connection.BeginTransactionAsync();
 
     /// <summary>
-    /// Commits the database transaction.
+    /// Commits the database transaction started with <see cref="BeginTransaction"/>.
     /// </summary>
     public void Commit() {
         Transaction?.Commit();
@@ -41,7 +42,7 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     }
 
     /// <summary>
-    /// Commits the database transaction.
+    /// Commits the database transaction started with <see cref="BeginTransactionAsync"/>.
     /// </summary>
     public async ValueTask CommitAsync() {
         if (Transaction is not null) {
@@ -52,7 +53,7 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     }
 
     /// <summary>
-    /// Rolls back a transaction from a pending state.
+    /// Rolls back a transaction started with <see cref="BeginTransaction"/>.
     /// </summary>
     public void Rollback() {
         Transaction?.Rollback();
@@ -61,7 +62,7 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     }
 
     /// <summary>
-    /// Rolls back a transaction from a pending state.
+    /// Rolls back a transaction started with <see cref="BeginTransactionAsync"/>.
     /// </summary>
     public async ValueTask RollbackAsync() {
         if (Transaction is not null) {
@@ -72,11 +73,11 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     }
 
     /// <summary>
-    /// Executes a stored procedure with some optional parameters.
+    /// Executes a stored procedure with optional parameters.
     /// Returns whatever database engine returns for non-query mode.
     /// </summary>
     /// <param name="procedure">Stored procedure name.</param>
-    /// <param name="parameters">An object whose properties with names will be used to set command parameters.</param>
+    /// <param name="parameters">An object whose properties with names will be used to set command parameters. Use <see cref="DataTable"/> for collections.</param>
     /// <returns>Number of affected rows or other integer the specific database engine returns for non-query mode.</returns>
     public int Exec(string procedure, object? parameters = null) {
         if (Connection.State != ConnectionState.Open) Connection.Open();
@@ -90,13 +91,13 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     }
 
     /// <summary>
-    /// Executes a stored procedure with some optional parameters.
+    /// Executes a stored procedure with optional parameters.
     /// Returns whatever database engine returns for non-query mode.
     /// </summary>
     /// <param name="procedure">Stored procedure name.</param>
-    /// <param name="parameters">An object whose properties with names will be used to set command parameters.</param>
-    /// <returns>Number of affected rows or other integer the specific database engine returns for non-query mode.</returns>
-    public async Task<int> ExecAsync(string procedure, object? parameters = null) {
+    /// <param name="parameters">An object whose properties with names will be used to set command parameters. Use <see cref="DataTable"/> for collections.</param>
+    /// <returns>A <see cref="ValueTask"/> returning a number of affected rows or other integer the specific database engine returns for non-query mode.</returns>
+    public async ValueTask<int> ExecAsync(string procedure, object? parameters = null) {
         if (Connection.State != ConnectionState.Open) await Connection.OpenAsync();
         await using var cmd = Connection.CreateCommand();
         if (Transaction is not null) cmd.Transaction = Transaction;
@@ -108,11 +109,11 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     }
 
     /// <summary>
-    /// Executes a stored procedure with some optional parameters to fetch data.
+    /// Executes a stored procedure with optional parameters to fetch data.
     /// </summary>
     /// <typeparam name="TElement">Returned element type.</typeparam>
     /// <param name="procedure">Stored procedure name.</param>
-    /// <param name="parameters">An object whose properties with names will be used to set command parameters.</param>
+    /// <param name="parameters">An object whose properties with names will be used to set command parameters. Use <see cref="DataTable"/> for collections.</param>
     /// <returns>A collection of elements.</returns>
     public IEnumerable<TElement> Query<TElement>(string procedure, object? parameters = null) where TElement : new() {
         if (Connection.State != ConnectionState.Open) Connection.Open();
@@ -133,8 +134,8 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     /// </summary>
     /// <typeparam name="TElement">Returned element type.</typeparam>
     /// <param name="procedure">Stored procedure name.</param>
-    /// <param name="parameters">An object whose properties with names will be used to set command parameters.</param>
-    /// <returns>A collection of elements.</returns>
+    /// <param name="parameters">An object whose properties with names will be used to set command parameters. Use <see cref="DataTable"/> for collections.</param>
+    /// <returns>An asynchronous stream of elements.</returns>
     public async IAsyncEnumerable<TElement> QueryAsync<TElement>(string procedure, object? parameters = null) where TElement : new() {
         if (Connection.State != ConnectionState.Open) await Connection.OpenAsync();
         await using var cmd = Connection.CreateCommand();
@@ -150,10 +151,10 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     }
 
     /// <summary>
-    /// Executes a stored procedure with some optional parameters to fetch data.
+    /// Executes a stored procedure with some parameters to fetch data. The rows will be fetched as arrays of objects.
     /// </summary>
     /// <param name="procedure">Stored procedure name.</param>
-    /// <param name="parameters">Parameters in SQL digestable form. Use <see cref="DataTable"/> for table types.</param>
+    /// <param name="parameters">An object whose properties with names will be used to set command parameters. Use <see cref="DataTable"/> for collections.</param>
     /// <returns>A collection of rows.</returns>
     public IEnumerable<object[]> QueryRaw(string procedure, object? parameters = null) {
         if (Connection.State != ConnectionState.Open) Connection.Open();
@@ -172,11 +173,11 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     }
 
     /// <summary>
-    /// Executes a stored procedure with some optional parameters to fetch data.
+    /// Executes a stored procedure with some optional parameters to fetch data. The rows will be fetched as arrays of objects.
     /// </summary>
     /// <param name="procedure">Stored procedure name.</param>
-    /// <param name="parameters">Parameters in SQL digestable form. Use <see cref="DataTable"/> for table types.</param>
-    /// <returns>A collection of rows.</returns>
+    /// <param name="parameters">An object whose properties with names will be used to set command parameters. Use <see cref="DataTable"/> for collections.</param>
+    /// <returns>An asynchronous stream of rows.</returns>
     public async IAsyncEnumerable<object[]> QueryRawAsync(string procedure, object? parameters = null) {
         if (Connection.State != ConnectionState.Open) await Connection.OpenAsync();
         await using var cmd = Connection.CreateCommand();
@@ -205,13 +206,16 @@ public abstract class DbModel<TParam> : IDisposable, IAsyncDisposable where TPar
     /// <summary>
     /// Disposes the connection (and transaction if applicable).
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A <see cref="ValueTask"/> completed when everything is disposed.</returns>
     public async ValueTask DisposeAsync() {
         if (Transaction is not null) await Transaction.DisposeAsync();
         if (Connection is not null) await Connection.DisposeAsync();
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Local common transaction reference.
+    /// </summary>
     private DbTransaction? Transaction;
 
 }

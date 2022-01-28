@@ -84,10 +84,30 @@ Use the `Publish` tool to show detailed package dependencies.
 
 ## Building system
 
-All packages are built to a common directory that is used to build the local
-package repository.
+The solution contains Tools folder, where the **`Woof Repository Manager`** resides.
+The solution is configured to build all packages in a single directory.
+Then the `Manager` tool creates a local NuGet repository.
+
+The local repository is used either directly, or by the `Manager` to display dependency structure.
+
+From the `Manager` level the packages can be published to any remote private or public feed.
+
+The feeds are configured in a local user's JSON configuration file.
+
 
 To publish to external feeds like nuget.org use the `Publish` tool.
+
+API keys can be safely stored in the JSON configuration, because they are encrypted on the first
+reload using Windows Data Protection API for the current user.
+
+**NOTE**
+
+To actually build packages you either need the strong name key that is not included in this
+repository or just remove strong name signing from the projects.
+I decided to not include the key in order to be sure, that the signed Woof packages are
+what they are.
+
+The key will be shared to Woof contributors. To become one just ask.
 
 ## Template
 
@@ -140,11 +160,26 @@ the **current `Woof` is multiplatform**.
 Each package is tested on both Windows and Linux.
 (For now: Windows 11 and Ubuntu 20.)
 
+## Current state
+
+Final works. Mostly on testing and improving documentation.
+The beta version packages will be soon released on GitHub, and after some testing
+version 6.2.0 will go to NuGet.org. All older packages will be deprecated.
+
+
+## Known issues
+
+Missing demos, test, documentation for some packages.
+
 ## Future
 
 `Woof` is here to stay. In 2022 you can count on very intense active
 development. The 6.2.0 version will be rock solid, as the `.NET 6.0`
 itself.
+
+Also: Woof.Blazor experimental package containing some advanced GUI controls.
+
+## Development
 
 The whole toolkit is developed by just one person by now.
 Join me any time.

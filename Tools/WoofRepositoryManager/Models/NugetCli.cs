@@ -40,9 +40,12 @@ public static class NugetCli {
     /// <summary>
     /// Resets (deletes) the local NuGet package repository.
     /// </summary>
-    public static void ResetRepository() {
+    public static ValueTask ResetRepositoryAsync() {
         Directory.Delete(Target, recursive: true);
-        Directory.CreateDirectory(Target);
+        var localCache = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages"));
+        var cachedPackages = localCache.GetDirectories().Where(d => d.Name.StartsWith(Settings.Default.Prefix));
+        foreach (var package in cachedPackages) package.Delete(recursive: true);
+        return UpdateRepositoryAsync();
     }
 
     #endregion

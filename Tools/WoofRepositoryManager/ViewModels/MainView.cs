@@ -24,9 +24,12 @@ public class MainView : ViewModelBase, IGetAsync {
     public ObservableList<Settings.NuGetFeed> Feeds { get; } = new();
 
     /// <summary>
-    /// Gets the feed currently selected.
+    /// Gets or sets the feed currently selected.
     /// </summary>
-    public Settings.NuGetFeed? CurrentFeed { get; set; }
+    public Settings.NuGetFeed? CurrentFeed {
+        get => GetValue<Settings.NuGetFeed?>(nameof(CurrentFeed), null);
+        set => SetValue(nameof(CurrentFeed), value);
+    }
 
     /// <summary>
     /// Gets the packages for the view.
@@ -51,14 +54,13 @@ public class MainView : ViewModelBase, IGetAsync {
             IsBusy = true;
             Status = "Loading local repository...";
             IsLoaded = false;
-            CurrentFeed = null;
-            OnPropertyChanged(nameof(CurrentFeed));
             Feeds.Clear();
             Feeds.AddRange(Settings.Default.Feeds);
-            CurrentFeed = Feeds.FirstOrDefault();
-            OnPropertyChanged(nameof(CurrentFeed));
             await Packages.GetAsync();
             IsLoaded = true;
+        }
+        catch (Exception exception) {
+            Status = exception.Message;
         }
         finally {
             IsBusy = false;
@@ -87,7 +89,7 @@ public class MainView : ViewModelBase, IGetAsync {
                 break;
             case "Reset":
                 Status = "Resetting the local repository...";
-                await CallAsync(command, NugetCli.ResetRepository, reloadView: true);
+                await CallAsync(command, NugetCli.ResetRepositoryAsync, reloadView: true);
                 Status = null;
                 break;
             case "Collapse":
@@ -119,6 +121,7 @@ public class MainView : ViewModelBase, IGetAsync {
                 }
                 break;
             case "ReloadSettings":
+                CurrentFeed = null;
                 await CallAsync(command, ReloadSettingsAsync);
                 break;
         }
@@ -177,6 +180,7 @@ public class MainView : ViewModelBase, IGetAsync {
     /// <param name="asyncAction">A synchronous action to call.</param>
     /// <param name="reloadView">True to reload the view after the action is completed.</param>
     /// <returns>A <see cref="ValueTask"/> completed when the action completes and optionally the view is reloaded.</returns>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Might be needed later")]
     private ValueTask CallAsync(string commandName, Action action, bool reloadView)
         => CallAsync(commandName, () => { action(); return ValueTask.CompletedTask; }, reloadView);
 

@@ -32,7 +32,7 @@
                 <ui:AppBarButton Icon="{StaticResource SelectAllIcon}" Label="Select all" Command="{Binding}" CommandParameter="All"/>
                 <ui:AppBarButton Icon="{StaticResource PublishIcon}" Label="Publish" Command="{Binding}" CommandParameter="Publish" ToolTip="Publish to the selected target"/>
                 <ui:AppBarButton Icon="{StaticResource DeleteIcon}" Label="Delete" Command="{Binding}" CommandParameter="Delete" Style="{StaticResource DangerButton}" ToolTip="Delete or unlist from the selected target"/>
-                <ComboBox ItemsSource="{Binding Feeds}" VerticalAlignment="Center" SelectedValue="{Binding CurrentFeed}">
+                <ComboBox ItemsSource="{Binding Feeds, IsAsync=True}" VerticalAlignment="Center" SelectedValue="{Binding CurrentFeed, IsAsync=True, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}"/>

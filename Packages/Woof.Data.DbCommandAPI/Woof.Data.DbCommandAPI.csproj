@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup Label="Package metadata">
+        <Title>Woof.Data.DbCommandApi</Title>
+        <Version>6.2.0-beta.1</Version>
+        <PackageTags>woof;toolkit;db;adatabase;sql;mssql;api</PackageTags>
+        <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
+        <Authors>Adam Łyskawa</Authors>
+        <Company>CodeDog</Company>
+        <Description>A convenient API over DbCommand, uses SQL procedures to map DTOs.</Description>
+        <Copyright>(c)2022 CodeDog</Copyright>
+        <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.Template</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <IncludeSymbols>True</IncludeSymbols>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\..\..\CodeDog\Keys\Woof.snk</AssemblyOriginatorKeyFile>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <PackageIcon>Icon.png</PackageIcon>
+    </PropertyGroup>
+
+    <ItemGroup Label="Embedded files">
+        <None Include="..\..\Icon.png" Pack="true" PackagePath="" />
+        <None Include="Readme.md" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+    <!-- Microsoft and 3rd party packages -->
+    <ItemGroup Label="System dependencies">
+    </ItemGroup>
+
+    <!-- Local project references -->
+    <ItemGroup Label="Local dependencies">
+    </ItemGroup>
+
+    <PropertyGroup Label="Project settings">
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DebugType>embedded</DebugType>
+        <RootNamespace>Woof.Data.DbCommandApi</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Code quality">
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Code quality: Release" Condition="'$(Configuration)'=='Release'">
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <BaseOutputPath>..\bin\</BaseOutputPath>
+    </PropertyGroup>
+
+</Project>

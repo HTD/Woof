@@ -80,7 +80,7 @@ Released versions are fully tested, however - expect the unexpected.
 
 ## Dependencies (internal)
 
-Use the `Publish` tool to show detailed package dependencies.
+Use the `Woof Repository Manager` tool to show detailed package dependencies.
 
 ## Building system
 

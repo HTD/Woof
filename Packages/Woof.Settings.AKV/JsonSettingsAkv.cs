@@ -27,8 +27,12 @@ public abstract class JsonSettingsAkv<T> : JsonSettings<T> where T : class {
     /// </summary>
     /// <returns>Configuration data.</returns>
     public override T Load() {
-        if (_AccessProvider is null)
-            _AccessProvider = new(new VaultConfiguration(_Metadata.Name + ".access", _Metadata.ProtectionScope).Load().Protect());
+        if (_AccessProvider is null) {
+            var vaultConfiguration = new VaultConfiguration(_Metadata).Load();
+            if (!vaultConfiguration.IsLoaded) throw new InvalidOperationException(LoadError);
+            vaultConfiguration.Protect();
+            _AccessProvider = new(vaultConfiguration);
+        }
         return base.Load();
     }
 
@@ -38,7 +42,8 @@ public abstract class JsonSettingsAkv<T> : JsonSettings<T> where T : class {
     /// <returns>A <see cref="ValueTask"/> returning configuration data when loaded.</returns>
     public async override ValueTask<T> LoadAsync() {
         if (_AccessProvider is null) {
-            var vaultConfiguration = await new VaultConfiguration(_Metadata.Name + ".access", _Metadata.ProtectionScope).LoadAsync();
+            var vaultConfiguration = await new VaultConfiguration(_Metadata).LoadAsync();
+            if (!vaultConfiguration.IsLoaded) throw new InvalidOperationException(LoadError);
             await vaultConfiguration.ProtectAsync();
             _AccessProvider = new(vaultConfiguration);
         }
@@ -51,7 +56,7 @@ public abstract class JsonSettingsAkv<T> : JsonSettings<T> where T : class {
     /// <param name="sender">The property attribute.</param>
     /// <param name="e">Event arguments to get the type from and set value to.</param>
     private void SpecialAttributeResolver(object? sender, SpecialAttributeEventArgs e) {
-        if (sender is not AKVAttribute akv || akv.Name is null) return;
+        if (sender is not AKVAttribute akv || akv.Name is null || _AccessProvider is null) return; // the only case the _AccessProvider is null is when getting default value.
         var akvString = AccessProvider.GetString(akv.Name);
         e.Value = ValueConversions.Parse(akvString, e.Type);
     }
@@ -65,5 +70,7 @@ public abstract class JsonSettingsAkv<T> : JsonSettings<T> where T : class {
     /// <see cref="AccessProvider"/> backing field.
     /// </summary>
     private AkvAccessProvider? _AccessProvider;
+
+    private const string LoadError = "Can't load AKV access configuration";
 
 }

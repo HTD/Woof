@@ -36,16 +36,25 @@ public class JsonSettingsLocator : ILocator {
             : new[] { programDirectory, userDirectory };
         var extensions = IsDebug ? GetDebugExtensions() : Extensions;
         var matches = new List<FileInfo>();
-        foreach (var target in targets) { // we search all targets to find the most recent configuration.
-            foreach (var extension in extensions) {
+        var userTargetExists = false; // introduced not to copy the secondary extension files from program to user directory.
+        foreach (var extension in extensions) {
+            foreach (var target in targets) { // we search all targets to find the most recent configuration.
                 var file = new FileInfo(Path.Combine(target, name + extension));
                 if (file.Exists) {
-                    if (PreferUserDirectory && file.Directory!.FullName.Equals(programDirectory, StringComparison.OrdinalIgnoreCase)) {
+                    if (PreferUserDirectory) {
                         var userTarget = new FileInfo(Path.Combine(userDirectory, file.Name));
-                        if (!userTarget.Exists || file.LastWriteTime > userTarget.LastWriteTime)
-                            File.Copy(file.FullName, userTarget.FullName, true);
+                        if (userTarget.Exists) userTargetExists = true;
+                        if (file.Directory!.FullName.Equals(programDirectory, StringComparison.OrdinalIgnoreCase)) { // file exists in a program directory, but not user
+                            if (!userTargetExists || (userTarget.Exists && file.LastWriteTime > userTarget.LastWriteTime)) { // not matched for primary extension, or there is a newer version
+                                if (!userTarget.Directory!.Exists) userTarget.Directory.Create();
+                                File.Copy(file.FullName, userTarget.FullName, true);
+                                try { File.Delete(file.FullName); } catch { } // this step is optional.
+                                file = new FileInfo(userTarget.FullName);
+                            }
+                        }
                     }
-                    matches.Add(file); break;
+                    matches.Add(file);
+                    break;
                 }
             }
         }

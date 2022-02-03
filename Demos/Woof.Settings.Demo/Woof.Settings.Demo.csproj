@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Company>CodeDog</Company>
+        <Product>Woof.Settings.Demo</Product>
+        <AssemblyName>wsd</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Packages\Woof.DataProtection.Linux\Woof.DataProtection.Linux.csproj" />
+        <ProjectReference Include="..\..\Packages\Woof.Settings.AKV\Woof.Settings.AKV.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Settings.access.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Settings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

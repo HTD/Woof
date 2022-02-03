@@ -1,0 +1,7 @@
+{
+    "VaultUri": "https://wooftest.vault.azure.net/",
+    "DirectoryId": "71756c44-0fc5-4386-b61e-64574528ec3d",
+    "ApplicationId": "8717a6da-ec0e-4103-828e-f4c0316c2720",
+    "ClientSecret": "0jv7Q~SyoqdCq1tuVcvq4tMT4Ym7mJJ1mqllV",
+    "CredentialsEncodingKeyName": "TestCredentialsEncryptionKey"
+}

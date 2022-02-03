@@ -25,7 +25,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <ui:AppBarButton Icon="{StaticResource UpdateIcon}" Label="Update" Command="{Binding}" CommandParameter="Update" ToolTip="Update the local repository"/>
-                <ui:AppBarButton Icon="{StaticResource ResetIcon}" Label="Reset" Command="{Binding}" CommandParameter="Reset" ToolTip="Clear the local repository"/>
+                <ui:AppBarButton Icon="{StaticResource ResetIcon}" Label="Reset" Command="{Binding}" CommandParameter="Reset" ToolTip="Reset the local repository"/>
                 <ui:AppBarButton Icon="{StaticResource ExpandAllIcon}" Label="Expand all" Command="{Binding}" CommandParameter="Expand"/>
                 <ui:AppBarButton Icon="{StaticResource CollapseAllIcon}" Label="Collapse all" Command="{Binding}" CommandParameter="Collapse"/>
                 <ui:AppBarButton Icon="{StaticResource SelectNoneIcon}" Label="Select none" Command="{Binding}" CommandParameter="None"/>

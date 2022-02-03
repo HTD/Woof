@@ -10,9 +10,11 @@ public class VaultConfiguration : JsonSettingsProtected<VaultConfiguration> {
     /// <summary>
     /// Sets up the vault configuration name and data protection.
     /// </summary>
-    /// <param name="name">The base name of the vault configuration file.</param>
-    /// <param name="protectionScope">Protection scope for the vault configuration file.</param>
-    internal VaultConfiguration(string name, DataProtectionScope protectionScope) : base(protectionScope) => _Metadata.Name = name;
+    /// <param name="metadata">Caller metadata.</param>
+    internal VaultConfiguration(JsonSettingsAkvMetadata metadata) : base(metadata.ProtectionScope) {
+        _Metadata.Name = metadata.Name + ".access";
+        _Metadata.Locator.PreferUserDirectory = metadata.Locator.PreferUserDirectory;
+    }
 
     /// <summary>
     /// Gets the AKV URI.

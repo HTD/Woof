@@ -40,7 +40,6 @@
         <ProjectReference Include="..\..\Packages\Woof.NPOI\Woof.NPOI.csproj" />
         <ProjectReference Include="..\..\Packages\Woof.Settings\Woof.Settings.csproj" />
         <ProjectReference Include="..\..\Packages\Woof.Shell\Woof.Shell.csproj" />
-        <ProjectReference Include="..\..\Packages\Woof.Template\Woof.Template.csproj" />
     </ItemGroup>
 
     <ItemGroup>

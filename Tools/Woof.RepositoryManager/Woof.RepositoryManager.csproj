@@ -41,7 +41,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="WoofRepositoryManager.json">
+      <None Update="Woof.RepositoryManager.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

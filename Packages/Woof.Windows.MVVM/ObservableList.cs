@@ -204,10 +204,20 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// <param name="item">Element to replace.</param>
     /// <param name="replacement">Replacement.</param>
     public void Replace(T item, T replacement) {
-        int index = IndexOf(item);
+        int index = base.IndexOf(item);
         if (item is INotifyPropertyChanged observableItem) observableItem.PropertyChanged -= (s, e) => OnPropertyChanged(observableItem, e);
         if (item is IDisposable disposableItem) disposableItem.Dispose();
-        if (index >= 0) this[index] = replacement;
+        if (index >= 0) {
+            base[index] = replacement;
+            if (ShadowList is not null) {
+                var shadowIndex = ShadowList.IndexOf(item);
+                if (shadowIndex >= 0) ShadowList[shadowIndex] = replacement;
+            }
+            if (ShadowList is null)
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, replacement, item));
+            else
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
     }
 
     /// <summary>

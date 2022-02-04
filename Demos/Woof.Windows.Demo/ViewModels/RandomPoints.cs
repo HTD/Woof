@@ -56,6 +56,17 @@ internal class RandomPoints : ViewModelBase, IGetAsync {
         Items.Insert(0, item);
     }
 
+    private void Replace() {
+        foreach (var item in Items.ToArray()) {
+            var replacement = new DataPointObservable { Id = item.Id, X = 1, Y = 2, Z = 3 };
+            var index = Items.IndexOf(item);
+            //Items.RemoveAt(index);
+            //Items.Add(replacement);
+            Items.Replace(item, replacement);
+            //OnPropertyChanged(nameof(Items));
+        }
+    }
+
     public override bool CanExecute(object? parameter) =>
         parameter is MvvmEventData eventData && eventData.EventName == "Loaded" ||
         parameter is string cmd &&
@@ -64,7 +75,9 @@ internal class RandomPoints : ViewModelBase, IGetAsync {
             or nameof(AddSome)
             or nameof(Reload)
             or nameof(DeleteFirst)
-            or nameof(InsertNew) && IsLoaded && !IsLoading;
+            or nameof(InsertNew)
+            or nameof(Replace)
+            && IsLoaded && !IsLoading;
 
     public override void Execute(object? parameter) {
         if (parameter is MvvmEventData eventData) {
@@ -78,6 +91,7 @@ internal class RandomPoints : ViewModelBase, IGetAsync {
             case nameof(Reload): Reload(); break;
             case nameof(DeleteFirst): DeleteFirst(); break;
             case nameof(InsertNew): InsertNew(); break;
+            case nameof(Replace): Replace(); break;
         }
     }
 

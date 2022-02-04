@@ -25,6 +25,7 @@
             <Button Command="{Binding}" CommandParameter="Reload">Reload</Button>
             <Button Command="{Binding}" CommandParameter="DeleteFirst">Delete first</Button>
             <Button Command="{Binding}" CommandParameter="InsertNew">Insert new</Button>
+            <Button Command="{Binding}" CommandParameter="Replace">Replace</Button>
             <c:Checks ItemsSource="{Binding Checks}" Empty="All values" />
         </StackPanel>
         <DataGrid Grid.Row="1"

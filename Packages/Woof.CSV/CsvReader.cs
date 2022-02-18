@@ -169,6 +169,41 @@ public class CsvReader {
     }
 
     /// <summary>
+    /// Reads CSV stream using configured encoding into collection of <see cref="CsvRowData"/> rows.
+    /// </summary>
+    /// <param name="stream">CSV stream.</param>
+    /// <returns>Collection of rows.</returns>
+    public IEnumerable<CsvRowData?> Read(Stream stream) {
+        using var reader = new StreamReader(stream, Encoding, true);
+        return Read(reader.ReadToEnd());
+    }
+
+    /// <summary>
+    /// Reads CSV stream using configured encoding into collection of predefined records.
+    /// </summary>
+    /// <typeparam name="T">Record type.</typeparam>
+    /// <param name="stream"></param>
+    /// <returns>Asynchronous stream returning items after whole stream is loaded and split into lines.</returns>
+    public async IAsyncEnumerable<T?> ReadAsync<T>(Stream stream) where T : new() {
+        using var reader = new StreamReader(stream, Encoding, true);
+        var text = await reader.ReadToEndAsync();
+        var items = Read<T>(text);
+        foreach (var item in items) yield return item;
+    }
+
+    /// <summary>
+    /// Reads CSV stream using configured encoding into collection of <see cref="CsvRowData"/> rows.
+    /// </summary>
+    /// <param name="stream">CSV stream.</param>
+    /// <returns>Asynchronous stream returning items after whole stream is loaded and split into lines.</returns>
+    public async IAsyncEnumerable<CsvRowData?> ReadAsync(Stream stream) {
+        using var reader = new StreamReader(stream, Encoding, true);
+        var text = await reader.ReadToEndAsync();
+        var items = Read(text);
+        foreach (var item in items) yield return item;
+    }
+
+    /// <summary>
     /// Reads CSV file using configured encoding into collection of predefined records.
     /// </summary>
     /// <typeparam name="T">Record type.</typeparam>
@@ -184,11 +219,36 @@ public class CsvReader {
     /// Reads CSV file into a collecton of <see cref="CsvRowData"/> rows.
     /// </summary>
     /// <param name="path">A path to the CSV file.</param>
-    /// <returns></returns>
+    /// <returns>Collection of rows.</returns>
     public IEnumerable<CsvRowData?> ReadFile(string path) {
         using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
         using var reader = new StreamReader(stream, Encoding, true);
         return Read(reader.ReadToEnd());
+    }
+
+    /// <summary>
+    /// Reads CSV file using configured encoding into collection of predefined records.
+    /// </summary>
+    /// <typeparam name="T">Record type.</typeparam>
+    /// <param name="path">Path to CSV file.</param>
+    /// <returns>>Asynchronous stream returning items after whole stream is loaded and split into lines.</returns>
+    public async IAsyncEnumerable<T?> ReadFileAsync<T>(string path) where T : new() {
+        await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var reader = new StreamReader(stream, Encoding, true);
+        var items = Read<T>(await reader.ReadToEndAsync());
+        foreach (var item in items) yield return item;
+    }
+
+    /// <summary>
+    /// Reads CSV file into a collecton of <see cref="CsvRowData"/> rows.
+    /// </summary>
+    /// <param name="path">A path to the CSV file.</param>
+    /// <returns>>Asynchronous stream returning items after whole stream is loaded and split into lines.</returns>
+    public async IAsyncEnumerable<CsvRowData?> ReadFileAsync(string path) {
+        await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var reader = new StreamReader(stream, Encoding, true);
+        var items = Read(await reader.ReadToEndAsync());
+        foreach (var item in items) yield return item;
     }
 
     /// <summary>
@@ -215,6 +275,33 @@ public class CsvReader {
     public IEnumerable<CsvRowData?> ReadDirectory(string directory, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly) {
         foreach (var file in Directory.EnumerateFiles(directory, searchPattern, searchOption)) {
             foreach (var record in ReadFile(file)) yield return record;
+        }
+    }
+
+    /// <summary>
+    /// Reads all matchin files in a directory to one collection of predefined records.
+    /// </summary>
+    /// <typeparam name="T">Record type.</typeparam>
+    /// <param name="directory">Directory path.</param>
+    /// <param name="searchPattern">Optional search pattern to match specified extensions.</param>
+    /// <param name="searchOption">Search option.</param>
+    /// <returns>Asynchronous stream starting returning items after a file is loaded and split into lines.</returns>
+    public async IAsyncEnumerable<T?> ReadDirectoryAsync<T>(string directory, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly) where T : new() {
+        foreach (var file in Directory.EnumerateFiles(directory, searchPattern, searchOption)) {
+            await foreach (var record in ReadFileAsync<T>(file)) yield return record;
+        }
+    }
+
+    /// <summary>
+    /// Reads all matching files in a directory to one collection of <see cref="CsvRowData"/>.
+    /// </summary>
+    /// <param name="directory">Directory path.</param>
+    /// <param name="searchPattern">Search pattern, default "*" for all files.</param>
+    /// <param name="searchOption">Allows recursive search, see <see cref="SearchOption"/>.</param>
+    /// <returns>Asynchronous stream starting returning items after a file is loaded and split into lines.</returns>
+    public async IAsyncEnumerable<CsvRowData?> ReadDirectoryAsync(string directory, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly) {
+        foreach (var file in Directory.EnumerateFiles(directory, searchPattern, searchOption)) {
+            await foreach (var record in ReadFileAsync(file)) yield return record;
         }
     }
 

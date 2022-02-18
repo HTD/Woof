@@ -91,7 +91,7 @@ public class DotNetSolution {
     /// <param name="index">Index reference.</param>
     /// <param name="match">Matched string.</param>
     /// <returns>True if the string is found.</returns>
-    private bool TryMatchString(string line, ref int index, out string match) {
+    private static bool TryMatchString(string line, ref int index, out string match) {
         match = default!;
         var start = line.IndexOf('"', index) + 1; if (start < 0) return false; index = start + 1;
         var end = line.IndexOf('"', index); if (end < 0) return false; index = end;

@@ -24,7 +24,7 @@ public class Terminal {
     /// <param name="prompt">Prompt value.</param>
     /// <param name="run">Additional command to run when the cmd.exe is started.</param>
     /// <returns>A string to be injected into wt.exe arguments.</returns>
-    private string GetCommand(string dir, string? title = null, string? prompt = "$P$G", string? run = null)
+    private static string GetCommand(string dir, string? title = null, string? prompt = "$P$G", string? run = null)
         => run is null
             ? $"--title \"{title}\" cmd /K \"{dir[0..2]}&&cd {dir}&&PROMPT={prompt}\""
             : $"--title \"{title}\" cmd /K \"{dir[0..2]}&&cd {dir}&&PROMPT={prompt}&&{run}\"";
@@ -73,6 +73,5 @@ public class Terminal {
 
     private readonly string SolutionDirectory = DotNetSolution.CurrentSolutionFile?.Directory?.FullName
         ?? throw new InvalidOperationException("Can't get the current solution directory");
-    private readonly string CurrentConfiguration = Executable.CurrentBuildConfiguration;
 
 }

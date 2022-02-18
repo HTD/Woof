@@ -407,8 +407,6 @@ internal class CommandLineRenderer : CommandLine {
             ConsoleKey.F17, ConsoleKey.F18, ConsoleKey.F19, ConsoleKey.F20, ConsoleKey.F21, ConsoleKey.F22, ConsoleKey.F23, ConsoleKey.F24
         };
 
-    private static readonly Regex _RxUnquotedDoubleQuotes = new(@"""{1}", RegexOptions.Compiled);
-
     /// <summary>
     /// X coordinate of the original console position of the rendered command line.
     /// </summary>

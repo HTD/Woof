@@ -121,12 +121,12 @@ public class CommandLine : ICommand {
         Map = Array.Empty<int>();
     }
 
-    /// <summary>
-    /// Gets the part index at specified position within the command line text.
-    /// </summary>
-    /// <param name="at">Position within the command line text.</param>
-    /// <returns>Part index, negative for whitespace that doesn't belong to any part.</returns>
-    private int GetPartIndex(int at) => at < 0 ? 0 : Map[at < Text.Length ? at : Text.Length - 1];
+    ///// <summary>
+    ///// Gets the part index at specified position within the command line text.
+    ///// </summary>
+    ///// <param name="at">Position within the command line text.</param>
+    ///// <returns>Part index, negative for whitespace that doesn't belong to any part.</returns>
+    //private int GetPartIndex(int at) => at < 0 ? 0 : Map[at < Text.Length ? at : Text.Length - 1];
 
     /// <summary>
     /// Splits the command line into command and arguments, creates parts map.

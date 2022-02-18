@@ -2,9 +2,9 @@
 
 public class Settings : JsonSettingsAkv<Settings> {
 
-    public Settings() : base(DataProtectionScope.CurrentUser) {
-        _Metadata.Name = "Settings";
-        _Metadata.Locator.PreferUserDirectory = true;
+    public Settings() : base(DataProtectionScope.LocalMachine) {
+        //_Metadata.Name = "Settings";
+        //_Metadata.Locator.PreferUserDirectory = true;
     }
 
     public Uri? Uri { get; init; }

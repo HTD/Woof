@@ -5,9 +5,9 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Company>CodeDog</Company>
+        <!--<Company>CodeDog</Company>
         <Product>Woof.Settings.Demo</Product>
-        <AssemblyName>wsd</AssemblyName>
+        <AssemblyName>wsd</AssemblyName>-->
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,10 +16,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="Settings.access.json">
+        <None Update="Woof.Settings.Demo.access.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Settings.json">
+        <None Update="Woof.Settings.Demo.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>

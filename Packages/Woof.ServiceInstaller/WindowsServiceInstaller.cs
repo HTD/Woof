@@ -27,10 +27,11 @@ internal class WindowsServiceInstaller {
                 Metadata.Name!,
                 $"binPath={Executable.FilePath}"
             };
-        if (Metadata.DisplayName is not null) argsList.Add($"DisplayName={Metadata.DisplayName}");
+        if (Metadata.Account == SystemAccount.NetworkService) argsList.Add($"obj=\"NT Authority\\NetworkService\"");
+        if (Metadata.DisplayName is not null) argsList.Add($"DisplayName=\"{Metadata.DisplayName}\"");
         if (Metadata.Start != null) argsList.Add($"start={Metadata.Start}");
         await new ShellCommand("sc", argsList).ExecVoidAsync();
-        if (Metadata.Description != null) await new ShellCommand($"sc description {Metadata.Name} {Metadata.Description}").ExecVoidAsync();
+        if (Metadata.Description != null) await new ShellCommand($"sc description \"{Metadata.Name}\" \"{Metadata.Description}\"").ExecVoidAsync();
     }
 
     private readonly ServiceMetadataWindows Metadata;

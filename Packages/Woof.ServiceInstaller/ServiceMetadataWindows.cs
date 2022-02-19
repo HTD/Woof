@@ -20,4 +20,9 @@ public class ServiceMetadataWindows : ServiceMetadata {
     /// </summary>
     public string? EventSourceName { get; set;  }
 
+    /// <summary>
+    /// Gets or sets the system account for the system.
+    /// </summary>
+    public SystemAccount Account { get; set; } = SystemAccount.LocalSystem;
+
 }

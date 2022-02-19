@@ -5,7 +5,8 @@
         "description": "Tests the Woof.ServiceInstaller.",
         "eventLogName": "Woof.ServiceInstaller",
         "eventSourceName": "Woof.ServiceInstaller.Test",
-        "eventLogLevelMinimal": "debug"
+        "eventLogLevelMinimal": "debug",
+        "account": "NetworkService"
     },
     "systemDaemon": {
         "name": "testsvc",

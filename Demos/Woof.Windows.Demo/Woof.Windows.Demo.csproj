@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Linq.Async" Version="5.1.0" />
+        <PackageReference Include="System.Linq.Async" Version="6.0.1" />
         <PackageReference Include="ModernWpfUis" Version="1.4.0" />
         <ProjectReference Include="..\..\Packages\Woof.Windows.Controls\Woof.Windows.Controls.csproj" />
         <ProjectReference Include="..\..\Packages\Woof.Windows.MVVM\Woof.Windows.MVVM.csproj" />

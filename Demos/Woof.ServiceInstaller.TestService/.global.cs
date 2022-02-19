@@ -1,4 +1,5 @@
-﻿global using System.Runtime.InteropServices;
+﻿global using System.Diagnostics;
+global using System.Runtime.InteropServices;
 
 global using Woof;
 global using Woof.ServiceInstaller;

@@ -1,6 +1,8 @@
 ﻿namespace Woof.ServiceInstaller.TestService;
 
-public class Settings : JsonSettings<Settings> {
+public class Settings : JsonSettingsProtected<Settings> {
+
+    private Settings() : base(DataProtection.DataProtectionScope.LocalMachine) => DataProtection.Api.DPAPI.UseServiceAPI = true;
 
     public static Settings Default { get; } = new Settings();
 

@@ -4,42 +4,12 @@
 /// Linux data protection api key for a user or system.<br/>
 /// In order to use <see cref="DataProtectionScope.LocalMachine"/> this must be run via sudo first time.
 /// </summary>
-internal class DPAPI_LinuxKey {
+internal class DPAPI_LinuxKey : DataProtectionKeyBase {
 
     /// <summary>
     /// Gets the key owner.
     /// </summary>
     public UserInfo User { get; }
-
-    /// <summary>
-    /// Gets the data protector instance.
-    /// </summary>
-    public IDataProtector Protector { get; }
-
-    /// <summary>
-    /// Gets the <see cref="IDataProtectionProvider"/> instance.
-    /// </summary>
-    public IDataProtectionProvider Provider { get; }
-
-    /// <summary>
-    /// Gets the <see cref="IKey"/> instance.
-    /// </summary>
-    public IKey Key { get; }
-
-    /// <summary>
-    /// Gets the <see cref="IKeyManager"/> instance.
-    /// </summary>
-    public IKeyManager KeyManager { get; private set; }
-
-    /// <summary>
-    /// Gets the key directory.
-    /// </summary>
-    public DirectoryInfo KeyDirectory { get; }
-
-    /// <summary>
-    /// Gets the full key file path.
-    /// </summary>
-    public FileInfo KeyFile { get; }
 
     /// <summary>
     /// Gets the dictionary of the currenly configured keys for users.<br/>
@@ -82,19 +52,25 @@ internal class DPAPI_LinuxKey {
     /// </summary>
     /// <param name="user">A user to create the data protection for.</param>
     /// <param name="group">A group the user belongs to, taken from user information if not set.</param>
-    public DPAPI_LinuxKey(UserInfo user, GroupInfo? group = null) {
+    public DPAPI_LinuxKey(UserInfo user, GroupInfo? group = null) : base(GetConfiguration(user, ref group)) {
         User = user;
-        if (group is null) group = GroupInfo.FromGid(user.Gid);
-        KeyDirectory = new DirectoryInfo(user.Uid == 0 ? SystemDirectory : Linux.ResolveUserPath(UserDirectory));
-        Provider = CreateDataProtectionProvider(KeyDirectory);
-        Protector = Provider.CreateProtector($"Woof.DPAPI:{user.Name}");
-        Protector.Protect(new byte[1]); // initializes the protector, forces key creation.
-        Key = KeyManager.GetAllKeys().Where(k => !k.IsRevoked).OrderByDescending(k => k.ActivationDate).First();
-        KeyFile = new(Path.Combine(KeyDirectory.FullName, $"key-{Key!.KeyId}.xml"));
-        if (CurrentUser.IsRoot) Linux.ChownR(KeyDirectory.FullName, user, group!);
+        if (CurrentUser.IsRoot) Linux.ChownR(KeyDirectory.FullName, User, group!);
         if (user == UserInfo.CurrentProcessUser || CurrentUser.IsRoot)
             Linux.Chmod(KeyFile.FullName, user.Uid == 0 ? "666" : "660");
-        Available[user.Uid] = this;
+        Available[User.Uid] = this;
+    }
+
+    /// <summary>
+    /// Gets the key configuration.
+    /// </summary>
+    /// <param name="user">A user to create the data protection for.</param>
+    /// <param name="group">A group the user belongs to, taken from user information if not set.</param>
+    /// <returns>Data protection key configuration.</returns>
+    private static DataProtectionKeyConfiguration GetConfiguration(UserInfo user, ref GroupInfo? group) {
+        if (group is null) group = GroupInfo.FromGid(user.Gid)!;
+        var target = user.Uid == 0 ? SystemDirectory : Linux.ResolveUserPath(UserDirectory);
+        var purpose = $"Woof.DPAPI:{user.Name}";
+        return GetConfiguration(target, purpose);
     }
 
     /// <summary>
@@ -105,24 +81,6 @@ internal class DPAPI_LinuxKey {
             _ = new DPAPI_LinuxKey(UserInfo.FromUid(0)!);
         }
         catch { } // ...but the users should still be able to configure their own keys.
-    }
-
-    /// <summary>
-    /// Creates the default <see cref="IDataProtectionProvider"/> using internal builder to get the <see cref="IKeyManager"/> instance with it.
-    /// </summary>
-    /// <remarks>
-    /// Based on <see href="https://github.com/dotnet/aspnetcore/blob/main/src/DataProtection/Extensions/src/DataProtectionProvider.cs"/>.
-    /// </remarks>
-    /// <param name="keyDirectory">A directory that should contain data protection keys.</param>
-    /// <returns><see cref="IDataProtectionProvider"/> instance.</returns>
-    [MemberNotNull("KeyManager")]
-    private IDataProtectionProvider CreateDataProtectionProvider(DirectoryInfo keyDirectory) {
-        var serviceCollection = new ServiceCollection();
-        var builder = serviceCollection.AddDataProtection();
-        builder.PersistKeysToFileSystem(keyDirectory);
-        var serviceProvider = serviceCollection.BuildServiceProvider();
-        KeyManager = serviceProvider.GetService<IKeyManager>()!;
-        return serviceProvider.GetRequiredService<IDataProtectionProvider>();
     }
 
 }

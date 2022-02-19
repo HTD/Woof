@@ -27,6 +27,9 @@
     </ItemGroup>
 
     <ItemGroup Label="System dependencies">
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="6.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="6.0.2" />
         <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="6.0.0" />
     </ItemGroup>
 

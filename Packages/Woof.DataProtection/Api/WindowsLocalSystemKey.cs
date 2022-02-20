@@ -17,7 +17,7 @@ public class WindowsLocalSystemKey : DataProtectionKeyBase {
     /// Gets the configuration for the base constructor.
     /// </summary>
     /// <returns>Data protection key configuration.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "Used only for Windows")]
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "Used only for Windows")]
     private static DataProtectionKeyConfiguration GetConfiguration() {
         var systemDirectory = Environment.GetFolderPath(Environment.SpecialFolder.System);
         var target = Path.Combine(systemDirectory, "DPAPI");
@@ -25,13 +25,13 @@ public class WindowsLocalSystemKey : DataProtectionKeyBase {
         if (!targetDirectory.Exists) {
             targetDirectory.Create();
             targetDirectory = new DirectoryInfo(target);
-            var targetSecurity = new DirectorySecurity();
-            var acl = targetSecurity.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount));
-            targetSecurity.SetAccessRuleProtection(true, false);
-            foreach (FileSystemAccessRule ace in acl) targetSecurity.PurgeAccessRules(ace.IdentityReference);
-            targetSecurity.AddAccessRule(new FileSystemAccessRule("SYSTEM", FileSystemRights.FullControl, AccessControlType.Allow));
-            targetSecurity.AddAccessRule(new FileSystemAccessRule("CREATOR OWNER", FileSystemRights.FullControl, AccessControlType.Allow));
-            targetDirectory.SetAccessControl(targetSecurity);
+            DirectorySecurity ds = new();
+            var rules = ds.GetAccessRules(includeExplicit: true, includeInherited: true, typeof(NTAccount));
+            ds.SetAccessRuleProtection(isProtected: true, preserveInheritance: false);
+            foreach (FileSystemAccessRule rule in rules) ds.PurgeAccessRules(rule.IdentityReference);
+            ds.AddAccessRule(new FileSystemAccessRule("SYSTEM", FileSystemRights.FullControl, AccessControlType.Allow));
+            ds.AddAccessRule(new FileSystemAccessRule("CREATOR OWNER", FileSystemRights.FullControl, AccessControlType.Allow));
+            targetDirectory.SetAccessControl(ds);
         }
         var purpose = "Woof.DPAPI:Local System Service Key";
         return GetConfiguration(target, purpose);

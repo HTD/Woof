@@ -2,7 +2,7 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.NPOI</Title>
-        <Version>6.2.0-beta.1</Version>
+        <Version>6.2.0</Version>
         <PackageTags>woof;toolkit;NPOI;xls;xlsx;excel;spreadsheet;export</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>

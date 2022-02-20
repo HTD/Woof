@@ -2,7 +2,7 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.Net.WebSockets</Title>
-        <Version>6.2.0-beta.1</Version>
+        <Version>6.2.0</Version>
         <PackageTags>woof;toolkit;net;networking;api;websocket;websockets;client;server</PackageTags>
         <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>

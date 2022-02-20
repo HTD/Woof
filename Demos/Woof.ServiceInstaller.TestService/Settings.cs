@@ -2,7 +2,7 @@
 
 public class Settings : JsonSettingsAkv<Settings> {
 
-    private Settings() : base(DataProtection.DataProtectionScope.LocalMachine) => DPAPI.UseServiceAPI = true;
+    private Settings() : base(DataProtectionScope.LocalSystem) { }
 
     public static Settings Default { get; } = new Settings();
 

@@ -19,7 +19,7 @@ public class JsonSettingsProtectedMetadata : JsonSettingsMetadata {
     /// Creates the metadata for the protection scope.
     /// </summary>
     /// <param name="protectionScope">Data protection scope for the loader.</param>
-    public JsonSettingsProtectedMetadata(DataProtectionScope? protectionScope) {
+    public JsonSettingsProtectedMetadata(DataProtectionScope protectionScope) {
         Locator = new JsonSettingsProtectedLocator();
         Loader = new JsonNodeProtectedLoader(protectionScope);
     }

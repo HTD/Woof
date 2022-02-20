@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace TestService;
+namespace Woof.ServiceInstaller.TestService;
 
 class TestService : IHostedService {
 

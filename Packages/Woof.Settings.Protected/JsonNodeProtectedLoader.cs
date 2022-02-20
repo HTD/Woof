@@ -14,7 +14,7 @@ public class JsonNodeProtectedLoader : JsonNodeLoader {
     /// Defines the data protection scope for the loader. Null means no data protection used.
     /// </summary>
     /// <param name="protectionScope"></param>
-    public JsonNodeProtectedLoader(DataProtectionScope? protectionScope) => ProtectionScope = protectionScope;
+    public JsonNodeProtectedLoader(DataProtectionScope protectionScope) => ProtectionScope = protectionScope;
 
     /// <summary>
     /// Loads the root node from file.

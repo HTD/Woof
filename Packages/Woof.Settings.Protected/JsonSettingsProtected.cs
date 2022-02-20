@@ -15,8 +15,8 @@ public abstract class JsonSettingsProtected<T> : JsonSettings<T> where T : class
     /// Defines the protection scope for the settings.
     /// </summary>
     /// <param name="protectionScope">Protection scope. Use null for no protection, if it makes sense.</param>
-    protected JsonSettingsProtected(DataProtectionScope? protectionScope)
-        => _Metadata = new JsonSettingsProtectedMetadata(protectionScope);
+    protected JsonSettingsProtected(DataProtectionScope protectionScope)
+        => _Metadata = new JsonSettingsProtectedMetadata(DPAPI.AssertValidWindowsScope(protectionScope));
 
     /// <summary>
     /// Protects the settings file if it is loaded from the unprotected source.

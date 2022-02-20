@@ -13,7 +13,6 @@ public class WindowsLocalSystemKey : DataProtectionKeyBase {
     /// </summary>
     public WindowsLocalSystemKey() : base(GetConfiguration()) { }
 
-
     /// <summary>
     /// Gets the configuration for the base constructor.
     /// </summary>

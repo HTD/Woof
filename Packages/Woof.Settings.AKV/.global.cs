@@ -5,3 +5,4 @@ global using Azure.Identity;
 global using Azure.Security.KeyVault.Secrets;
 
 global using Woof.DataProtection;
+global using Woof.DataProtection.Api;

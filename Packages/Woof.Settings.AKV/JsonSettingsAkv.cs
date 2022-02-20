@@ -18,7 +18,7 @@ public abstract class JsonSettingsAkv<T> : JsonSettings<T> where T : class {
     /// </summary>
     /// <param name="protectionScope">Data protection scope for the AKV access file.</param>
     protected JsonSettingsAkv(DataProtectionScope protectionScope) {
-        _Metadata = new(protectionScope);
+        _Metadata = new(DPAPI.AssertValidWindowsScope(protectionScope));
         SpecialAttribute.Resolve += SpecialAttributeResolver;
     }
 

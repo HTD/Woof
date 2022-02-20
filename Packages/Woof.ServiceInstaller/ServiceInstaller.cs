@@ -8,19 +8,54 @@ public static class ServiceInstaller {
     const string Done = "Done.";
 
     /// <summary>
+    /// Asserts system administrator access to the service command line interface.
+    /// </summary>
+    /// <remarks>
+    /// Run BEFORE loading the protected configuration!
+    /// </remarks>
+    /// <param name="args">Command line arguments.</param>
+    public static void AssertAdmin(string[] args) {
+        if (args.Length > 0 && !CurrentUser.IsAdmin) {
+            Console.WriteLine("The system service access requires admin access.");
+            Environment.Exit(-1);
+        }
+    }
+
+    /// <summary>
     /// Configures <see cref="Options.Install"/> and <see cref="Options.Uninstall"/> command line options.<br/>
     /// Call <see cref="CommandLineParser.RunDelegatesAsync"/> to handle installer options.<br/>
     /// Use <see cref="CommandLine.Help"/> or <see cref="CommandLine.OptionsSummary"/> to get automatic documentation of the options.
     /// </summary>
     /// <typeparam name="TService">Service type.</typeparam>
-    /// <param name="settings">Configuration containing "Service" section or the "Service" section itself that have <see cref="Settings"/> properties set.</param>
+    /// <param name="settings">Service metadata.</param>
     public static void Configure<TService>(ServiceMetadata settings) where TService : class, IHostedService {
         Settings = settings;
         var c = CommandLine.Default;
         c.Map<Options>();
+        c.Delegates.Add(Options.Help, Help);
+        c.Delegates.Add(Options.Query, QueryAsync);
         c.Delegates.Add(Options.Install, InstallAsync);
         c.Delegates.Add(Options.Uninstall, UninstallAsync);
         c.Delegates.Add(Options.DeleteLog, DeleteLog);
+    }
+
+    /// <summary>
+    /// Configures and runs either the command line interface or the service host.
+    /// </summary>
+    /// <typeparam name="TService">Service type.</typeparam>
+    /// <param name="settings">Service metadata.</param>
+    /// <param name="args">Command line arguments for the program.</param>
+    /// <returns>A <see cref="ValueTask"/> completed when the program completes.</returns>
+    public static async ValueTask ConfigureAndRunAsync<TService>(ServiceMetadata settings, string[] args) where TService : class, IHostedService {
+        Configure<TService>(settings);
+        if (args.Length > 0) {
+            var c = CommandLine.Default;
+            c.Parse(args);
+            var errors = CommandLine.ValidationErrors;
+            if (errors is not null) Error(errors);
+            else await c.RunDelegatesAsync();
+        }
+        else await RunHostAsync<TService>();
     }
 
     /// <summary>
@@ -81,6 +116,26 @@ public static class ServiceInstaller {
     }
 
     /// <summary>
+    /// Displays the automatic help for the installer.
+    /// </summary>
+    static void Help() => Console.WriteLine(CommandLine.Help);
+
+    /// <summary>
+    /// Displays the errors and usage in case of invalid command line syntax.
+    /// </summary>
+    /// <param name="errorText"></param>
+    static void Error(string? errorText) {
+        Console.WriteLine(errorText);
+        Console.WriteLine(CommandLine.Usage);
+    }
+
+    /// <summary>
+    /// Queries the operation system for the service status.
+    /// </summary>
+    /// <returns></returns>
+    static async ValueTask QueryAsync() => Console.WriteLine(await ServiceInstaller.Settings!.QueryAsync());
+
+    /// <summary>
     /// Deletes the service log.
     /// </summary>
     private static void DeleteLog() {
@@ -103,8 +158,20 @@ public static class ServiceInstaller {
     /// <summary>
     /// Installation options.
     /// </summary>
-    [Usage("{command} <--install|--uninstall>")]
+    [Usage("{command} <--install|--uninstall|--query|--help>")]
     public enum Options {
+
+        /// <summary>
+        /// Help option.
+        /// </summary>
+        [Option("?|h|help", null, "Displays this help message.")]
+        Help,
+
+        /// <summary>
+        /// Query service option.
+        /// </summary>
+        [Option("q|query", null, "Shows current service status.")]
+        Query,
 
         /// <summary>
         /// Install option.

@@ -22,7 +22,7 @@ When `{command}` is your compiled service as one file native executable:
 ### Windows
 
 Install your executable with a [Microsoft Installer](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2022InstallerProjects) first.
-For protected configurations use `DataProtectionScope.LocalMachine`.
+For protected configurations use `DataProtectionScope.LocalSystem`.
 The service will be registered in the location it was run with the `--install` option.
 
 On Windows, Windows Installer (MSI) is the default way to install applications,
@@ -34,6 +34,10 @@ or type `sc query {serviceName}`  in `cmd`.
 You can also use Windows Event Log to look for entries from the service.
 
 The service runs in `LocalSystem` user context.
+The account can be changed to `NetworkService` via the `Account` property
+of the service configuration metadata. However - the data protection feature
+will work ONLY with `LocalSystem`. This applies to `Woof.Settings.Protected` and
+`Woof.Settings.AKV` packages.
 
 When the service is uninstalled with `--uninstal` option it will be automatically stopped,
 then unregistered. The logs will stay until deleted with `--delete-log` option.
@@ -62,33 +66,60 @@ the service installed files will be deleted but the `service` user will stay.
 
 Also the Linux logs are not cleared.
 
-### Common
+### Usage
 
-For service configuration options see the configuration `JSON` in example,
-also check the [ServiceMetadata](https://github.com/HTD/Woof.ServiceInstaller/blob/master/Woof.ServiceInstaller/ServiceMetadata.cs) class XML documentation.
+1. Create a console project.
+2. Add `Woof.Settings` / `Woof.Settings.AKV` / `Woof.Settings.Protected` package reference.
+3. Optionally, if data protection is used and the service supports Linux systems,
+   add `Woof.DataProtection.Linux` package reference.
+4. Create a service configuration JSON file like:
+   ```json
+   {
+       "windowsService": {
+           "name": "testsvc",
+           "displayName": "Woof Service Installer Test",
+           "description": "Tests the Woof.ServiceInstaller.",
+           "eventLogName": "Woof.ServiceInstaller",
+           "eventSourceName": "Woof.ServiceInstaller.Test",
+           "eventLogLevelMinimal": "debug"
+       },
+       "systemDaemon": {
+           "name": "testsvc",
+           "displayName": "Woof Service Installer Test",
+           "eventLogLevelMinimal": "debug",
+           "user": "service",
+           "group": "service"
+       }
+   }
+   ```
+5. Create settings class like:
+   ```cs
+   public class Settings : JsonSettingsAkv<Settings> {
 
-The configuration for the example service is provided with
-[Woof.Config](https://github.com/HTD/Woof.Config) package.
+       private Settings() : base(DataProtectionScope.LocalSystem) { }
+       public static Settings Default { get; } = new Settings();
+       public ServiceMetadataWindows WindowsService { get; } = new();
+       public ServiceMetadataSystemd SystemDaemon { get; } = new();
 
-Installing the service with the same name as an existing one will cause the
-current one to be automatically stopped and uninstalled first.
+   }
+   ```
+5. Save the file with the name matching the assembly name with `.json` extension.
+6. Set the `Copy to Output Directory` property to `Copy if newer`.
+7. Optionally create a corresponding `.access.json` file as described in
+   `Woof.Settings.AKV` documentation.
+8. Create `Program.cs` like:
+   ```cs
+    ServiceInstaller.AssertAdmin(args);
+    await Settings.Default.LoadAsync();
+    ServiceMetadata serviceSettings = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+        ? Settings.Default.WindowsService : RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+        ? Settings.Default.SystemDaemon : throw new PlatformNotSupportedException();
+    await ServiceInstaller.ConfigureAndRunAsync<TestService>(serviceSettings, args);
+   ```
 
-Naturally, the service will be uninstalled if it was installed with
-`Woof.ServiceInstaller` and its configuration matches.
-
-The described feature is designed for easy software upgrades.
-Just install the new version, the service will be upgraded,
-no extra steps needed.
-
-The installed services can be controlled (started, stopped, queried and unregistered)
-using the target system service controller.
-
-The default configuration makes the service start as soon as it's installed.
-
-The `Woof.ServiceInstaller` package was made to install self-hosting `WebSocket` APIs on both
-Linux and Windows hosts, however additional networking setup is needed for that.
-
-To build a [WebSocket](https://en.wikipedia.org/wiki/WebSocket) API use [Woof.Net.WebSockets](https://github.com/HTD/Woof.Net.WebSockets) package.
+The service can be tested, installed and uninstalled with admin access only.
+Run without parameters to test the service operation.
+Run with `-?` switch to display installer help.
 
 ### Operation / Design
 
@@ -111,92 +142,6 @@ a unified, POSIX type command line interface.
 By default the service installer automatically binds the
 `--install|-i`, `--uninstall|-u` and `--delete-log|-d` options
 to its internal handlers.
-
-It doesn't bind the `--help|-h|-?` option, it should be done in
-user code, because the user code can provide its own additional
-options. `--query|-q` and `--running|r` options are defined in the
-example to illustrate how it's done.
-
-The automatically generated help for the options can be obtained
-from `CommandLine.Help` property.
-
-Similarily, command line validation errors can be obtained from
-`CommandLine.ValidationErrors` property after the `Parse()`
-method was called.
-
-## Usage
-
-Here's example `Program.cs`:
-```cs
-using System;
-using System.Threading.Tasks;
-
-using Woof;
-using Woof.Config;
-using Woof.ServiceInstaller;
-
-var config = new JsonConfig();
-var commandLine = CommandLine.Default;
-
-ServiceInstaller.Configure<TestService.TestService>(config);
-if (args?.Length > 0) {
-    commandLine.Map<Options>();
-    commandLine.Delegates.Add(Options.Help, Help);
-    commandLine.Delegates.Add(Options.Query, QueryAsync);
-    commandLine.Delegates.Add(Options.Running, IsRunningAsync);
-    commandLine.Parse(args);
-    var errors = CommandLine.ValidationErrors;
-    if (errors is not null) Error(errors);
-    else await commandLine.RunDelegatesAsync();
-}
-else await ServiceInstaller.ServiceMetadata!.RunHostAsync<TestService.TestService>();
-
-static void Help() => Console.WriteLine(CommandLine.Help);
-
-static void Error(string? errorText) {
-    Console.WriteLine(errorText);
-    Console.WriteLine(CommandLine.Usage);
-}
-
-static async ValueTask IsRunningAsync()
-    => Console.WriteLine((await ServiceInstaller.ServiceMetadata!.IsRunningAsync()) ? "RUNNING" : "NOT RUNNING");
-
-static async ValueTask QueryAsync()
-    => Console.WriteLine(await ServiceInstaller.ServiceMetadata!.QueryAsync());
-
-[Usage("(sudo) {command} [--install|--uninstall|--help]")]
-enum Options {
-    [Option("q|query", null, "Shows current service status.")]
-    Query,
-    [Option("r|running", null, "Tests if the service is running.")]
-    Running,
-    [Option("?|h|help", null, "Displays this help message.")]
-    Help
-}
-```
-
-To execute code before or after installation / uninstallation simply check
-if the install/uninstall options are present before and/or after [RunDelegatesAsync](https://github.com/HTD/Woof.CommandLine/blob/13de430e26851419e1ac9c20141dc9f8341f0e8f/Woof.CommandLine/API/CommandLineParser.cs#L202)
-like this:
-```cs
-if (commandLine.HasOption(ServiceInstaller.Options.Install)) {
-    // code to execute
-}
-```
-
-The installed service is started with [RunHostAsync](https://github.com/HTD/Woof.ServiceInstaller/blob/78a7e28fd2c462ab3d339b9357b304259bf3ad3d/Woof.ServiceInstaller/ServiceMetadataExtensions.cs#L97):
-```cs
-ServiceInstaller.ServiceMetadata!.RunHostAsync<TestService.TestService>();
-```
-
-If executing of some external commands is needed before or after the installation,
-[Shell.ExecAsync](https://github.com/HTD/Woof.LinuxAdmin/blob/2cad3b3e7e8f18009ec6026d040b1df007cc7763/Woof.LinuxAdmin/Shell.cs#L22) method from [Woof.LinuxAdmin](https://github.com/HTD/Woof.LinuxAdmin/) dependency can be used for that.
-If the command executed that way fails, the method will throw an `InvalidOperationException`
-with the error message obtained from the command output.
-
-For more information see the included example project.
-
----
 
 ## Disclaimer
 

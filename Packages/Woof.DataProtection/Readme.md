@@ -58,11 +58,9 @@ That would result in following exception being thrown:
 In order to fix that in this case a special service API can be used.
 
 To use `Microsoft.AspNetCore.DataProtection` API instead of
-`System.Security.Cryptography` set `UseServiceAPI` static property of `DPAPI` class:
+`System.Security.Cryptography` set the data protection scope to `LocalSystem`
+instead of `LocalMachine`.
 
-```cs
-DPAPI.UseServiceAPI = true;
-```
 
 ---
 

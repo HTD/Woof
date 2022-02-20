@@ -22,6 +22,13 @@ public enum DataProtectionScope {
     /// </summary>
     LocalMachine = System.Security.Cryptography.DataProtectionScope.LocalMachine,
 
+    /// <summary>
+    /// The protected data is associated with the machine context.
+    /// On Windows only system administrators can protect or unprotect data.
+    /// On Linux only root can protect data for the first run, any user can uprotect data.
+    /// </summary>
+    LocalSystem = 2
+
 #pragma warning restore CA1416
 
 }
@@ -36,8 +43,14 @@ public static class DataProtectionScopeExtensions {
     /// </summary>
     /// <param name="scope">Data protection scope.</param>
     /// <returns><see cref="System.Security.Cryptography.DataProtectionScope"/>.</returns>
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "Safe to call on all systems.")]
     public static System.Security.Cryptography.DataProtectionScope AsSystemType(this DataProtectionScope scope)
-        => (System.Security.Cryptography.DataProtectionScope)(int)scope;
+        => scope switch {
+            DataProtectionScope.CurrentUser => System.Security.Cryptography.DataProtectionScope.CurrentUser,
+            DataProtectionScope.LocalMachine => System.Security.Cryptography.DataProtectionScope.LocalMachine,
+            DataProtectionScope.LocalSystem => System.Security.Cryptography.DataProtectionScope.LocalMachine,
+            _ => throw new ArgumentOutOfRangeException(nameof(scope))
+        };
 
     /// <summary>
     /// Returns the cross-platform type. Same value.

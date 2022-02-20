@@ -48,7 +48,7 @@ public class DPAPI_Linux : IDPAPI, IAcceptMessage {
     /// <returns>Data protector instance.</returns>
     /// <exception cref="UnauthorizedAccessException">Insufficient privileges for the key access.</exception>
     private IDataProtector GetProtector(DataProtectionScope scope) {
-        if (scope == DataProtectionScope.LocalMachine) return DPAPI_LinuxKey.LocalMachineScope.Protector;
+        if (scope is DataProtectionScope.LocalMachine or DataProtectionScope.LocalSystem) return DPAPI_LinuxKey.LocalMachineScope.Protector;
         var currentUser = UserInfo.CurrentProcessUser;
         var contextUser = currentUser.Uid == CurrentContext ? currentUser : UserInfo.FromUid(CurrentContext)!;
         if (currentUser.Uid == CurrentContext) return DPAPI_LinuxKey.CurrentUserScope.Protector;

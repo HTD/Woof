@@ -150,7 +150,7 @@ public class JsonNodeProtectedLoader : JsonNodeLoader {
             using var writer = new Utf8JsonWriter(plainStream, WriterOptions);
             node.WriteTo(writer, SerializerOptions);
             writer.Flush();
-            var protectedUtf8Text = DP.Protect(plainStream.ToArray());
+            var protectedUtf8Text = DP.Protect(plainStream.ToArray(), protectionScope.Value);
             using var protectedStream = new MemoryStream(protectedUtf8Text);
             protectedStream.CopyTo(stream);
         }
@@ -173,7 +173,7 @@ public class JsonNodeProtectedLoader : JsonNodeLoader {
             await using var writer = new Utf8JsonWriter(plainStream, WriterOptions);
             node.WriteTo(writer, SerializerOptions);
             await writer.FlushAsync();
-            var protectedUtf8Text = DP.Protect(plainStream.ToArray());
+            var protectedUtf8Text = DP.Protect(plainStream.ToArray(), protectionScope.Value);
             await using var protectedStream = new MemoryStream(protectedUtf8Text);
             await protectedStream.CopyToAsync(stream);
         }

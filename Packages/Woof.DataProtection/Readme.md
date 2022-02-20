@@ -23,14 +23,6 @@ extending packages, like `Woof.DataProtection.Linux`.
 If the OS specific extension package is present in the project, it will be used
 to provide the data protection API.
 
-### IMPORTANT NOTICE:
-
-As I needed only the Linux version and I don't even have any OSX or FreeBSD
-machines, if you need DataProtection support for those systems - please
-either create an issue on GitHub, or feel free to implement it yourself
-using `Woof.DataProtection.Linux` as an example. Don't forget about creating
-a pull request when it's done, so it will be properly signed and released.
-
 ## Usage
 
 Binary data protection:
@@ -53,6 +45,24 @@ if (DP.IsAvailable) {
 An optional parameter of type `DataProtectionScope` can be used.
 If this parameter is not specified, the default protection scope is
 `DataProtectionScope.CurrentUser`.
+
+## Windows service usage
+
+The package uses `System.Security.Cryptography` `DPAPI` by default.
+However, when the program is run by a Windows Service on `LOCAL SYSTEM`
+account, the system encryption key is not available to the service.
+
+That would result in following exception being thrown:
+> Internal.Cryptography.CryptoThrowHelper+WindowsCryptographicException: The system cannot find the path specified.
+
+In order to fix that in this case a special service API can be used.
+
+To use `Microsoft.AspNetCore.DataProtection` API instead of
+`System.Security.Cryptography` set `UseServiceAPI` static property of `DPAPI` class:
+
+```cs
+DPAPI.UseServiceAPI = true;
+```
 
 ---
 

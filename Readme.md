@@ -84,28 +84,33 @@ Use the `Woof Repository Manager` tool to show detailed package dependencies.
 
 ## Building system
 
-The solution contains Tools folder, where the **`Woof Repository Manager`** resides.
+The solution contains Tools folder, where the
+**`Woof Repository Manager`** resides.
 The solution is configured to build all packages in a single directory.
 Then the `Manager` tool creates a local NuGet repository.
 
-The local repository is used either directly, or by the `Manager` to display dependency structure.
+The local repository is used either directly, or by the `Manager` to display
+dependency structure.
 
-From the `Manager` level the packages can be published to any remote private or public feed.
+From the `Manager` level the packages can be published to any remote private
+or public feed.
 
 The feeds are configured in a local user's JSON configuration file.
 
 
 To publish to external feeds like nuget.org use the `Publish` tool.
 
-API keys can be safely stored in the JSON configuration, because they are encrypted on the first
-reload using Windows Data Protection API for the current user.
+API keys can be safely stored in the JSON configuration, because they are
+encrypted on the first reload using Windows Data Protection API for the
+current user.
 
 **NOTE**
 
-To actually build packages you either need the strong name key that is not included in this
+To actually build packages you either need the strong name key that is not
+included in this
 repository or just remove strong name signing from the projects.
-I decided to not include the key in order to be sure, that the signed Woof packages are
-what they are.
+I decided to not include the key in order to be sure, that the signed Woof
+packages are what they are.
 
 The key will be shared to Woof contributors. To become one just ask.
 
@@ -142,15 +147,16 @@ library. Packages before version 6.2 were developed as separate solutions.
 The versioning didn't followed the strict guidelines defined in this
 document.
 
-Also the strict separate of concerns principle is implemented since version 6.2.
+Also the strict separate of concerns principle is implemented since version
+6.2.
 
 Historically `Woof` supported various frameworks:
  - `.NET Framework` from  4.5 to 4.8
  - `.NET Standard 2.0`
  - `.NET 5.0`.
 
-Supporting the legacy frameworks is in conflict with the development speed rule
-defined, so the latest `Woof` supports
+Supporting the legacy frameworks is in conflict with the development speed
+rule defined, so the latest `Woof` supports
 
 **the current `.NET 6.0` only.**
 
@@ -163,8 +169,9 @@ Each package is tested on both Windows and Linux.
 ## Current state
 
 Final works. Mostly on testing and improving documentation.
-The beta version packages will be soon released on GitHub, and after some testing
-version 6.2.0 will go to NuGet.org. All older packages will be deprecated.
+The beta version packages will be soon released on GitHub, and after some
+testing version 6.2.0 will go to NuGet.org. All older packages will be
+deprecated.
 
 
 ## Known issues

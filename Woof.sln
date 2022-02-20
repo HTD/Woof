@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Woof Tookit", "Woof Tookit"
 		CodeDog.ico = CodeDog.ico
 		CodingStyle.vssettings = CodingStyle.vssettings
 		Icon.png = Icon.png
+		md-styles.css = md-styles.css
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
@@ -98,7 +99,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woof.Settings.Demo", "Demos
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{837B4DC2-617B-4166-B160-567AD9B0AFD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuke", "Tools\Nuke\Nuke.csproj", "{26363A02-0D35-443A-B770-CF164FDD0D7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuke", "Tools\Nuke\Nuke.csproj", "{26363A02-0D35-443A-B770-CF164FDD0D7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

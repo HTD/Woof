@@ -25,14 +25,4 @@ public struct ConsoleState {
     /// </summary>
     public int Y;
 
-    /// <summary>
-    /// Window to buffer X coordinate.
-    /// </summary>
-    public int WinX;
-
-    /// <summary>
-    /// Window to buffer Y coorinate.
-    /// </summary>
-    public int WinY;
-
 }

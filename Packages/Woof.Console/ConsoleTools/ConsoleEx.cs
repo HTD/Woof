@@ -105,19 +105,23 @@ public static class ConsoleEx {
     /// Gets or sets current console state.
     /// </summary>
     public static ConsoleState State {
-        get => new() {
-            Background = Console.BackgroundColor,
-            Foreground = Console.ForegroundColor,
-            X = Console.CursorLeft,
-            Y = Console.CursorTop,
-            WinX = Console.WindowLeft,
-            WinY = Console.WindowTop
-        };
+        get {
+            lock (InternalLock) {
+                return new() {
+                    Background = Console.BackgroundColor,
+                    Foreground = Console.ForegroundColor,
+                    X = Console.CursorLeft,
+                    Y = Console.CursorTop,
+                };
+            }
+        }
         set {
-            Console.BackgroundColor = value.Background;
-            Console.ForegroundColor = value.Foreground;
-            Console.SetCursorPosition(value.X, value.Y);
-            if (OperatingSystem.IsWindows()) Console.SetWindowPosition(value.WinX, value.WinY);
+            lock (InternalLock) {
+                Console.BackgroundColor = value.Background;
+                Console.ForegroundColor = value.Foreground;
+                Console.CursorLeft = value.X;
+                Console.CursorTop = value.Y;
+            }
         }
     }
 
@@ -139,8 +143,7 @@ public static class ConsoleEx {
     /// <param name="items">Items to display.</param>
     /// <param name="assembly">Assembly to use, if none specified - entry assembly is used.</param>
     public static void AssemblyHeader(HeaderItems items = HeaderItems.Basic, Assembly? assembly = default) {
-        if (assembly is null) assembly = Assembly.GetEntryAssembly();
-        if (assembly is null) throw new NullReferenceException();
+        assembly ??= Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
         var product = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
         var title = assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title;
         var version = assembly.GetCustomAttribute<AssemblyVersionAttribute>()?.Version ?? assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
@@ -371,9 +374,14 @@ public static class ConsoleEx {
     }
 
     /// <summary>
-    /// Gets the console lock object for synchronous console accesss.
+    /// Console lock object for synchronous console accesss.
     /// </summary>
     public static readonly object Lock = new();
+
+    /// <summary>
+    /// Internal lock.
+    /// </summary>
+    private static readonly object InternalLock = new();
 
     private static bool _IsHexColorEnabled;
     private static readonly Dictionary<char, int> SeverityMap = new() {

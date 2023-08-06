@@ -49,8 +49,8 @@ public sealed class WoofCodec : SubProtocolCodec {
             .Select(t => new { Type = t, Meta = t.GetCustomAttribute<MessageAttribute>() })) {
             if (t.Meta is null) continue;
             var id = t.Meta.MessageTypeId;
-            if (MessageTypes.ContainsKey(id)) throw new InvalidOperationException(
-                $"Duplicate {nameof(t.Meta.MessageTypeId)} assigned to both {MessageTypes[id].MessageType.Name} and {t.Type.Name}");
+            if (MessageTypes.TryGetValue(id, out var context)) throw new InvalidOperationException(
+                $"Duplicate {nameof(t.Meta.MessageTypeId)} assigned to both {context.MessageType.Name} and {t.Type.Name}");
             MessageTypes.Add(t.Meta.MessageTypeId, new MessageTypeContext(t.Meta.MessageTypeId, t.Type, t.Meta.IsSigned, t.Meta.IsSignInRequest, t.Meta.IsError));
         }
     }

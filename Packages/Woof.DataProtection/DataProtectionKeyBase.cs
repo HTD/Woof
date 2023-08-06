@@ -55,8 +55,9 @@ public abstract class DataProtectionKeyBase : IDataProtectionKey {
     /// <param name="keyPurpose">The purpose to be assigned to the newly-created <see cref="IDataProtector"/>.</param>
     /// <returns>Key configuration for the base constructor.</returns>
     protected static DataProtectionKeyConfiguration GetConfiguration(string keyDirectory, string keyPurpose) {
-        DataProtectionKeyConfiguration c = new();
-        c.KeyDirectory = new DirectoryInfo(keyDirectory);
+        DataProtectionKeyConfiguration c = new() {
+            KeyDirectory = new DirectoryInfo(keyDirectory)
+        };
         c.Provider = CreateDataProtectionProvider(c.KeyDirectory, out var keyManager);
         c.KeyManager = keyManager;
         c.Protector = c.Provider.CreateProtector(keyPurpose);

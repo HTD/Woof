@@ -5,7 +5,7 @@ namespace Woof.Command;
 /// <summary>
 /// Command line arguments processing class.
 /// </summary>
-public sealed class CommandLineArguments : IEnumerable<string> {
+public sealed partial class CommandLineArguments : IEnumerable<string> {
 
     /// <summary>
     /// Gets a value indicating whether the command line has arguments.
@@ -59,9 +59,7 @@ public sealed class CommandLineArguments : IEnumerable<string> {
             var match = RxElement.Match(e.Current);
             if (match.Success) {
                 var key = match.Groups[1].Value;
-                if (markedAsOptions.Any() && markedAsOptions.Contains(key, StringComparer.Ordinal)) {
-                    if (e.MoveNext() && !options.ContainsKey(key)) options.Add(key, e.Current);
-                }
+                if (markedAsOptions.Any() && markedAsOptions.Contains(key, StringComparer.Ordinal))                     if (e.MoveNext() && !options.ContainsKey(key)) options.Add(key, e.Current);
                 else switches.Add(key);
             }
             else positional.Add(e.Current);
@@ -74,7 +72,7 @@ public sealed class CommandLineArguments : IEnumerable<string> {
     /// <summary>
     /// Matches element with or without optional switch.
     /// </summary>
-    private static readonly Regex RxElement = new(@"^(?:-|--|/)(.*)$", RegexOptions.Compiled);
+    private static readonly Regex RxElement = RxElementCT();
 
     /// <summary>
     /// Gets the enumerator of the raw original array.
@@ -87,5 +85,8 @@ public sealed class CommandLineArguments : IEnumerable<string> {
     /// </summary>
     /// <returns>Enumerator.</returns>
     IEnumerator IEnumerable.GetEnumerator() => Raw.GetEnumerator();
+
+    [GeneratedRegex("^(?:-|--|/)(.*)$", RegexOptions.Compiled)]
+    private static partial Regex RxElementCT();
 
 }

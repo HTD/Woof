@@ -3,7 +3,7 @@
 /// <summary>
 /// Optionally interactive command line processor / console renderer.
 /// </summary>
-public class CommandLine : ICommand {
+public partial class CommandLine : ICommand {
 
     #region Properties
 
@@ -15,7 +15,7 @@ public class CommandLine : ICommand {
     /// <summary>
     /// Gets the exact command alone, without arguments.
     /// </summary>
-    public string Command { get; private set; } = String.Empty;
+    public string Command { get; private set; } = string.Empty;
 
     /// <summary>
     /// Gets the current command line length.
@@ -65,14 +65,14 @@ public class CommandLine : ICommand {
     /// </summary>
     /// <param name="parts">Parts.</param>
     /// <returns>Line.</returns>
-    public static string Join(string[] parts) => String.Join(" ", parts.Select(i => Quote(i)));
+    public static string Join(string[] parts) => string.Join(" ", parts.Select(i => Quote(i)));
 
     /// <summary>
     /// Quotes the part if the part contains one or more spaces and isn't already quoted.
     /// </summary>
     /// <param name="part">A single command line part.</param>
     /// <returns>Quoted part.</returns>
-    public static string Quote(string part) => part.Contains(' ') && part[0] != '"' && part[^1] != '"' ? ('"' + part.Replace("\"", "\"\"") + '"') : part;
+    public static string Quote(string part) => part.Contains(' ') && part[0] != '"' && part[^1] != '"' ? '"' + part.Replace("\"", "\"\"") + '"' : part;
 
     /// <summary>
     /// Unquotes the part if its quoted with double quotes. Also unquotes incomplete quoting.
@@ -115,8 +115,8 @@ public class CommandLine : ICommand {
     /// Resets properties. The optional text is parsed.
     /// </summary>
     private void Reset() {
-        _Text = String.Empty;
-        Command = String.Empty;
+        _Text = string.Empty;
+        Command = string.Empty;
         Arguments = new();
         Map = Array.Empty<int>();
     }
@@ -132,14 +132,13 @@ public class CommandLine : ICommand {
     /// Splits the command line into command and arguments, creates parts map.
     /// </summary>
     private void Parse() {
-        if (String.IsNullOrEmpty(Text)) { Reset(); return; }
+        if (string.IsNullOrEmpty(Text)) { Reset(); return; }
         if (Map.Length != Text.Length) Map = new int[Text.Length];
         var unquoted = Split(Text);
         var quoted = Split(Text, true);
         int partIndex = -1, partLeft = -1;
         bool isOutside = true;
-        for (int i = 0, n = Map.Length; i < n; i++) {
-            if (isOutside) {
+        for (int i = 0, n = Map.Length; i < n; i++)             if (isOutside) {
                 if (Text[i] == ' ') Map[i] = -1;
                 else {
                     isOutside = false;
@@ -153,8 +152,7 @@ public class CommandLine : ICommand {
                 Map[i] = partIndex;
                 if (--partLeft < 1) isOutside = true;
             }
-        }
-        Command = unquoted.FirstOrDefault() ?? String.Empty;
+        Command = unquoted.FirstOrDefault() ?? string.Empty;
         Arguments = new CommandLineArguments(unquoted.Length > 0 ? unquoted[1..] : Array.Empty<string>());
     }
 
@@ -181,12 +179,15 @@ public class CommandLine : ICommand {
     /// <summary>
     /// Command line text cache.
     /// </summary>
-    private string _Text = String.Empty;
+    private string _Text = string.Empty;
 
     /// <summary>
     /// Matches douoble quotes.
     /// </summary>
-    private static readonly Regex _RxUnquotedDoubleQuotes = new(@"""{1}", RegexOptions.Compiled);
+    private static readonly Regex _RxUnquotedDoubleQuotes = _RxUnquotedDoubleQuotesCT();
+
+    [GeneratedRegex("\"{1}", RegexOptions.Compiled)]
+    private static partial Regex _RxUnquotedDoubleQuotesCT();
 
     #endregion
 

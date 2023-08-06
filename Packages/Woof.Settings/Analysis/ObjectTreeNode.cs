@@ -3,7 +3,7 @@
 /// <summary>
 /// Contains a property with the path from its root.
 /// </summary>
-public struct ObjectTreeNode {
+public readonly struct ObjectTreeNode {
 
     /// <summary>
     /// The path to the node.
@@ -70,6 +70,6 @@ public struct ObjectTreeNode {
     /// Returns the leaf path and value as string.
     /// </summary>
     /// <returns>Leaf path.</returns>
-    public override string ToString() => $"{Path} => {Content}";
+    public override readonly string ToString() => $"{Path} => {Content}";
 
 }

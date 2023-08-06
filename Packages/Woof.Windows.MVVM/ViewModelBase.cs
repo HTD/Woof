@@ -37,7 +37,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged, ICommand {
     /// <param name="defaultValue">Default value, if not set.</param>
     /// <returns>Property value.</returns>
     protected T? GetValue<T>(string propertyName, T? defaultValue = default)
-        => Properties.ContainsKey(propertyName) ? (T?)Properties[propertyName] : defaultValue;
+        => Properties.TryGetValue(propertyName, out var propertyValue) ? (T?)propertyValue : defaultValue;
 
     /// <summary>
     /// Sets a bound property value.

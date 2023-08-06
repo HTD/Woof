@@ -30,8 +30,8 @@ public sealed class CommandLineOptionCollection : IEnumerable<KeyValuePair<strin
     /// <returns>Option value, null if it doesn't exist.</returns>
     public string? this[string name] => !Options.Any() ? null : (
             name.Contains('|')
-                ? name.Split('|').Where(i => Options.ContainsKey(i)).Select(i => Options[i]).FirstOrDefault()
-                : (Options.ContainsKey(name) ? Options[name] : null)
+                ? name.Split('|').Select(i => Options.TryGetValue(i, out var v) ? v : null).FirstOrDefault(i => i is not null)
+                : Options.TryGetValue(name, out var v) ? v : null
         );
 
     /// <summary>

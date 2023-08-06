@@ -20,8 +20,9 @@ public class NPOITest {
     /// </summary>
     [Fact]
     public void A015_ToExcel_Alignment() {
-        List<AlignmentTestRow> test = new();
-        test.Add(new AlignmentTestRow());
+        List<AlignmentTestRow> test = new() {
+            new AlignmentTestRow()
+        };
         //test.Add(new AlignmentTestRow());
         test.ToExcel("AlignmentTest.xlsx");
     }
@@ -30,6 +31,6 @@ public class NPOITest {
     /// Tests the Excel file creation. See the output directory for the test file created.
     /// </summary>
     [Fact]
-    public void A020_ToExcel() => TestRow.GetSample(1).ToExcel("Test.xlsx");
+    public void A020_ToExcel() => TestRow.GetSample(10).ToExcel("Test.xlsx");
 
 }

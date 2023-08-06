@@ -43,9 +43,8 @@ public class Utf8DecodeStream : Stream {
     /// <param name="offset">Position in the buffer to start.</param>
     /// <param name="count">Number of bytes to write.</param>
     public override void Write(byte[] buffer, int offset, int count) {
-        bool sequenceFound = false;
         while (count > 0) {
-            sequenceFound = false;
+            bool sequenceFound = false;
             for (int i = offset, n = offset + count; i < n; i++) {
                 if (DecodeUtf8Sequence(buffer, i, out var sequence, out var bytesConsumed)) {
                     InnerStream.Write(buffer, offset, i - offset);

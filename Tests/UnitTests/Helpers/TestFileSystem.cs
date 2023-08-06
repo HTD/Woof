@@ -1,6 +1,6 @@
 ﻿namespace UnitTests.Helpers;
 
-public static class TestFileSystem {
+public static partial class TestFileSystem {
 
     /// <summary>
     /// Creates test file structure.
@@ -68,11 +68,14 @@ public static class TestFileSystem {
     /// </summary>
     /// <param name="path">Path ending with a number.</param>
     /// <returns>Number at the end.</returns>
-    private static int GetNumber(string path) => Int32.Parse(RxNumber.Match(path).Value);
+    private static int GetNumber(string path) => int.Parse(RxNumber.Match(path).Value);
 
     /// <summary>
     /// A regular expression matching numbers at the end of the string.
     /// </summary>
-    private static readonly Regex RxNumber = new(@"\d+$", RegexOptions.Compiled);
+    private static readonly Regex RxNumber = RxNumberCT();
+
+    [GeneratedRegex("\\d+$", RegexOptions.Compiled)]
+    private static partial Regex RxNumberCT();
 
 }

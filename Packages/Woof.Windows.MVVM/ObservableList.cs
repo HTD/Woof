@@ -118,7 +118,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
             if (item is IDisposable disposableItem) disposableItem.Dispose();
         }
         base.Clear();
-        if (ShadowList is not null) ShadowList.Clear();
+        ShadowList?.Clear();
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
@@ -248,7 +248,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// </exception>
     public new void Sort() {
         base.Sort();
-        if (ShadowList != null) ShadowList.Sort();
+        ShadowList?.Sort();
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
@@ -269,7 +269,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// </exception>
     public new void Sort(IComparer<T>? comparer) {
         base.Sort(comparer);
-        if (ShadowList != null) ShadowList.Sort();
+        ShadowList?.Sort();
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
@@ -284,7 +284,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// </exception>
     public new void Sort(Comparison<T> comparison) {
         base.Sort(comparison);
-        if (ShadowList != null) ShadowList.Sort();
+        ShadowList?.Sort();
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
@@ -311,7 +311,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// </exception>
     public new void Sort(int index, int count, IComparer<T>? comparer) {
         base.Sort(index, count, comparer);
-        if (ShadowList != null) ShadowList.Sort();
+        ShadowList?.Sort();
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
@@ -376,7 +376,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// the item was not inserted into the collection.</returns>
     int IList.Add(object? value) {
         int index = BaseIListAdd(value);
-        if (ShadowList is not null) ShadowList.Add((T)value!);
+        ShadowList?.Add((T)value!);
         if (index < 0) return index;
         if (value is INotifyPropertyChanged observableItem) observableItem.PropertyChanged += (s, e) => OnPropertyChanged(observableItem, e);
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, value));
@@ -396,7 +396,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the System.Collections.Generic.IList`1.</exception>
     void IList.Insert(int index, object? value) {
         BaseIListInsert(index, value);
-        if (ShadowList is not null) ShadowList.Insert(index, (T)value!);
+        ShadowList?.Insert(index, (T)value!);
         if (value is INotifyPropertyChanged observableItem) observableItem.PropertyChanged += (s, e) => OnPropertyChanged(observableItem, e);
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, value));
     }

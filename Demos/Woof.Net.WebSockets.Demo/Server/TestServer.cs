@@ -46,8 +46,7 @@ public class TestServer : Server<WoofCodec> {
             // This part tests if we can get the client's context knowing its id.
             // When there's only one client and it's signed in, it should find its own id.
             var clientSession = GetClientSession(clientId);
-            var clientContext = GetClientContext(clientSession);
-            if (clientContext is null) throw new InvalidOperationException("GetClientContext() failed");
+            var clientContext = GetClientContext(clientSession) ?? throw new InvalidOperationException("GetClientContext() failed");
         }
         if (LagTime > TimeSpan.Zero) await Task.Delay(LagTime);
         if (IgnoreMessagesCount > 0) {

@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents Linux file system entry permissions.
 /// </summary>
-public class Permissions {
+public partial class Permissions {
 
     /// <summary>
     /// Gets a copy of the permissions.
@@ -33,12 +33,12 @@ public class Permissions {
             const uint w = (uint)Bits.Write;
             const uint x = (uint)Bits.Execute;
             ls[0] = (Mode & d) > 0 ? ls[0] = 'd' : '-';
-            ls[1] = (Mode & (r << 6)) > 0 ? ls[1] = 'r' : '-';
-            ls[2] = (Mode & (w << 6)) > 0 ? ls[2] = 'w' : '-';
-            ls[3] = (Mode & (x << 6)) > 0 ? ls[3] = 'x' : '-';
-            ls[4] = (Mode & (r << 3)) > 0 ? ls[4] = 'r' : '-';
-            ls[5] = (Mode & (w << 3)) > 0 ? ls[5] = 'w' : '-';
-            ls[6] = (Mode & (x << 3)) > 0 ? ls[6] = 'x' : '-';
+            ls[1] = (Mode & r << 6) > 0 ? ls[1] = 'r' : '-';
+            ls[2] = (Mode & w << 6) > 0 ? ls[2] = 'w' : '-';
+            ls[3] = (Mode & x << 6) > 0 ? ls[3] = 'x' : '-';
+            ls[4] = (Mode & r << 3) > 0 ? ls[4] = 'r' : '-';
+            ls[5] = (Mode & w << 3) > 0 ? ls[5] = 'w' : '-';
+            ls[6] = (Mode & x << 3) > 0 ? ls[6] = 'x' : '-';
             ls[7] = (Mode & r) > 0 ? ls[7] = 'r' : '-';
             ls[8] = (Mode & w) > 0 ? ls[8] = 'w' : '-';
             ls[9] = (Mode & x) > 0 ? ls[9] = 'x' : '-';
@@ -65,7 +65,7 @@ public class Permissions {
     /// <summary>
     /// Creates Linux file system entry permissions from <see cref="uint"/>.
     /// </summary>
-    /// <param name="mode"><see cref="UInt32"/> mode.</param>
+    /// <param name="mode"><see cref="uint"/> mode.</param>
     public Permissions(uint mode) => Mode = mode;
 
     /// <summary>
@@ -79,7 +79,7 @@ public class Permissions {
     /// <summary>
     /// Modifies original file system entry permissions with the <see cref="OriginalString"/>.
     /// </summary>
-    /// <param name="mode"><see cref="UInt32"/> mode.</param>
+    /// <param name="mode"><see cref="uint"/> mode.</param>
     /// <exception cref="InvalidOperationException">Original string is not a valid permissions string.</exception>
     /// <returns>This modified, absolute permissions.</returns>
     public Permissions Modify(uint mode) {
@@ -176,9 +176,9 @@ public class Permissions {
     private uint GetEffectiveBits(Target target, Bits bits, bool invert = false) {
         var tmask = (uint)target;
         var umask = (uint)bits & 0xfffu;
-        if (!invert) tmask &= (~0u ^ 0b001001001u) | ((Mode & 0b100100100u) >> 2); // don't allow adding execute on unreadable.
+        if (!invert) tmask &= ~0u ^ 0b001001001u | (Mode & 0b100100100u) >> 2; // don't allow adding execute on unreadable.
         if (bits.HasFlag(Bits.SpecialExecute) && IsDirOrExecutable) umask |= 1;
-        var result = tmask & ((umask << 6) | (umask << 3) | umask);
+        var result = tmask & (umask << 6 | umask << 3 | umask);
         return invert ? ~result : result;
     }
 
@@ -282,11 +282,20 @@ public class Permissions {
     #region Private data
 
     private readonly string OriginalString = "";
-    private static readonly Regex RxOctalString = new(@"^[0-7]{3,7}$", RegexOptions.Compiled);
-    private static readonly Regex RxRelativePart = new(@"^([ugoa]*)([=+-])([rwxXs]+)$", RegexOptions.Compiled);
-    private static readonly Regex RxSplitRelative = new(@"[, ]", RegexOptions.Compiled);
+    private static readonly Regex RxOctalString = RxOctalStringCT();
+    private static readonly Regex RxRelativePart = RxRelativePartCT();
+    private static readonly Regex RxSplitRelative = RxSplitRelativeCT();
     const string EInvalid = "Invalid permissions string";
     const string EAbsolute = "Cannot modify absolute permissions";
+
+    [GeneratedRegex("^[0-7]{3,7}$", RegexOptions.Compiled)]
+    private static partial Regex RxOctalStringCT();
+
+    [GeneratedRegex("^([ugoa]*)([=+-])([rwxXs]+)$", RegexOptions.Compiled)]
+    private static partial Regex RxRelativePartCT();
+
+    [GeneratedRegex("[, ]", RegexOptions.Compiled)]
+    private static partial Regex RxSplitRelativeCT();
 
     #endregion
 

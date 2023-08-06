@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFramework>net7.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
     </PropertyGroup>
@@ -11,6 +11,14 @@
         <BaseOutputPath>..\bin\</BaseOutputPath>
         <ImplicitUsings>enable</ImplicitUsings>
         <ApplicationIcon>CodeDog.ico</ApplicationIcon>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <NoWarn>1701;1702;IDE0079</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <NoWarn>1701;1702;IDE0079</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

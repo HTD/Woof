@@ -84,7 +84,7 @@ public class ValueConversions : Dictionary<Type, (ValueParser Parse, ValueToStri
     /// <returns>Deserialized object.</returns>
     /// <exception cref="InvalidCastException">Unsupported type.</exception>
     public static object Parse(string value, Type type) {
-        if (Default.ContainsKey(type)) return Default[type].Parse(value);
+        if (Default.TryGetValue(type, out var item)) return item.Parse(value);
         if (typeof(ISerializableSettingsValue).IsAssignableFrom(type)) {
             var instance = (ISerializableSettingsValue)Activator.CreateInstance(type)!;
             instance.Parse(value);

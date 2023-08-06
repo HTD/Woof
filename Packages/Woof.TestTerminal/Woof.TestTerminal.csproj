@@ -2,9 +2,9 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.TestTerminal</Title>
-        <Version>6.2.0</Version>
+        <Version>7.0.0</Version>
         <PackageTags>woof;toolkit;terminal;test;console</PackageTags>
-        <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
+        <PackageReleaseNotes>.NET7 target.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>Displays a Windows Terminal window with optional split panels.</Description>
@@ -31,7 +31,7 @@
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <DebugType>embedded</DebugType>
     </PropertyGroup>

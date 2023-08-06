@@ -52,7 +52,7 @@ public class DPAPI_Linux : IDPAPI, IAcceptMessage {
         var currentUser = UserInfo.CurrentProcessUser;
         var contextUser = currentUser.Uid == CurrentContext ? currentUser : UserInfo.FromUid(CurrentContext)!;
         if (currentUser.Uid == CurrentContext) return DPAPI_LinuxKey.CurrentUserScope.Protector;
-        if (DPAPI_LinuxKey.Available.ContainsKey(CurrentContext)) return DPAPI_LinuxKey.Available[CurrentContext].Protector;
+        if (DPAPI_LinuxKey.Available.TryGetValue(CurrentContext, out var key)) return key.Protector;
         try {
             return new DPAPI_LinuxKey(contextUser).Protector;
         }

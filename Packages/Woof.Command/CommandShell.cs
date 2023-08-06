@@ -460,8 +460,8 @@ public class CommandShell {
                 "[ " + String.Join(", ", ManPages.Keys) + " ]"
             );
         }
-        else if (ManPages.ContainsKey(page)) {
-            ShowMsg(ManPages[page]);
+        else if (ManPages.TryGetValue(page, out var pageContent)) {
+            ShowMsg(pageContent);
         }
         else ShowMsg($"There's no manual page on \"{page}\".", CommandMessageType.Warning);
     }

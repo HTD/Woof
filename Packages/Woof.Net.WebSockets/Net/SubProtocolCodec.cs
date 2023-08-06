@@ -123,17 +123,14 @@ public abstract class SubProtocolCodec {
     /// </summary>
     /// <param name="apiKey"></param>
     /// <returns>32 bytes (128 bits).</returns>
-    public virtual byte[] GetHash(byte[] apiKey) {
-        using var sha = SHA256.Create();
-        return sha.ComputeHash(apiKey);
-    }
+    public virtual byte[] GetHash(byte[] apiKey) => SHA256.HashData(apiKey);
 
     /// <summary>
     /// Gets a new key.
     /// </summary>
     /// <returns>64 bytes (256 bits).</returns>
     public virtual byte[] GetKey() {
-        using var hmac = HMAC.Create("HMACSHA256");
+        using var hmac = new HMACSHA256();
         return hmac is null ? throw new NullReferenceException() : hmac.Key;
     }
 

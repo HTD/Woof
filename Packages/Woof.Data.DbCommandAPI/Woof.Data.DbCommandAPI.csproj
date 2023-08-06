@@ -2,9 +2,9 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.Data.DbCommandApi</Title>
-        <Version>6.2.0</Version>
+        <Version>7.0.0</Version>
         <PackageTags>woof;toolkit;db;adatabase;sql;mssql;api</PackageTags>
-        <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
+        <PackageReleaseNotes>.NET7 target.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>A convenient API over DbCommand, uses SQL procedures to map DTOs.</Description>
@@ -35,7 +35,7 @@
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <DebugType>embedded</DebugType>
         <RootNamespace>Woof.Data.DbCommandApi</RootNamespace>

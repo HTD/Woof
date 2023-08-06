@@ -5,7 +5,7 @@ namespace UnitTests.Types;
 /// <summary>
 /// A very basic test row to generate a spreadsheet from.
 /// </summary>
-[XSheet(Name = "Test")] //, IsSumInTheFirstRow = true, SumLabel = "Total:"
+[XSheet(Name = "Test", AutoFilters = true, ColumnFiltersStart = 6)] //, IsSumInTheFirstRow = true, SumLabel = "Total:"
 internal class TestRow {
 
     /// <summary>

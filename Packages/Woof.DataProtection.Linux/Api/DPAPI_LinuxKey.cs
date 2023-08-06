@@ -24,7 +24,7 @@ internal class DPAPI_LinuxKey : DataProtectionKeyBase {
     public static DPAPI_LinuxKey CurrentUserScope {
         get {
             var user = CurrentUser.BehindSudo ?? UserInfo.CurrentProcessUser;
-            return Available.ContainsKey(user.Uid) ? Available[user.Uid] : new DPAPI_LinuxKey(user);
+            return Available.TryGetValue(user.Uid, out var key) ? key : new DPAPI_LinuxKey(user);
         }
     }
 
@@ -32,8 +32,8 @@ internal class DPAPI_LinuxKey : DataProtectionKeyBase {
     /// Gets the data protection key for the local machine scope.
     /// </summary>
     public static DPAPI_LinuxKey LocalMachineScope
-        => Available.ContainsKey(0) ?
-            Available[0] : CurrentUser.IsRoot ?
+        => Available.TryGetValue(0, out var key) ?
+            key : CurrentUser.IsRoot ?
             new DPAPI_LinuxKey(UserInfo.FromUid(0)!) :
             throw new UnauthorizedAccessException("This must be run with sudo for the first time");
 
@@ -67,7 +67,7 @@ internal class DPAPI_LinuxKey : DataProtectionKeyBase {
     /// <param name="group">A group the user belongs to, taken from user information if not set.</param>
     /// <returns>Data protection key configuration.</returns>
     private static DataProtectionKeyConfiguration GetConfiguration(UserInfo user, ref GroupInfo? group) {
-        if (group is null) group = GroupInfo.FromGid(user.Gid)!;
+        group ??= GroupInfo.FromGid(user.Gid)!;
         var target = user.Uid == 0 ? SystemDirectory : Linux.ResolveUserPath(UserDirectory);
         var purpose = $"Woof.DPAPI:{user.Name}";
         return GetConfiguration(target, purpose);

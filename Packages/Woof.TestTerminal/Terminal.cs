@@ -35,8 +35,7 @@ public class Terminal {
     /// <param name="name">Project name.</param>
     /// <returns>Project metadata.</returns>
     private static DotNetProject GetProject(string name) {
-        var solutionFile = DotNetSolution.CurrentSolutionFile;
-        if (solutionFile is null) throw new FileNotFoundException();
+        var solutionFile = DotNetSolution.CurrentSolutionFile ?? throw new FileNotFoundException();
         var solution = new DotNetSolution(solutionFile);
         return new(solution.Projects.First(p => p.Name == name).Path);
     }

@@ -12,9 +12,26 @@ public class XSheetAttribute : Attribute {
     public string? Name { get; set; }
 
     /// <summary>
+    /// Gets or sets a value automatic column filters are enabled in the first row.
+    /// </summary>
+    public bool AutoFilters { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating that all column sizes shoud be automatic.
     /// </summary>
     public bool AutoSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets the column filters start index.
+    /// Negative or zero will select first column.
+    /// </summary>
+    public int ColumnFiltersStart { get; set; } = -1;
+
+    /// <summary>
+    /// Gets or sets the column filters end index.
+    /// Negative value will select the last column.
+    /// </summary>
+    public int ColumnFiltersEnd { get; set; } = -1;
 
     /// <summary>
     /// Gets or sets a value indicating that the sum should be placed in the first row, instead of the last one.

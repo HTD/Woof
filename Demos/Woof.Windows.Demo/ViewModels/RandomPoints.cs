@@ -59,7 +59,7 @@ internal class RandomPoints : ViewModelBase, IGetAsync {
     private void Replace() {
         foreach (var item in Items.ToArray()) {
             var replacement = new DataPointObservable { Id = item.Id, X = 1, Y = 2, Z = 3 };
-            var index = Items.IndexOf(item);
+            //var index = Items.IndexOf(item);
             //Items.RemoveAt(index);
             //Items.Add(replacement);
             Items.Replace(item, replacement);

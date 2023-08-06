@@ -18,7 +18,7 @@ public struct LinuxTime : IEquatable<LinuxTime>, IComparable<LinuxTime> {
     /// <summary>
     /// Gets the Linux time as .NET <see cref="DateTime"/>.
     /// </summary>
-    public DateTime AsDateTime => DateTime.UnixEpoch.AddSeconds(Seconds + Nano * Nanoseconds).ToLocalTime();
+    public readonly DateTime AsDateTime => DateTime.UnixEpoch.AddSeconds(Seconds + Nano * Nanoseconds).ToLocalTime();
 
     /// <summary>
     /// Creates a Linux time stamp from .NET time.
@@ -56,21 +56,21 @@ public struct LinuxTime : IEquatable<LinuxTime>, IComparable<LinuxTime> {
     /// </summary>
     /// <param name="other">Compared time stamp.</param>
     /// <returns>True if equal.</returns>
-    public bool Equals(LinuxTime other) => Seconds == other.Seconds && Nanoseconds == other.Nanoseconds;
+    public readonly bool Equals(LinuxTime other) => Seconds == other.Seconds && Nanoseconds == other.Nanoseconds;
 
     /// <summary>
     /// Equality test.
     /// </summary>
     /// <param name="obj">Compared object.</param>
     /// <returns>True if equal.</returns>
-    public override bool Equals(object? obj) => obj is LinuxTime t && t.Equals(this);
+    public override readonly bool Equals(object? obj) => obj is LinuxTime t && t.Equals(this);
 
     /// <summary>
     /// Compares two Linux time instances.
     /// </summary>
     /// <param name="other">The other instance.</param>
     /// <returns>-1 if this comes before the other, zero for equal values, if this comes after the other.</returns>
-    public int CompareTo(LinuxTime other) {
+    public readonly int CompareTo(LinuxTime other) {
         double time = Seconds + Nano * Nanoseconds;
         double otherTime = other.Seconds + Nano * Nanoseconds;
         return time < otherTime ? -1 : time > otherTime ? 1 : 0;
@@ -80,7 +80,7 @@ public struct LinuxTime : IEquatable<LinuxTime>, IComparable<LinuxTime> {
     /// Gets the hash code for the structure.
     /// </summary>
     /// <returns>The hash code.</returns>
-    public override int GetHashCode() => HashCode.Combine(Seconds, Nanoseconds);
+    public override readonly int GetHashCode() => HashCode.Combine(Seconds, Nanoseconds);
 
     /// <summary>
     /// Tests for equality.

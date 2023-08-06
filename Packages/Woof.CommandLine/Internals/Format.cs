@@ -43,7 +43,7 @@ static class Format {
                 column1 = metadata.ToString(syntax);
                 if (column1 is null) continue;
                 column2 = LocalizedString(localizationProvider, metadata.Option.ToString(), metadata.Description!);
-                if (column2 is null) column2 = string.Empty;
+                column2 ??= string.Empty;
                 yield return (column1, column2);
             }
         }

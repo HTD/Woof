@@ -7,7 +7,7 @@ namespace Woof.Net.WebSockets;
 /// <summary>
 /// WebSocket server base providing simple WebSocket transport and handshake over any given subprotocol.
 /// </summary>
-public abstract class Server<TCodec> : WebSocketEndpoint<TCodec>, IDisposable, IAsyncDisposable where TCodec : SubProtocolCodec, new() {
+public abstract partial class Server<TCodec> : WebSocketEndpoint<TCodec>, IDisposable, IAsyncDisposable where TCodec : SubProtocolCodec, new() {
 
     #region Public API
 
@@ -350,7 +350,7 @@ public abstract class Server<TCodec> : WebSocketEndpoint<TCodec>, IDisposable, I
         var length = getStreamFragmentRequest.Length;
         if (position >= 0) stream.Position = position;
         var bytesRequested = length;
-        if (bytesRequested < 1 && stream.Length < Int32.MaxValue) bytesRequested = (int)stream.Length;
+        if (bytesRequested < 1 && stream.Length < int.MaxValue) bytesRequested = (int)stream.Length;
         var streamBuffer = new byte[bytesRequested];
         var endPosition = length > 0 ? stream.Position + length : stream.Length;
         var bytesRead = await stream.ReadAsync(streamBuffer.AsMemory(0, bytesRequested));
@@ -479,7 +479,7 @@ public abstract class Server<TCodec> : WebSocketEndpoint<TCodec>, IDisposable, I
             var httpListenerContext = await Listener.GetContextAsync();
             if (httpListenerContext.Request.IsWebSocketRequest) {
                 HttpListenerWebSocketContext httpListenerWebSocketContext;
-                httpListenerWebSocketContext = await httpListenerContext.AcceptWebSocketAsync(Codec.SubProtocol ?? String.Empty);
+                httpListenerWebSocketContext = await httpListenerContext.AcceptWebSocketAsync(Codec.SubProtocol ?? string.Empty);
                 var context = new WebSocketContext(httpListenerWebSocketContext, httpListenerContext.Request);
                 if (context.IsOpen) {
                     Codec.SessionProvider?.OpenSession(context.Transport);
@@ -557,12 +557,15 @@ public abstract class Server<TCodec> : WebSocketEndpoint<TCodec>, IDisposable, I
     /// <summary>
     /// A regular expression matching WebSocket protocol URI part.
     /// </summary>
-    private readonly Regex RxWS = new(@"^ws", RegexOptions.Compiled);
+    private readonly Regex RxWS = RxWSCT();
 
     /// <summary>
     /// A <see cref="HttpListener"/> used to listen for incomming connections.
     /// </summary>
     private HttpListener? Listener;
+
+    [GeneratedRegex("^ws", RegexOptions.Compiled)]
+    private static partial Regex RxWSCT();
 
     #endregion
 

@@ -9,14 +9,14 @@ class Demo {
 
     static async Task Main() {
         ConsoleEx.Init();
-        //ConsoleEx.SuccessText = "✓"; // how crazy is that? ;)
-        //ConsoleEx.FailText = "✘"; // needs a good Unicode font though.
+        ConsoleEx.SuccessText = "✓"; // how crazy is that? ;)
+        ConsoleEx.FailText = "✘"; // needs a good Unicode font though.
         ConsoleEx.BulletIndentation = 2;
         ConsoleEx.AlignStart = 35;
         ConsoleEx.AssemblyHeader<Cursor>(HeaderItems.All);
         BulletsTest(3);
         Console.WriteLine();
-        await CursorsTestAsync(4);
+        await CursorsTestAsync(32);
         Console.WriteLine();
         if (ConsoleEx.IsHexColorEnabled) {
             ColorTest();

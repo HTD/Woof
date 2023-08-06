@@ -28,9 +28,7 @@ public static class JsonNodeTraits {
     /// <param name="node">The node to set.</param>
     /// <exception cref="InvalidOperationException">Parent node doesn't exist.</exception>
     public static void SetNode(this JsonNode root, JsonNodePath path, JsonNode node) {
-        JsonNode? parent = path.Parent is JsonNodePath parentPath ? root.Select(parentPath) : root;
-        if (parent is null) throw new InvalidOperationException("The parent node doesn't exist");
-
+        JsonNode? parent = (path.Parent is JsonNodePath parentPath ? root.Select(parentPath) : root) ?? throw new InvalidOperationException("The parent node doesn't exist");
         if (parent is JsonObject parentObject) {
             if (parentObject.TryGetPropertyValue(path.Key, out _)) parentObject.Remove(path.Key);
             parentObject.Add(path.Key, node);
@@ -52,8 +50,7 @@ public static class JsonNodeTraits {
         JsonNode? parent = path.Parent is JsonNodePath parentPath ? root.Select(parentPath) : root;
         if (parent is null) {
             // knowing the keys we can create the parent node if it doesn't exist:
-            var grandparent = path.Length < 3 ? root : root.Select(path.Parts.Select(p => p.ToString()).ElementAt(^3));
-            if (grandparent is null) throw new InvalidOperationException("Target path too far from an existing ancestor");
+            var grandparent = (path.Length < 3 ? root : root.Select(path.Parts.Select(p => p.ToString()).ElementAt(^3))) ?? throw new InvalidOperationException("Target path too far from an existing ancestor");
             var parentKey = path.Parent!.Key;
             var targetKey = path.Key;
             var parentNode = JsonNode.Parse(int.TryParse(targetKey, out _) ? "[]" : "{}");

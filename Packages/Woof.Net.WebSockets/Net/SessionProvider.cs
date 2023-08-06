@@ -23,7 +23,7 @@ public sealed class SessionProvider : IDisposable {
     /// </summary>
     /// <param name="context">Connection context to be used to generate the session identifier from.</param>
     public void OpenSession(IAsyncTransport context) {
-        if (IdGenerator is null) IdGenerator = new ObjectIDGenerator();
+        IdGenerator ??= new ObjectIDGenerator();
         IdGenerator.GetId(context, out var _);
     }
 
@@ -50,7 +50,7 @@ public sealed class SessionProvider : IDisposable {
         if (IdGenerator is null) return (TSession)(Session = new TSession()); // single session, started from client scenario.
         if (context is null) throw new NullReferenceException("Context is required for server use");
         var sessionId = IdGenerator.GetId(context, out _);
-        if (Sessions is null) Sessions = new SessionCollection();
+        Sessions ??= new SessionCollection();
         if (!Sessions.ContainsKey(sessionId)) {
             var newSession = new TSession();
             Sessions.Add(sessionId, newSession);
@@ -79,7 +79,7 @@ public sealed class SessionProvider : IDisposable {
         if (IdGenerator is null && Session is null) return null;
         if (IdGenerator is null) return Session?.Key;
         var sessionId = IdGenerator.GetId(context, out _);
-        return Sessions != null && Sessions.ContainsKey(sessionId) ? Sessions[sessionId].Key : null;
+        return Sessions != null && Sessions.TryGetValue(sessionId, out var session) ? session.Key : null;
     }
 
     /// <summary>

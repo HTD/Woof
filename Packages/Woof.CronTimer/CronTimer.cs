@@ -124,7 +124,13 @@ public sealed partial class CronTimer<TData> : IDisposable {
 
     private CancellationTokenSource? CTS;
     private readonly SemaphoreSlim EventsLock = new(1, 1);
-    private static readonly Regex RxItems = new(@"\s*,\s*", RegexOptions.Compiled);
-    private static readonly Regex RxFields = new(@"\s+", RegexOptions.Compiled);
+    private static readonly Regex RxItems = RxItemsCT();
+    private static readonly Regex RxFields = RxFieldsCT();
+
+    [GeneratedRegex("\\s*,\\s*", RegexOptions.Compiled)]
+    private static partial Regex RxItemsCT();
+
+    [GeneratedRegex("\\s+", RegexOptions.Compiled)]
+    private static partial Regex RxFieldsCT();
 
 }

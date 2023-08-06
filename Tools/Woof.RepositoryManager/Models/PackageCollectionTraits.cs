@@ -27,7 +27,7 @@ public static class PackageCollectionTraits {
             if (package.DependencySets.FirstOrDefault(i => i.TargetFramework.DotNetFrameworkName == Settings.Default.DotNetFrameworkName) is PackageDependencyGroup group) {
                 foreach (var dependency in group.Packages) {
                     if (dependency.Id.StartsWith(Settings.Default.Prefix, StringComparison.Ordinal)) {
-                        if (dependencies is null) dependencies = new();
+                        dependencies ??= new();
                         dependencies.Add(new(dependency.Id, dependency.VersionRange.OriginalString, null));
                     }
                 }

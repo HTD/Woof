@@ -70,8 +70,7 @@ public class ShellCommand {
     /// <exception cref="ShellExecException">Command returned non zero exit code.</exception>
     public string Exec() {
         Redirect = true;
-        using var process = Process.Start(this);
-        if (process is null) throw new InvalidOperationException("Shell execute failed");
+        using var process = Process.Start(this) ?? throw new InvalidOperationException("Shell execute failed");
         var output = process.StandardOutput.ReadToEnd().Trim();
         var error = process.StandardError.ReadToEnd().Trim();
         process.WaitForExit();
@@ -88,8 +87,7 @@ public class ShellCommand {
     /// <exception cref="ShellExecException">Command returned non zero exit code.</exception>
     public async ValueTask<string> ExecAsync() {
         Redirect = true;
-        using var process = Process.Start(this);
-        if (process is null) throw new InvalidOperationException("Shell execute failed");
+        using var process = Process.Start(this) ?? throw new InvalidOperationException("Shell execute failed");
         var output = (await process.StandardOutput.ReadToEndAsync()).Trim();
         var error = (await process.StandardError.ReadToEndAsync()).Trim();
         await process.WaitForExitAsync();
@@ -105,8 +103,7 @@ public class ShellCommand {
     /// <exception cref="ShellExecException">Command returned non zero exit code.</exception>
     public void ExecVoid() {
         Redirect = true;
-        using var process = Process.Start(this);
-        if (process is null) throw new InvalidOperationException("Shell execute failed");
+        using var process = Process.Start(this) ?? throw new InvalidOperationException("Shell execute failed");
         var output = process.StandardOutput.ReadToEnd().Trim();
         var error = process.StandardError.ReadToEnd().Trim();
         process.WaitForExit();
@@ -121,8 +118,7 @@ public class ShellCommand {
     /// <exception cref="ShellExecException">Command returned non zero exit code.</exception>
     public async ValueTask ExecVoidAsync() {
         Redirect = true;
-        using var process = Process.Start(this);
-        if (process is null) throw new InvalidOperationException("Shell execute failed");
+        using var process = Process.Start(this) ?? throw new InvalidOperationException("Shell execute failed");
         var output = (await process.StandardOutput.ReadToEndAsync()).Trim();
         var error = (await process.StandardError.ReadToEndAsync()).Trim();
         await process.WaitForExitAsync();

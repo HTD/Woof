@@ -70,6 +70,17 @@ public static class XSSFExtensions {
                 }
             }
         }
+        // Auto filters
+        if (sheetMetadata?.AutoFilters == true) {
+            sheet.SetAutoFilter(
+                new CellRangeAddress(
+                    0,
+                    rowIndex - 1,
+                    sheetMetadata?.ColumnFiltersStart > 0 ? sheetMetadata.ColumnFiltersStart : 0,
+                    sheetMetadata?.ColumnFiltersEnd > 0 ? sheetMetadata.ColumnFiltersEnd : n - 1
+                )
+            );
+        }
         // Column widths
         for (var i = 0; i < n; i++) {
             var columnWidth = columns[i].Metadata?.Width;

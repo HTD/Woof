@@ -19,7 +19,7 @@ public class AkvAccessProvider {
     /// <param name="name">Secret name.</param>
     /// <returns>Data decoded from Base64 string.</returns>
     public byte[] GetBytes(string name)
-        => ByteCache.ContainsKey(name) ? ByteCache[name] : (ByteCache[name] = Convert.FromBase64String(SecretClient.GetSecret(name).Value.Value));
+        => ByteCache.TryGetValue(name, out var data) ? data : (ByteCache[name] = Convert.FromBase64String(SecretClient.GetSecret(name).Value.Value));
 
     /// <summary>
     /// Gets the secret value from the Azure Key Vault.
@@ -27,7 +27,7 @@ public class AkvAccessProvider {
     /// <param name="name">Secret name.</param>
     /// <returns>Secret string.</returns>
     public string GetString(string name)
-        => StringCache.ContainsKey(name) ? StringCache[name] : (StringCache[name] = SecretClient.GetSecret(name).Value.Value);
+        => StringCache.TryGetValue(name, out var data) ? data : (StringCache[name] = SecretClient.GetSecret(name).Value.Value);
 
     /// <summary>
     /// Encrypts a string with the specified key.

@@ -18,12 +18,12 @@ public struct JsonNodeTreeNode {
     /// <summary>
     /// Gets the node as <see cref="JsonValue"/>.
     /// </summary>
-    public JsonValue? Value => Content as JsonValue;
+    public readonly JsonValue? Value => Content as JsonValue;
 
     /// <summary>
     /// Gets the root node of the content node.
     /// </summary>
-    public JsonNode? Root => Content?.Root;
+    public readonly JsonNode? Root => Content?.Root;
 
     /// <summary>
     /// Creates a tree node.
@@ -49,6 +49,6 @@ public struct JsonNodeTreeNode {
     /// Returns the leaf path and value as string.
     /// </summary>
     /// <returns>Leaf path.</returns>
-    public override string ToString() => $"{Path} => {Content}";
+    public override readonly string ToString() => $"{Path} => {Content}";
 
 }

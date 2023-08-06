@@ -51,7 +51,7 @@ class TestItem {
     /// <returns>Task completed when the test is completed or failed with exception.</returns>
     /// <remarks>This method never throws.</remarks>
     public async ValueTask StartAsync() {
-        if (Cursor is null) Cursor = ConsoleEx.Start(Name);
+        Cursor ??= ConsoleEx.Start(Name);
         string? message = null;
         try {
             if (Test is Func<ValueTask<string>> getMessageAsync) message = await getMessageAsync();

@@ -4,7 +4,7 @@
 /// Structure containing user defined console key shortcut.
 /// LATER: Test using <see cref="IsMatch(ConsoleKeyInfo)"/> method.
 /// </summary>
-internal struct ConsoleKeyShortcut {
+internal readonly struct ConsoleKeyShortcut {
 
     /// <summary>
     /// Gets the key part of the shortcut.

@@ -28,7 +28,7 @@ public struct Property {
     /// <summary>
     /// Gets a value indicating the property is a collection type.
     /// </summary>
-    public bool IsCollection
+    public readonly bool IsCollection
         => Type is Type type && (typeof(Array).IsAssignableFrom(type) || typeof(IList).IsAssignableFrom(type)) && type != typeof(byte[]);
 
     /// <summary>
@@ -136,7 +136,7 @@ public struct Property {
     /// Initializes the collection at the specified index with the default instance for the collection type.
     /// </summary>
     /// <param name="index">Index.</param>
-    public void EnsureInitializedAtIndex(int index) {
+    public readonly void EnsureInitializedAtIndex(int index) {
         if (Value is Array array && array.GetValue(index) is null) {
             var elementType = Type!.GetElementType()!;
             if (ObjectTree.IsContainer(elementType)) array.SetValue(Activator.CreateInstance(elementType), index);

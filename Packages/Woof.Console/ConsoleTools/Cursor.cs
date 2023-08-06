@@ -59,7 +59,7 @@ public sealed class Cursor {
         lock (ConsoleEx.Lock) {
             B = C;
             C = L;
-            Console.SetCursorPosition(x, C.Y);
+            Console.CursorLeft = x;
             Console.WriteLine(text);
             C = B;
             if (ConsoleEx.IsHexColorEnabled) Console.ResetColor();
@@ -91,7 +91,7 @@ public sealed class Cursor {
     /// <summary>
     /// Last console state.
     /// </summary>
-    private ConsoleState L;
+    ConsoleState L;
 
     /// <summary>
     /// Current console state.

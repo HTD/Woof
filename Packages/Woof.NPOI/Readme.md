@@ -69,6 +69,7 @@ tested both on Microsoft Excel and LibreOffice Calc.
    `XWorkbookResult` created from collection in your web application controller.
 
 See the attached [unit test](https://github.com/HTD/Woof/blob/master/Tests/UnitTests/NPOITest.cs) for an example usage.
+The sample data for this test is defined [here](https://github.com/HTD/Woof/blob/master/Tests/UnitTests/Types/NPOI/TestRow.cs).
 
 ---
 

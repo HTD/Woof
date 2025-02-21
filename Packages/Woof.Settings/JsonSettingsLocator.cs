@@ -27,13 +27,13 @@ public class JsonSettingsLocator : ILocator {
     /// <param name="name">Settings file base name (no extension).</param>
     /// <returns>A tuple with the full path to the file and a flag indicating whether the file exists.</returns>
     public virtual (string path, bool exists) Locate(string name) {
-        if (name is null) throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
         var programDirectory = Executable.Directory.FullName;
         var userDirectory = UserFiles.UserDirectory.FullName;
         var targets =
             PreferUserDirectory
             ? new[] { userDirectory, programDirectory }
-            : new[] { programDirectory, userDirectory };
+            : [programDirectory, userDirectory];
         var extensions = IsDebug ? GetDebugExtensions() : Extensions;
         var matches = new List<FileInfo>();
         var userTargetExists = false; // introduced not to copy the secondary extension files from program to user directory.
@@ -76,7 +76,7 @@ public class JsonSettingsLocator : ILocator {
     /// The caller can decide whether to use the secondary path if the primary path is not writeable.
     /// </returns>
     public virtual (string primaryPath, string secondaryPath) LocateNew(string name) {
-        if (name is null) throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
         var programDirectory = Executable.Directory.FullName;
         var userDirectory = UserFiles.UserDirectory.FullName;
         var extension = Extensions.First();

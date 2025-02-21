@@ -36,7 +36,7 @@ public class ProtoBufSerializer : IBufferSerializer {
         using var targetStream = new MemoryStream();
         var messageType = typeHint ?? message?.GetType();
         if (messageType != null)
-            GenericSerializer.MakeGenericMethod(messageType).Invoke(null, new object?[] { targetStream, message });
+            GenericSerializer.MakeGenericMethod(messageType).Invoke(null, [targetStream, message]);
         targetStream.TryGetBuffer(out var buffer);
         return buffer;
     }

@@ -40,7 +40,7 @@ public class CommandHistory : IEnumerable<string> {
     /// Creates a command history lines collection from a string collection.
     /// </summary>
     /// <param name="items">A string collection to create the history list from.</param>
-    public CommandHistory(IEnumerable<string> items) => Items = items != null ? new List<string>(items) : new List<string>();
+    public CommandHistory(IEnumerable<string> items) => Items = items != null ? new List<string>(items) : [];
 
     #endregion
 
@@ -130,7 +130,7 @@ public class CommandHistory : IEnumerable<string> {
     /// Converts plain lines of text into command history instance.
     /// </summary>
     /// <param name="s">Plain text lines.</param>
-    public static implicit operator CommandHistory(string s) => new(s.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+    public static implicit operator CommandHistory(string s) => new(s.Split([Environment.NewLine], StringSplitOptions.RemoveEmptyEntries));
 
     #endregion
 
@@ -155,7 +155,7 @@ public class CommandHistory : IEnumerable<string> {
     /// <summary>
     /// The internal list of items.
     /// </summary>
-    private readonly List<string> Items = new();
+    private readonly List<string> Items = [];
 
     #endregion
 

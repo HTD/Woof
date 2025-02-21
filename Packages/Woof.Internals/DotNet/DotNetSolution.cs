@@ -21,7 +21,7 @@ public class DotNetSolution {
     public IEnumerable<Project> Projects {
         get {
             if (_Projects is not null) return _Projects;
-            _Projects = new();
+            _Projects = [];
             if (!File.Exists) throw new FileNotFoundException();
             using var reader = new StreamReader(
                 File.FullName, Encoding.UTF8, false,

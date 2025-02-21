@@ -22,7 +22,7 @@ public static class JsonNodeBinder {
     }
 
     /// <summary>
-    /// Attempts to bind the <see cref="JsonNode"/> instance to a new instance of type T.<br/>
+    /// Attempts to bind the <see cref="JsonNode"/> instance to a new instance of type TVertex.<br/>
     /// If this <see cref="JsonNode"/> is a <see cref="JsonValue"/>, that will be used.<br/>
     /// Otherwise binding by matching property names against <see cref="JsonNode"/> keys recursively.<br/>
     /// </summary>

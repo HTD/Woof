@@ -17,7 +17,7 @@ public sealed partial class CronTimer<TData> : IDisposable {
     /// <summary>
     /// Gets the list of sheduled events.
     /// </summary>
-    public List<ScheduledEvent> Events { get; } = new();
+    public List<ScheduledEvent> Events { get; } = [];
 
     /// <summary>
     /// Gets or sets the timer resolution. Default set to 1 second.

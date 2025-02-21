@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <LangVersion>10</LangVersion>
         <Nullable>enable</Nullable>
         <AnalysisLevel>latest</AnalysisLevel>

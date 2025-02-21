@@ -1,4 +1,4 @@
-﻿namespace WoofRepositoryManager.Models;
+﻿namespace Woof.RepositoryManager.Models;
 
 /// <summary>
 /// Extension methods for NuGet package collections.
@@ -10,7 +10,7 @@ public static class PackageCollectionTraits {
     /// </summary>
     /// <param name="items">Packages with dependencies.</param>
     /// <returns>Packages with dependencies.</returns>
-    public static IEnumerable<PackageNode> All(this ObservableList<PackageNode> items) => items.TraverseDFS(i => i.Dependencies);
+    public static IEnumerable<PackageNode> All(this ObservableList<PackageNode> items) => items.TraverseDepthFirst(i => i.Dependencies);
 
     /// <summary>
     /// Gets the packages from the local repository.
@@ -27,18 +27,18 @@ public static class PackageCollectionTraits {
             if (package.DependencySets.FirstOrDefault(i => i.TargetFramework.DotNetFrameworkName == Settings.Default.DotNetFrameworkName) is PackageDependencyGroup group) {
                 foreach (var dependency in group.Packages) {
                     if (dependency.Id.StartsWith(Settings.Default.Prefix, StringComparison.Ordinal)) {
-                        dependencies ??= new();
-                        dependencies.Add(new(dependency.Id, dependency.VersionRange.OriginalString, null));
+                        dependencies ??= [];
+                        dependencies.Add(new(dependency.Id, dependency!.VersionRange.OriginalString!, null));
                     }
                 }
             }
             items.Add(new(name, version!, dependencies));
         }
         var reference = items.ToArray();
-        foreach (var item in reference.TraverseDFS(i => i.Dependencies)) {
+        foreach (var item in reference.TraverseDepthFirst(i => i.Dependencies)) {
             var direct = reference.First(i => i.Name == item.Name);
             if (item.Dependencies is null && direct.Dependencies is not null) {
-                item.Dependencies = new ObservableList<PackageNode>();
+                item.Dependencies = [];
                 foreach (var d in direct.Dependencies) item.Dependencies.Add(new(d));
             }
         }
@@ -50,8 +50,8 @@ public static class PackageCollectionTraits {
     /// <param name="items">Packages bound to the view.</param>
     /// <returns>All package items that are checked in the view.</returns>
     public static IEnumerable<PackageItem> GetChecked(this IEnumerable<PackageNode> items) {
-        List<PackageNode> result = new();
-        foreach (var item in items.TraverseDFS(n => n.Dependencies).Where(i => i.IsChecked))
+        List<PackageNode> result = [];
+        foreach (var item in items.TraverseDepthFirst(n => n.Dependencies).Where(i => i.IsChecked))
             if (!result.Any(i => i.Name == item.Name)) result.Add(item);
         return result;
     }

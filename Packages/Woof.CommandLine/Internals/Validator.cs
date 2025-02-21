@@ -111,7 +111,7 @@ static class Validator {
         IEnumerable<Enum> current,
         out Dictionary<string, Enum[]?> errors
         ) {
-        errors = new();
+        errors = [];
         // One missing
         var oneRequired = map.Where(e => e.Required == OptionRequired.One).Select(e => e.Option);
         if (oneRequired.Any()) {

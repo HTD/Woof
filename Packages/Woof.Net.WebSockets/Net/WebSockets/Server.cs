@@ -552,7 +552,7 @@ public abstract partial class Server<TCodec> : WebSocketEndpoint<TCodec>, IDispo
     /// <summary>
     /// Socket contexts of the clients currently connected to the server.
     /// </summary>
-    private readonly List<WebSocketContext> Clients = new();
+    private readonly List<WebSocketContext> Clients = [];
 
     /// <summary>
     /// A regular expression matching WebSocket protocol URI part.

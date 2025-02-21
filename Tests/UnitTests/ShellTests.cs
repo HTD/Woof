@@ -22,7 +22,7 @@ public class ShellTests {
     }
 
     [Fact]
-    public async ValueTask ExecAsync() {
+    public async Task ExecAsync() {
         var dir = await DirOK.ExecAsync();
         Assert.True(dir.Length > 40);
         try {
@@ -47,7 +47,7 @@ public class ShellTests {
     }
 
     [Fact]
-    public async ValueTask ExecVoidAsync() {
+    public async Task ExecVoidAsync() {
         await DirOK.ExecVoidAsync();
         try {
             await DirFail.ExecVoidAsync();
@@ -65,7 +65,7 @@ public class ShellTests {
     }
 
     [Fact]
-    public async ValueTask ExecAndForgetAsync() {
+    public async Task ExecAndForgetAsync() {
         await DirOK.ExecAndForgetAsync();
         await DirFail.ExecAndForgetAsync();
     }
@@ -79,7 +79,7 @@ public class ShellTests {
     }
 
     [Fact]
-    public async ValueTask TryExecAsync() {
+    public async Task TryExecAsync() {
         var d1 = await DirOK.TryExecAsync();
         var d2 = await DirFail.TryExecAsync();
         Assert.NotNull(d1);
@@ -92,8 +92,8 @@ public class ShellTests {
         Assert.Equal(1, exception.ExitCode);
         Assert.True(exception.Message.Length > 0);
         Assert.True(exception.CommandOutput?.Length > 0);
-        Assert.False(exception.Message.EndsWith("\n"));
-        Assert.False(exception.CommandOutput?.EndsWith("\n"));
+        Assert.False(exception.Message.EndsWith('\n'));
+        Assert.False(exception.CommandOutput?.EndsWith('\n'));
     }
 
 }

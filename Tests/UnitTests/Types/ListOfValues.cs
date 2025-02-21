@@ -2,7 +2,7 @@
 
 public class ListOfValues {
 
-    public List<int> L { get; } = new();
+    public List<int> L { get; } = [];
 
     public List<int>? N { get; set; }
 

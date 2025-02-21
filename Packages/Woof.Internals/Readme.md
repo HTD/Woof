@@ -4,7 +4,7 @@ A part of the [**Woof Tookit**](../../Readme.md)
 by **[CodeDog](https://www.codedog.pl)**.
 
 Distributed under [MIT License](https://en.wikipedia.org/wiki/MIT_License).
-(c)2022 by CodeDog, All rights reserved.
+(c)2025 by CodeDog, All rights reserved.
 
 ---
 
@@ -18,6 +18,13 @@ Contains some basic tools shared by many `Woof Toolkit` packages.
 2. `Executable`
    A static class providing information about the current executable file,
    including its location and file name.
+3. `FileSystemInfoTraits`
+   Adds `FindBack` methods for searching a file starting from the target
+   file / directory towards the directory root.
+4. `GraphVertex`
+   A base class for traversing directed graphs and detecing cycles in them.
+   Can also be used for tree structures, as they are a subset of directed
+   graphs.
 
 This dependency is made not to repeat the same blocks of code in packages
 that often are used together.
@@ -37,7 +44,7 @@ In order to make it simple, the `Executable` class exists.
 It is important that the `Assembly.Location` property does not work with
 builds published as a single file. The `Executable` class solves this problem.
 
-It doesn't do much, but it replaces really next to impossible to remember 
+It doesn't do much, but it replaces really next to impossible to remember
 invocations with simple, obvious names that doesn't require refering
 to documentation each time the property is needed.
 
@@ -56,6 +63,15 @@ They are usually equal to each other, but it is not always the case.
 ## Usage
 
 See the XML documentation provided in sources.
+
+---
+
+## Recetnt changes
+
+The last version has removed `Trees` class and added `GraphVertex`
+class that is more versatile and better optimized, as it works
+for directed graphs that trees are a special case of.
+The new version is also re-targeted for .NET8.0 LTS.
 
 ---
 

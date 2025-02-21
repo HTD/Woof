@@ -142,12 +142,12 @@ public class AkvAccessProvider {
     /// <summary>
     /// A cache for string values.
     /// </summary>
-    private readonly Dictionary<string, string> StringCache = new();
+    private readonly Dictionary<string, string> StringCache = [];
 
     /// <summary>
     /// A cache for binary values.
     /// </summary>
-    private readonly Dictionary<string, byte[]> ByteCache = new();
+    private readonly Dictionary<string, byte[]> ByteCache = [];
 
     /// <summary>
     /// Local AES algorithm instance.

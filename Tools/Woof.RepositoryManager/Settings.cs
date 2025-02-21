@@ -1,6 +1,6 @@
 ﻿using Woof.Settings.Protected;
 
-namespace WoofRepositoryManager;
+namespace Woof.RepositoryManager;
 
 #pragma warning disable CS8618 // no null values when the settings are loaded, without settings loaded.
 /// <summary>

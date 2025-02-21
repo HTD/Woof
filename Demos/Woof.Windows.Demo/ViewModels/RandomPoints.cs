@@ -4,9 +4,9 @@ namespace Woof.Windows.Demo.ViewModels;
 
 internal class RandomPoints : ViewModelBase, IGetAsync {
 
-    public ObservableList<DataPointObservable> Items { get; } = new();
+    public ObservableList<DataPointObservable> Items { get; } = [];
 
-    public ObservableList<Check> Checks { get; } = new();
+    public ObservableList<Check> Checks { get; } = [];
 
     public bool IsLoaded { get; private set; }
 

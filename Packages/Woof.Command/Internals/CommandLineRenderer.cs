@@ -396,7 +396,7 @@ internal class CommandLineRenderer : CommandLine {
     /// <summary>
     /// Keys to be ignored by <see cref="Type(char)"/> method.
     /// </summary>
-    private static readonly ConsoleKey[] _NonPrintableKeys = new ConsoleKey[] {
+    private static readonly ConsoleKey[] _NonPrintableKeys = [
             ConsoleKey.Backspace, ConsoleKey.Tab, ConsoleKey.Enter,
             ConsoleKey.Pause, ConsoleKey.Escape, ConsoleKey.PageUp, ConsoleKey.PageDown, ConsoleKey.End, ConsoleKey.Home,
             ConsoleKey.LeftArrow, ConsoleKey.UpArrow, ConsoleKey.RightArrow, ConsoleKey.DownArrow,
@@ -405,7 +405,7 @@ internal class CommandLineRenderer : CommandLine {
             ConsoleKey.F1, ConsoleKey.F2, ConsoleKey.F3, ConsoleKey.F4, ConsoleKey.F5, ConsoleKey.F6, ConsoleKey.F7, ConsoleKey.F8,
             ConsoleKey.F9, ConsoleKey.F10, ConsoleKey.F11, ConsoleKey.F12, ConsoleKey.F13, ConsoleKey.F14, ConsoleKey.F15, ConsoleKey.F16,
             ConsoleKey.F17, ConsoleKey.F18, ConsoleKey.F19, ConsoleKey.F20, ConsoleKey.F21, ConsoleKey.F22, ConsoleKey.F23, ConsoleKey.F24
-        };
+        ];
 
     /// <summary>
     /// X coordinate of the original console position of the rendered command line.

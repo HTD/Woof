@@ -83,7 +83,7 @@ public class QueryApiResponse {
     /// Gets or sets the API messages understood by the end point.
     /// </summary>
     [ProtoMember(1)]
-    public Dictionary<int, string> Messages { get; set; } = new Dictionary<int, string>();
+    public Dictionary<int, string> Messages { get; set; } = [];
 
 }
 

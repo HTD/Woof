@@ -13,4 +13,4 @@ global using Woof.Settings;
 global using Woof.Shell;
 global using Woof.Windows.Mvvm;
 
-global using WoofRepositoryManager.Models;
+global using Woof.RepositoryManager.Models;

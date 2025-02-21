@@ -22,9 +22,9 @@ public class CsvSplitter {
     /// <returns>Field text collection.</returns>
     public IEnumerable<string> GetCells(string text) {
         char[] trimChars = Quote switch {
-            '\'' => new char[] { ' ', '\t', '\r', '\n', '"' },
-            '"' => new char[] { ' ', '\t', '\r', '\n', '\'' },
-            _ => new char[] { ' ', '\t', '\r', '\n', '\'', '"' }
+            '\'' => [' ', '\t', '\r', '\n', '"'],
+            '"' => [' ', '\t', '\r', '\n', '\''],
+            _ => [' ', '\t', '\r', '\n', '\'', '"']
         };
         text = text.Trim();
         if (String.IsNullOrEmpty(text)) yield break;

@@ -176,7 +176,7 @@ public partial class Checks : UserControl {
     private void NotifySourceItemChanged(object item) => ItemsSourceOnPropertyChanged(item, new PropertyChangedEventArgs("IsChecked"));
 
     private void ItemsSourceOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        => ItemsSourceOnPropertyChangedMethod?.Invoke(ItemsSource, new object?[] { sender, e });
+        => ItemsSourceOnPropertyChangedMethod?.Invoke(ItemsSource, [sender, e]);
 
     private MethodInfo? GetItemsSourceOnPropertyChanged() {
         if (ItemsSource is null) return null;

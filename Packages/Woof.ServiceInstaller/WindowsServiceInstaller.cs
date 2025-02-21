@@ -10,7 +10,7 @@ internal class WindowsServiceInstaller {
     /// <exception cref="ArgumentNullException">Argument is null.</exception>
     public WindowsServiceInstaller(ServiceMetadataWindows serviceMetadata) {
         if (!OS.IsWindows) throw new PlatformNotSupportedException();
-        if (serviceMetadata is null) throw new ArgumentNullException(nameof(serviceMetadata));
+        ArgumentNullException.ThrowIfNull(serviceMetadata);
         if (serviceMetadata.Name is null || serviceMetadata.Name.Length < 1)
             throw new ArgumentException(E.ServiceNameRequired, nameof(serviceMetadata));
         Metadata = serviceMetadata;

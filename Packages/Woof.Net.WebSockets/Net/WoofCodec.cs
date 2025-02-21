@@ -77,7 +77,7 @@ public sealed class WoofCodec : SubProtocolCodec {
             return new DecodeResult(new InvalidOperationException(EHeaderIncomplete));
         var metaData = Serializer.Deserialize<MessageMetadata>(metaDataBuffer);
         if (metaData is null) return new DecodeResult(new NullReferenceException(EMissingMetadata), default);
-        if (!MessageTypes.ContainsKey(metaData.TypeId)) { // we do not know the type, but we know the length so we should read it anyway!
+        if (!MessageTypes.TryGetValue(metaData.TypeId, out MessageTypeContext? typeContext)) { // we do not know the type, but we know the length so we should read it anyway!
             var rawData = new Memory<byte>(new byte[metaData.PayloadLength]);
             await transport.ReceiveAsync(rawData, token);
             var exception = new InvalidOperationException(EUnknownType);
@@ -91,7 +91,7 @@ public sealed class WoofCodec : SubProtocolCodec {
             exception.Data[nameof(limit)] = limit;
             return new DecodeResult(exception, metaData.Id);
         }
-        var typeContext = MessageTypes[metaData.TypeId];
+
         if (isEnd)
             return new DecodeResult(typeContext, Activator.CreateInstance(typeContext.MessageType), metaData.Id);
         var messageBuffer = new byte[metaData.PayloadLength];
@@ -108,7 +108,7 @@ public sealed class WoofCodec : SubProtocolCodec {
         messageSegment = new(messageBuffer, 0, currentOffset);
         if (messageSegment.Length < metaData.PayloadLength || !isEnd)
             return new DecodeResult(new InvalidOperationException(EMessageIncomplete), metaData.Id);
-        var message = Serializer.Deserialize(MessageTypes[metaData.TypeId].MessageType, messageSegment);
+        var message = Serializer.Deserialize(typeContext.MessageType, messageSegment);
         var isSignatureValid = false;
         var isSignInRequest = typeContext.IsSignInRequest || message is ISignInRequest;
         if (typeContext.IsSigned && metaData.Signature != null) {

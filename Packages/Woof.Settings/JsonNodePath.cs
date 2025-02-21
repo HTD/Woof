@@ -62,7 +62,7 @@ public class JsonNodePath {
     /// <param name="path">Node parent path.</param>
     /// <param name="key">Node key (a property name or an index).</param>
     public JsonNodePath(string? path, string key)
-        => Keys = string.IsNullOrEmpty(path) ? new string[] { key } : Split(path).Append(key).ToArray();
+        => Keys = string.IsNullOrEmpty(path) ? [key] : Split(path).Append(key).ToArray();
 
     /// <summary>
     /// Creates the path from the path object and an additional key.
@@ -70,7 +70,7 @@ public class JsonNodePath {
     /// <param name="path">Node parent path.</param>
     /// <param name="key">Node key (a property name or an index).</param>
     public JsonNodePath(JsonNodePath path, string key)
-        => Keys = path.Length < 1 ? new string[] { key } : path.Keys.Append(key).ToArray();
+        => Keys = path.Length < 1 ? [key] : path.Keys.Append(key).ToArray();
 
     /// <summary>
     /// Creates the path from keys.

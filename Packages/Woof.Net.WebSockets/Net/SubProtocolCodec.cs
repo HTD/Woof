@@ -47,7 +47,7 @@ public abstract class SubProtocolCodec {
     /// <summary>
     /// Gets the message types available in the API.
     /// </summary>
-    internal MessageTypeDictionary MessageTypes { get; } = new MessageTypeDictionary();
+    internal MessageTypeDictionary MessageTypes { get; } = [];
 
     /// <summary>
     /// In derived class loads message types from the current application domain assemblies.

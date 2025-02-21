@@ -1,4 +1,4 @@
-﻿namespace WoofRepositoryManager.ViewModels;
+﻿namespace Woof.RepositoryManager.ViewModels;
 
 /// <summary>
 /// Main view model.
@@ -21,7 +21,7 @@ public class MainView : ViewModelBase, IGetAsync {
     /// <summary>
     /// Gets the targets for the view.
     /// </summary>
-    public ObservableList<Settings.NuGetFeed> Feeds { get; } = new();
+    public ObservableList<Settings.NuGetFeed> Feeds { get; } = [];
 
     /// <summary>
     /// Gets or sets the feed currently selected.
@@ -34,7 +34,7 @@ public class MainView : ViewModelBase, IGetAsync {
     /// <summary>
     /// Gets the packages for the view.
     /// </summary>
-    public ObservableList<PackageNode> Packages { get; } = new();
+    public ObservableList<PackageNode> Packages { get; } = [];
 
     /// <summary>
     /// Gets or sets the status text.

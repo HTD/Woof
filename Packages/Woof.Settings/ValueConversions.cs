@@ -62,8 +62,8 @@ public class ValueConversions : Dictionary<Type, (ValueParser Parse, ValueToStri
     /// <exception cref="InvalidCastException">Unsupported type.</exception>
     public static string GetString(object value, out bool isQuoted) {
         var type = value.GetType();
-        if (Default.ContainsKey(type)) {
-            var (Parse, GetString, IsQuoted) = Default[type];
+        if (Default.TryGetValue(type, out (ValueParser Parse, ValueToString GetString, bool IsQuoted) value1)) {
+            var (Parse, GetString, IsQuoted) = value1;
             isQuoted = IsQuoted;
             if (value is IProtectedSettingsValue pValue) pValue.Protect();
             return GetString(value);

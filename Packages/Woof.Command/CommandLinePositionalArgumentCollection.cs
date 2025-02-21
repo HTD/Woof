@@ -16,7 +16,7 @@ public sealed class CommandLinePositionalArgumentCollection : IEnumerable<string
     /// <summary>
     /// Creates an empty collection.
     /// </summary>
-    internal CommandLinePositionalArgumentCollection() => Arguments = new(0);
+    internal CommandLinePositionalArgumentCollection() => Arguments = [];
 
     /// <summary>
     /// Creates new collection from any collection.

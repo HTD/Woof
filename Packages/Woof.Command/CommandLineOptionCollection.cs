@@ -15,7 +15,7 @@ public sealed class CommandLineOptionCollection : IEnumerable<KeyValuePair<strin
     /// <summary>
     /// Creates an empty collection.
     /// </summary>
-    internal CommandLineOptionCollection() => Options = new Dictionary<string, string>(0);
+    internal CommandLineOptionCollection() => Options = [];
 
     /// <summary>
     /// Creates new collection from a dictionary.

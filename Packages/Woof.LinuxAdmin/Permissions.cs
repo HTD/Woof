@@ -53,7 +53,7 @@ public partial class Permissions {
     /// <exception cref="ArgumentNullException"><paramref name="value"/> is null.</exception>
     /// <exception cref="ArgumentException">Argument is not a valid permission string.</exception>
     public Permissions(string value) {
-        if (value is null) throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
         OriginalString = value;
         if (RxOctalString.IsMatch(value)) {
             Mode = Convert.ToUInt32(value, 8);

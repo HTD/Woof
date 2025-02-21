@@ -1,4 +1,4 @@
-﻿namespace WoofRepositoryManager;
+﻿namespace Woof.RepositoryManager;
 
 /// <summary>
 /// Interaction logic for App.xaml

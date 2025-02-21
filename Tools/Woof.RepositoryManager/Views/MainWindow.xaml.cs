@@ -1,4 +1,4 @@
-﻿namespace WoofRepositoryManager.Views;
+﻿namespace Woof.RepositoryManager.Views;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml

@@ -3,7 +3,7 @@
 **.NET** programming toolkit by **[CodeDog](https://www.codedog.pl)**.
 
 Distributed under [MIT License](https://en.wikipedia.org/wiki/MIT_License).
-(c)2022 by CodeDog, All rights reserved.
+(c)2025 by CodeDog, All rights reserved.
 
 ---
 
@@ -31,13 +31,14 @@ tasks and production process.
 It is also crucial to avoid code duplication. If two projects share some
 similar code, it should be a true sharing, not duplication.
 
-`.NET 6.0` already contains powerful tools for most of the tasks itself, but
+`DotNet` already contains powerful tools for most of the tasks itself, but
 it's designed for maximum versatility, and it's the only way it can be.
-`.NET 6.0` exists to make complex tasks solvable using high level programming.
+`DotNet` exists to make complex tasks solvable using high level programming.
 
-Woof Toolkit in designed for **more focused use** and **development speed**.
+`Woof Toolkit` is designed for **more focused use** and **development speed**.
 
 **The key reasons:**
+
 - Each reusable component of the program must be fully tested
 - Majority of CodeDog's production must be Open Source (MIT License)
 - Upgraded features in one program should benefit all programs using
@@ -63,10 +64,6 @@ all public classes are fully documented.
 The solution file contains all current toolkit packages.
 
 ## Versioning
-
-The current toolkit version is 6.2.0-beta.1.
-
-That means the toolkit is in major redesign.
 
 The major version number matches the current `.NET` framework version.
 The minor version is the API version.
@@ -97,14 +94,13 @@ or public feed.
 
 The feeds are configured in a local user's JSON configuration file.
 
-
 To publish to external feeds like nuget.org use the `Publish` tool.
 
 API keys can be safely stored in the JSON configuration, because they are
 encrypted on the first reload using Windows Data Protection API for the
 current user.
 
-**NOTE**
+### NOTE
 
 To actually build packages you either need the strong name key that is not
 included in this
@@ -151,45 +147,46 @@ Also the strict separate of concerns principle is implemented since version
 6.2.
 
 Historically `Woof` supported various frameworks:
- - `.NET Framework` from  4.5 to 4.8
- - `.NET Standard 2.0`
- - `.NET 5.0`.
+
+- `.NET Framework` from  4.5 to 4.8
+- `.NET Standard 2.0`
+- `.NET 5.0`
+- `.NET 6.0`
+- `.NET 7.0`
 
 Supporting the legacy frameworks is in conflict with the development speed
 rule defined, so the latest `Woof` supports
 
-**the current `.NET 6.0` only.**
+**the current `.NET 8.0 (LTS)` and `.NET 9.0` only.**
 
 However, older versions of `Woof` were often Windows OS only,
 the **current `Woof` is multiplatform**.
 
 Each package is tested on both Windows and Linux.
-(For now: Windows 11 and Ubuntu 20.)
 
 ## Current state
 
-Final works. Mostly on testing and improving documentation.
-The beta version packages will be soon released on GitHub, and after some
-testing version 6.2.0 will go to NuGet.org. All older packages will be
-deprecated.
+Woof is still used in CodeDog's products, however due to a major company focus change
+its development is limited only to improving security, compatibility and reliability.
 
+So not many new features are added, however existing ones are fixed and improved
+if necessary.
 
 ## Known issues
 
 Missing demos, test, documentation for some packages.
+To be fixed one day.
 
 ## Future
 
-`Woof` is here to stay. In 2022 you can count on very intense active
-development. The 6.2.0 version will be rock solid, as the `.NET 6.0`
-itself.
-
-Also: Woof.Blazor experimental package containing some advanced GUI controls.
+`Woof` is here to stay. It's still relevant and it's still useful in 2025!
 
 ## Development
 
 The whole toolkit is developed by just one person by now.
 Join me any time.
+
+**I mean, please, do join the `Woof` development team!**
 
 ---
 

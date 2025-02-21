@@ -68,6 +68,6 @@ public abstract class ViewModelBase : INotifyPropertyChanged, ICommand {
     /// <summary>
     /// Automatic bound properties dictionary to provide backing fields for the properties.
     /// </summary>
-    private readonly Dictionary<string, object?> Properties = new();
+    private readonly Dictionary<string, object?> Properties = [];
 
 }

@@ -20,9 +20,9 @@ public class NPOITest {
     /// </summary>
     [Fact]
     public void A015_ToExcel_Alignment() {
-        List<AlignmentTestRow> test = new() {
+        List<AlignmentTestRow> test = [
             new AlignmentTestRow()
-        };
+        ];
         //test.Add(new AlignmentTestRow());
         test.ToExcel("AlignmentTest.xlsx");
     }

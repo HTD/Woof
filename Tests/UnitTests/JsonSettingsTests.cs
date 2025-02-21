@@ -295,7 +295,7 @@ public class JsonSettingsTests {
         var reference = new ListOfObjects();
         reference.L.Add(new DirectSimple { Value = "L1" });
         reference.L.Add(new DirectSimple { Value = "L2" });
-        reference.N = new List<DirectSimple> { new() { Value = "N1" }, new() { Value = "N2" } };
+        reference.N = [new() { Value = "N1" }, new() { Value = "N2" }];
         node.Set(reference);
         var result = node.Get<ListOfObjects>();
         Assert.Equal(reference.N.Count + 1, result.N!.Count);
@@ -307,7 +307,7 @@ public class JsonSettingsTests {
     /// </summary>
     /// <returns>A <see cref="ValueTask"/> completed when the test is done.</returns>
     [Fact]
-    public async ValueTask A200_LoadAsync() {
+    public async Task A200_LoadAsync() {
         const string testInput = @"{""level1"":{""test"":[{""x"":1,""y"":2},{""z"":3},""surprise""]}}";
         using var testStream = new MemoryStream(Encoding.UTF8.GetBytes(testInput));
         testStream.Position = 0;
@@ -323,7 +323,7 @@ public class JsonSettingsTests {
     /// </summary>
     /// <returns>A <see cref="ValueTask"/> completed when the test is done.</returns>
     [Fact]
-    public async ValueTask A210_SaveAsync() {
+    public async Task A210_SaveAsync() {
         var initial = JsonNodeLoader.Default.Parse(@"{""n"":null,""b"":false,""s"":""initial"",""i"":0,""d"":0.123456789}");
         initial["z"] = "a new value";
         initial["n"] = "not null";

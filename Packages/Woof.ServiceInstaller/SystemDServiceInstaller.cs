@@ -13,7 +13,7 @@ internal class SystemDServiceInstaller {
     /// <exception cref="ArgumentNullException">Argument is null.</exception>
     public SystemDServiceInstaller(ServiceMetadataSystemd serviceMetadata) {
         if (!OS.IsLinux) throw new PlatformNotSupportedException();
-        if (serviceMetadata is null) throw new ArgumentNullException(nameof(serviceMetadata));
+        ArgumentNullException.ThrowIfNull(serviceMetadata);
         if (serviceMetadata.Name is null || serviceMetadata.Name.Length < 1)
             throw new ArgumentException(E.ServiceNameRequired, nameof(serviceMetadata));
         Metadata = serviceMetadata;
@@ -45,7 +45,7 @@ internal class SystemDServiceInstaller {
         Linux.ChmodR(targetDirectory, "o-wX");
         var binaryPath = Path.Combine(targetDirectory, Executable.FileInfo.Name);
         if (!isDll) Linux.Chmod(binaryPath, "+x,o-wx");
-        File.WriteAllLines($"/etc/systemd/system/{Metadata.Name}.service", new string[] {
+        File.WriteAllLines($"/etc/systemd/system/{Metadata.Name}.service", [
             "[Unit]",
             $"Description={Metadata.DisplayName}",
             "",
@@ -58,7 +58,7 @@ internal class SystemDServiceInstaller {
             "",
             "[Install]",
             "WantedBy=multi-user.target"
-        });
+        ]);
         if (Metadata.Start is StartType.Auto or StartType.DelayedAuto)
             await new ShellCommand($"systemctl enable {Metadata.Name}.service").ExecVoidAsync();
     }

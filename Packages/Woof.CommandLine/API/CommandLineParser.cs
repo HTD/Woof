@@ -44,7 +44,7 @@ public class CommandLineParser {
     /// Gets the option to delegate bindings.
     /// A delegate should be synchronous or asynchronous method optionally accepting a string.
     /// </summary>
-    public Dictionary<Enum, Delegate> Delegates { get; } = new();
+    public Dictionary<Enum, Delegate> Delegates { get; } = [];
 
     #endregion
 
@@ -58,22 +58,22 @@ public class CommandLineParser {
     /// <summary>
     /// Gets the command line data (options with values).
     /// </summary>
-    public Dictionary<Enum, string?> Data { get; } = new();
+    public Dictionary<Enum, string?> Data { get; } = [];
 
     /// <summary>
     /// Gets the command line option identifiers.
     /// </summary>
-    public HashSet<Enum> Options { get; } = new();
+    public HashSet<Enum> Options { get; } = [];
 
     /// <summary>
     /// Gets the undefined options in the parsed command line.
     /// </summary>
-    public HashSet<string> OptionsUndefined { get; } = new();
+    public HashSet<string> OptionsUndefined { get; } = [];
 
     /// <summary>
     /// Gets the command line parameters: arguments not being option keys or values.
     /// </summary>
-    public List<string> Parameters { get; } = new();
+    public List<string> Parameters { get; } = [];
 
     /// <summary>
     /// Gets the detailed validation error descriptions if any.
@@ -269,7 +269,7 @@ public class CommandLineParser {
     /// <summary>
     /// Maps containing command line options binding metadata.
     /// </summary>
-    internal readonly List<OptionMetadata> CurrentMap = new();
+    internal readonly List<OptionMetadata> CurrentMap = [];
 
     /// <summary>
     /// Gets the <see cref="StringComparer"/> depending on the <see cref="Syntax"/>.

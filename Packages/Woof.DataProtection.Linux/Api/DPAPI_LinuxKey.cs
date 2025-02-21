@@ -16,7 +16,7 @@ internal class DPAPI_LinuxKey : DataProtectionKeyBase {
     /// The entry at zero is the root entry - a key that can only be configured by root,
     /// but readable to all users when using <see cref="DataProtectionScope.LocalMachine"/>.
     /// </summary>
-    internal static Dictionary<int, DPAPI_LinuxKey> Available { get; } = new();
+    internal static Dictionary<int, DPAPI_LinuxKey> Available { get; } = [];
 
     /// <summary>
     /// Gets the data protection key for the current user scope.

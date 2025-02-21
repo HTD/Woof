@@ -2,13 +2,13 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.CommandLine</Title>
-        <Version>7.0.0</Version>
+        <Version>9.0.0</Version>
         <PackageTags>woof;toolkit;command;parser;cli;shell;posix</PackageTags>
-        <PackageReleaseNotes>.NET7 target.</PackageReleaseNotes>
+        <PackageReleaseNotes>Targeting changed to .NET8.0 LTS.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>Advanced command line parser using POSIX, PowerShell and DOS command line arguments formatting guidelines. Automatically generates console documentation from options and assembly metadata.</Description>
-        <Copyright>(c)2022 CodeDog</Copyright>
+        <Copyright>(c)2025 CodeDog</Copyright>
         <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.CommandLine</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <DebugType>embedded</DebugType>
     </PropertyGroup>

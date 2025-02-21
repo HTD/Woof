@@ -2,7 +2,7 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.Data.DbCommandApi</Title>
-        <Version>7.0.0</Version>
+        <Version>9.0.0</Version>
         <PackageTags>woof;toolkit;db;adatabase;sql;mssql;api</PackageTags>
         <PackageReleaseNotes>.NET7 target.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
@@ -35,7 +35,7 @@
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <DebugType>embedded</DebugType>
         <RootNamespace>Woof.Data.DbCommandApi</RootNamespace>

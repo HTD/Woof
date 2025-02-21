@@ -2,6 +2,6 @@
 
 public class ArrayOfSections {
 
-    public DirectSimple[] A { get; } = new DirectSimple[] { new(), new(), new() };
+    public DirectSimple[] A { get; } = [new(), new(), new()];
 
 }

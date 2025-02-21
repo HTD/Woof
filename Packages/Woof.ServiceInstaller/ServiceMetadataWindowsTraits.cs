@@ -20,7 +20,7 @@ public static class ServiceMetadataWindowsTraits {
     /// <param name="serviceMetadata">Service metadata.</param>
     /// <returns><see cref="ValueTask"/> returning true if the command exited sucessfully.</returns>
     public static async ValueTask DeleteAsync(this ServiceMetadataWindows serviceMetadata) {
-        if (serviceMetadata is null) throw new ArgumentNullException(nameof(serviceMetadata));
+        ArgumentNullException.ThrowIfNull(serviceMetadata);
         if (String.IsNullOrWhiteSpace(serviceMetadata.Name)) throw new InvalidOperationException(E.ServiceNameRequired);
         try { await StopAsync(serviceMetadata); } catch { }
         await new ShellCommand($"sc delete {serviceMetadata.Name}").ExecAndForgetAsync();
@@ -62,6 +62,7 @@ public static class ServiceMetadataWindowsTraits {
     /// </summary>
     /// <param name="serviceMetadata">Service metadata.</param>
     /// <returns><see cref="Task"/> completed when the shutdown is triggered.</returns>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "This function is meant to use for Windows only")]
     public static Task RunHostAsync<TService>(this ServiceMetadataWindows serviceMetadata) where TService : class, IHostedService
         => Host.CreateDefaultBuilder()
         .ConfigureLogging(configureLogging => {

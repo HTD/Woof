@@ -89,7 +89,7 @@ public struct Property {
             var elementType = Type.GenericTypeArguments[0]; // list also should have the element type
             var elementCount = GetJsonArrayCount(jsonRoot, path);
             var array = Array.CreateInstance(elementType, elementCount);
-            var list = Activator.CreateInstance(Type, new object[] { array });
+            var list = Activator.CreateInstance(Type, [array]);
             SetValue(list);
         }
     }

@@ -110,7 +110,7 @@ public class CommandShell {
         PromptFormat = prompt;
         AutoComplete = new CommandAutoCompleteList(ManPages.Keys) { PeekColor = ColorPeek };
         CurrentLine = new CommandLineRenderer();
-        History = new CommandHistory();
+        History = [];
     }
 
     /// <summary>
@@ -408,11 +408,11 @@ public class CommandShell {
     /// </summary>
     /// <param name="fileName">Name of the file.</param>
     static void GetContent(string? fileName) {
-        if (fileName == null) ShowMsg(String.Join(Environment.NewLine, new string[] {
+        if (fileName == null) ShowMsg(String.Join(Environment.NewLine, [
                     @"      |\__/,|   (`\  ",
                     @"    _.|o o  |_   ) ) ",
                     @"---(((---(((---------"
-                }), CommandMessageType.Special);
+                ]), CommandMessageType.Special);
         else if (!File.Exists(fileName)) ShowMsg("No such file.", CommandMessageType.Warning);
         else
             try {

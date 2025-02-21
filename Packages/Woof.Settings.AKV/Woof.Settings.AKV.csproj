@@ -3,7 +3,7 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>Woof.Settings.AKV</Title>
-        <Version>7.0.0</Version>
+        <Version>9.0.0</Version>
         <PackageTags>woof;toolkit</PackageTags>
         <PackageReleaseNotes>.NET7 target.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
@@ -28,8 +28,8 @@
     </ItemGroup>
 
     <ItemGroup Label="System dependencies">
-        <PackageReference Include="Azure.Identity" Version="1.5.0" />
-        <PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.2.0" />
+        <PackageReference Include="Azure.Identity" Version="1.13.2" />
+        <PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.7.0" />
     </ItemGroup>
 
     <ItemGroup Label="Local dependencies">
@@ -37,7 +37,7 @@
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <DebugType>embedded</DebugType>
     </PropertyGroup>

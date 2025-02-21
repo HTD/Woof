@@ -57,7 +57,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// <param name="item">The item to be added to the end of the <see cref="ObservableList{T}"/>.</param>
     public new void Add(T item) {
         base.Add(item);
-        if (Filter is not null && ShadowList is null) ShadowList = new();
+        if (Filter is not null && ShadowList is null) ShadowList = [];
         if (Filter is not null && Filter(item)) ShadowList!.Add(item);
         if (item is INotifyPropertyChanged observableItem) observableItem.PropertyChanged += (s, e) => OnPropertyChanged(observableItem, e);
         if (Filter is null) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
@@ -72,7 +72,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     public void AddDistinct(T item) {
         if (Contains(item)) return;
         base.Add(item);
-        if (Filter is not null && ShadowList is null) ShadowList = new();
+        if (Filter is not null && ShadowList is null) ShadowList = [];
         if (Filter is not null && Filter(item)) ShadowList!.Add(item);
         if (item is INotifyPropertyChanged observableItem) observableItem.PropertyChanged += (s, e) => OnPropertyChanged(observableItem, e);
         if (Filter is null) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
@@ -358,7 +358,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// <param name="value">The object to add to the <see cref="IList"/>.</param>
     /// <returns>The position into which the new element was inserted, or -1 to indicate that
     /// the item was not inserted into the collection.</returns>
-    private int BaseIListAdd(object? value) => (int)BaseIListAddMethodInfo.Invoke(this, new object?[] { value })!;
+    private int BaseIListAdd(object? value) => (int)BaseIListAddMethodInfo.Invoke(this, [value])!;
 
     /// <summary>
     /// Invokes <see cref="IList.Insert(int, object?)"/> on the base class.
@@ -366,7 +366,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// <param name="index">The zero-based index at which item should be inserted.</param>
     /// <param name="value">The object to insert into the <see cref="ObservableList{T}"/>.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the System.Collections.Generic.IList`1.</exception>
-    private void BaseIListInsert(int index, object? value) => BaseIListInsertMethodInfo.Invoke(this, new object?[] { index, value });
+    private void BaseIListInsert(int index, object? value) => BaseIListInsertMethodInfo.Invoke(this, [index, value]);
 
     /// <summary>
     /// Adds an item to the <see cref="IList"/> and triggers <see cref="CollectionChanged"/> event.
@@ -437,7 +437,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// </summary>
     private static readonly MethodInfo BaseIListAddMethodInfo = BaseType.GetMethod(
             "System.Collections.IList.Add",
-            BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(object) }, null
+            BindingFlags.NonPublic | BindingFlags.Instance, null, [typeof(object)], null
         )!;
 
     /// <summary>
@@ -445,7 +445,7 @@ public class ObservableList<T> : List<T>, IList, ICollection, INotifyCollectionC
     /// </summary>
     private static readonly MethodInfo BaseIListInsertMethodInfo = BaseType.GetMethod(
             "System.Collections.IList.Insert",
-            BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(int), typeof(object) }, null
+            BindingFlags.NonPublic | BindingFlags.Instance, null, [typeof(int), typeof(object)], null
         )!;
 
     private static readonly MethodInfo BaseIEnumerableGetEnumerator = BaseType.GetMethod(

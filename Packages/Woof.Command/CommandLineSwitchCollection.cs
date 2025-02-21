@@ -15,7 +15,7 @@ public sealed class CommandLineSwitchCollection : IEnumerable<string> {
     /// <summary>
     /// Creates an empty collection.
     /// </summary>
-    internal CommandLineSwitchCollection() => Switches = new(0);
+    internal CommandLineSwitchCollection() => Switches = [];
 
     /// <summary>
     /// Creates new collection from any collection.

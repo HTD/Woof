@@ -149,10 +149,18 @@ public sealed partial class HexStream : Stream {
     /// <param name="length">Fragment length.</param>
     public static void WriteData(Stream stream, int offset, int length) {
         using var d = new HexStream();
-        var buffer = new byte[length];
+        var buffer = new byte[4096];
         stream.Position = offset;
-        stream.Read(buffer, 0, length);
-        d.Write(buffer, 0, length);
+        int totalBytesRead = 0;
+        while (totalBytesRead < length) {
+            int bytesToRead = Math.Min(buffer.Length, length - totalBytesRead);
+            int bytesRead = stream.Read(buffer, 0, bytesToRead);
+            if (bytesRead == 0) {
+                throw new EndOfStreamException("Unexpected end of stream.");
+            }
+            d.Write(buffer, 0, bytesRead);
+            totalBytesRead += bytesRead;
+        }
     }
 
     /// <summary>

@@ -20,7 +20,7 @@ public class ComplexBasic {
             instance.SectionA.Section1.Value = "SectionA1";
             instance.SectionA.Value2 = nameof(instance.SectionA.Value2);
             instance.SectionA.Value3 = nameof(instance.SectionA.Value3);
-            instance.SectionB.AB1 = new DirectSimple[] { new() { Value = "AB11" }, new() { Value = "AB12" } };
+            instance.SectionB.AB1 = [new() { Value = "AB11" }, new() { Value = "AB12" }];
             //instance.SectionB.AB2 = new(); // test existing case
             instance.SectionB.AB2.AddRange(new DirectSimple[] { new() { Value = "AB21" }, new() { Value = "AB22" } });
             instance.SectionB.AB3 = new DirectSimple { Value = "AB31" };

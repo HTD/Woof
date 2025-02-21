@@ -378,7 +378,7 @@ public class CsvReader {
     /// <summary>
     /// Internal CSV line parsing exception list.
     /// </summary>
-    private readonly List<CsvLineException> _LineExceptions = new();
+    private readonly List<CsvLineException> _LineExceptions = [];
 
 }
 

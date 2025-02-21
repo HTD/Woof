@@ -20,7 +20,7 @@ public static class ServiceMetadataSystemdTraits {
     /// <param name="serviceMetadata">Service metadata.</param>
     /// <returns><see cref="ValueTask"/> returning true if the command exited sucessfully.</returns>
     public static async ValueTask DeleteAsync(this ServiceMetadataSystemd serviceMetadata) {
-        if (serviceMetadata is null) throw new ArgumentNullException(nameof(serviceMetadata));
+        ArgumentNullException.ThrowIfNull(serviceMetadata);
         if (String.IsNullOrWhiteSpace(serviceMetadata.Name)) throw new InvalidOperationException(E.ServiceNameRequired);
         try { await StopAsync(serviceMetadata); } catch { }
         await new SystemDServiceInstaller(serviceMetadata).DeleteSystemDServiceAsync();
@@ -64,7 +64,6 @@ public static class ServiceMetadataSystemdTraits {
     public static Task RunHostAsync<TService>(this ServiceMetadataSystemd serviceMetadata) where TService : class, IHostedService
         => Host.CreateDefaultBuilder()
         .ConfigureLogging(configureLogging => {
-            configureLogging.AddFilter<EventLogLoggerProvider>(level => level >= serviceMetadata.EventLogLevelMinimal);
             configureLogging.SetMinimumLevel(serviceMetadata.EventLogLevelMinimal);
         })
         .ConfigureServices((hostContext, services) => services.AddHostedService<TService>())

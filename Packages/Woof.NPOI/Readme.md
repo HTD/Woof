@@ -26,7 +26,7 @@ It works **full auto**. Just `data.ToExcel("myFileName.xlsx");`, done and done.
 
 You want to download Excel files in a web application?
 No problem, it has `XWorkbookResut` type exactly for that purpose.
-User's browser will know it's an Excel file and will open it in Excel, 
+User's browser will know it's an Excel file and will open it in Excel,
 LibreOffice or any other compatible app.
 
 Woof.NPOI is to NPOI like HTML2PDF are to just plain PDF generators.
@@ -68,7 +68,7 @@ tested both on Microsoft Excel and LibreOffice Calc.
    to `XSSFWorkbook` with `ToXSSFWorkbook()` extension method or return new
    `XWorkbookResult` created from collection in your web application controller.
 
-See the attached `Woof.NPOI.Test` project for a simple example.
+See the attached [unit test](https://github.com/HTD/Woof/blob/master/Tests/UnitTests/NPOITest.cs) for an example usage.
 
 ---
 

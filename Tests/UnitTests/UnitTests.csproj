@@ -16,7 +16,7 @@
         <PackageProjectUrl>https://github.com/HTD/Woof</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <PackageTags>tests</PackageTags>
-        <PackageReleaseNotes>Current</PackageReleaseNotes>
+        <PackageReleaseNotes>Major update for .NET 9.0.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

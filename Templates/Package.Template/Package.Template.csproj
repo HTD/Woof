@@ -3,9 +3,9 @@
 
     <PropertyGroup Label="Package metadata">
         <Title>[PACKAGE NAME]</Title>
-        <Version>6.2.0</Version>
+        <Version>9.0.0</Version>
         <PackageTags>woof;toolkit</PackageTags>
-        <PackageReleaseNotes>Woof Toolkit 6.2 first release.</PackageReleaseNotes>
+        <PackageReleaseNotes></PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>Provides package metadata and common project settings.</Description>
@@ -36,7 +36,7 @@
     </ItemGroup>
 
     <PropertyGroup Label="Project settings">
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <DebugType>embedded</DebugType>
     </PropertyGroup>

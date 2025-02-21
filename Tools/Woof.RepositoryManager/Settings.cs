@@ -19,7 +19,6 @@ public class Settings : JsonSettings<Settings> {
     [Internal]
     public bool OK
         => IsLoaded &&
-        DotNetFrameworkName is not null &&
         Paths.PackageBinaries is not null && Paths.Repo is not null && Paths.Root is not null;
 
     /// <summary>
@@ -42,11 +41,6 @@ public class Settings : JsonSettings<Settings> {
     /// Gets the NuGet prefix for the toolkit.
     /// </summary>
     public string Prefix { get; init; }
-
-    /// <summary>
-    /// Gets the framework name string for package fitlering.
-    /// </summary>
-    public string DotNetFrameworkName { get; init; }
 
     /// <summary>
     /// Gets the feed targets.

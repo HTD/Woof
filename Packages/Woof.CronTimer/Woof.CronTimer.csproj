@@ -4,7 +4,7 @@
         <Title>Woof.CronTimer</Title>
         <Version>9.0.0</Version>
         <PackageTags>woof;toolkit;cron;timer</PackageTags>
-        <PackageReleaseNotes>Targeting changed to .NET8.0 LTS.</PackageReleaseNotes>
+        <PackageReleaseNotes>Major update for .NET 9.0.</PackageReleaseNotes>
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>A very simple task scheduler using cron expressions to schedule events.

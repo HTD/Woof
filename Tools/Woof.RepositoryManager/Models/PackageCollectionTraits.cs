@@ -24,7 +24,7 @@ public static class PackageCollectionTraits {
             var name = package.Identity.Id;
             var version = lastVersion;
             ObservableList<PackageNode>? dependencies = null;
-            if (package.DependencySets.FirstOrDefault(i => i.TargetFramework.DotNetFrameworkName == Settings.Default.DotNetFrameworkName) is PackageDependencyGroup group) {
+            if (package.DependencySets.FirstOrDefault() is PackageDependencyGroup group) {
                 foreach (var dependency in group.Packages) {
                     if (dependency.Id.StartsWith(Settings.Default.Prefix, StringComparison.Ordinal)) {
                         dependencies ??= [];

@@ -8,7 +8,7 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <Authors>CodeDog</Authors>
         <Description>Tests the Woof.ServiceInstaller package.</Description>
-        <Copyright>(c)2022 CodeDog</Copyright>
+        <Copyright>(c)2025 CodeDog</Copyright>
         <PackageProjectUrl>https://github.com/HTD/Woof.ServiceInstaller</PackageProjectUrl>
         <DebugType>embedded</DebugType>
         <AssemblyName>testsvc</AssemblyName>

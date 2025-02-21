@@ -8,7 +8,7 @@
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>Registers and unregisters a project executable as either Windows Service or systemd deamon. Works both on Windows and Linux.</Description>
-        <Copyright>(c)2022 CodeDog</Copyright>
+        <Copyright>(c)2025 CodeDog</Copyright>
         <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.ServiceInstaler</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

@@ -8,7 +8,7 @@
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>Provides fast shell commands execution on both Linux and Windows.</Description>
-        <Copyright>(c)2022 CodeDog</Copyright>
+        <Copyright>(c)2025 CodeDog</Copyright>
         <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.Shell</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

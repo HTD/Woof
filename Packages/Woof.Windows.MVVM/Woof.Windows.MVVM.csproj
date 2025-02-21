@@ -9,7 +9,7 @@
         <Authors>Adam Łyskawa</Authors>
         <Company>CodeDog</Company>
         <Description>WPF MVVM data binding made easy!</Description>
-        <Copyright>(c)2022 CodeDog</Copyright>
+        <Copyright>(c)2025 CodeDog</Copyright>
         <PackageProjectUrl>https://github.com/HTD/Woof/tree/master/Packages/Woof.Template</PackageProjectUrl>
         <RepositoryUrl>https://github.com/HTD/Woof</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

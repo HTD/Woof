@@ -1,4 +1,6 @@
-﻿namespace UnitTests;
+﻿using System.Text.Json.Serialization.Metadata;
+
+namespace UnitTests;
 
 public class JsonSettingsTests {
 
@@ -190,7 +192,7 @@ public class JsonSettingsTests {
         var node = JsonNodeLoader.Default.Parse("{}");
         var sample = DirectSupported.Default;
         node.Set(sample);
-        var json = node.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+        var json = node.ToJsonString(new JsonSerializerOptions { WriteIndented = true, TypeInfoResolver = new DefaultJsonTypeInfoResolver() });
         var parsedConfig = JsonNodeLoader.Default.Parse(json);
         var parsedData = parsedConfig.Get<DirectSupported>();
         parsedData.AssertEqual(sample);
@@ -312,10 +314,10 @@ public class JsonSettingsTests {
         using var testStream = new MemoryStream(Encoding.UTF8.GetBytes(testInput));
         testStream.Position = 0;
         var node = await new JsonNodeLoader().LoadAsync(testStream);
-        Assert.Equal(1, node.GetValue<int>("Level1:Test:0:x"));
-        Assert.Equal(2, node.GetValue<int>("Level1:Test:0:y"));
-        Assert.Equal(3, node.GetValue<int>("Level1:Test:1:z"));
-        Assert.Equal("surprise", node.GetValue<string>("Level1:Test:2"));
+        Assert.Equal(1, node.GetValue<int>("Level1.Test[0].x"));
+        Assert.Equal(2, node.GetValue<int>("Level1.Test.0.y"));
+        Assert.Equal(3, node.GetValue<int>("Level1.Test:1:z"));
+        Assert.Equal("surprise", node.GetValue<string>("Level1.Test.2"));
     }
 
     /// <summary>

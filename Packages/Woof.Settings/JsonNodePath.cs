@@ -8,7 +8,7 @@ public class JsonNodePath {
     /// <summary>
     /// Gets an empty path - a path containing no keys.
     /// </summary>
-    public static readonly JsonNodePath Empty = new(Array.Empty<string>());
+    public static readonly JsonNodePath Empty = new([]);
 
     /// <summary>
     /// Gets the key as an index if it is an index. Otherwise gets -1.
@@ -54,7 +54,7 @@ public class JsonNodePath {
     /// Creates the path from a string.
     /// </summary>
     /// <param name="path">Node path.</param>
-    public JsonNodePath(string? path) => Keys = string.IsNullOrEmpty(path) ? Array.Empty<string>() : Split(path).ToArray();
+    public JsonNodePath(string? path) => Keys = string.IsNullOrEmpty(path) ? [] : Split(path).ToArray();
 
     /// <summary>
     /// Creates the path from a string path and an additional key.
@@ -70,7 +70,7 @@ public class JsonNodePath {
     /// <param name="path">Node parent path.</param>
     /// <param name="key">Node key (a property name or an index).</param>
     public JsonNodePath(JsonNodePath path, string key)
-        => Keys = path.Length < 1 ? [key] : path.Keys.Append(key).ToArray();
+        => Keys = path.Length < 1 ? [key] : [.. path.Keys, key];
 
     /// <summary>
     /// Creates the path from keys.
@@ -95,14 +95,15 @@ public class JsonNodePath {
         int s = 0, p = s;
         if (p > 0 && n < 2) yield break;
         for (int i = s; i < n; i++) {
-            if (path[i] is '.' or '[') {
+            if (path[i] is '.' or ':' or '[' or ']') {
                 if (p > s) p++;
+                if (p == i) continue;
                 yield return path[p..i];
-                p = i++;
+                p = i;
             }
         }
         if (p > s) p++;
-        yield return path[n - 1] != ']' ? path[p..] : path[p..^1];
+        if (path[p..].Length > 0) yield return path[p..];
     }
 
     /// <summary>

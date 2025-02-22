@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
-
-namespace Woof.DataProtection;
+﻿namespace Woof.DataProtection;
 
 /// <summary>
 /// Implementing class contains complete data protection key details.

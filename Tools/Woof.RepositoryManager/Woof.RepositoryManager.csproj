@@ -3,6 +3,7 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net9.0-windows</TargetFramework>
+        <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
     </PropertyGroup>
@@ -11,15 +12,10 @@
         <BaseOutputPath>..\bin\</BaseOutputPath>
         <ImplicitUsings>enable</ImplicitUsings>
         <ApplicationIcon>CodeDog.ico</ApplicationIcon>
+        <Version>9.0.1</Version>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <NoWarn>1701;1702;IDE0079</NoWarn>
-    </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <NoWarn>1701;1702;IDE0079</NoWarn>
-    </PropertyGroup>
 
     <ItemGroup>
       <None Remove="Views\Icon.png" />

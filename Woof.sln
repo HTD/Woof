@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Woof Tookit", "Woof Tookit"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		CodeDog.ico = CodeDog.ico
-		CodingStyle.vssettings = CodingStyle.vssettings
 		Icon.png = Icon.png
 		md-styles.css = md-styles.css
 		Readme.md = Readme.md

@@ -192,18 +192,27 @@ public class MainView : ViewModelBase, IGetAsync {
     private async ValueTask PublishPackagesAsync(IEnumerable<PackageNode> packages) {
         if (!packages.Any()) return;
         foreach (var package in packages) {
-            Status = $"Publishing package {package.Name} {package.Version}...";
-            var packagePath = Path.Combine(LocalRepository.Path, package.Name, package.Version, $"{package.Name}.{package.Version}.nupkg");
-            if (CurrentFeed is Settings.NuGetFeed feed) {
-                var commandLine = feed.ApiKey is not null && feed.ApiKey.Value.Length > 0
-                    ? $"nuget push -Source {feed.Uri.OriginalString} -ApiKey {feed.ApiKey.Value} \"{packagePath}\""
-                    : $"nuget push -Source {feed.Uri.OriginalString} \"{packagePath}\"";
-                var command = new ShellCommand(commandLine);
-                await command.ExecVoidAsync();
-            } else await Task.Delay(250);
-            package.IsChecked = false;
-            foreach (var p in Packages.Where(p => p.Name == package.Name && p.Version == package.Version)) p.IsChecked = false;
-            Status += "OK";
+            try {
+                Status = $"Publishing package {package.Name} {package.Version}...";
+                var packagePath = Path.Combine(LocalRepository.Path, package.Name, package.Version, $"{package.Name}.{package.Version}.nupkg");
+                if (CurrentFeed is Settings.NuGetFeed feed) {
+                    var commandLine = feed.ApiKey is not null && feed.ApiKey.Value.Length > 0
+                        ? $"nuget push -Source {feed.Uri.OriginalString} -ApiKey {feed.ApiKey.Value} \"{packagePath}\""
+                        : $"nuget push -Source {feed.Uri.OriginalString} \"{packagePath}\"";
+                    var command = new ShellCommand(commandLine);
+                    await command.ExecVoidAsync();
+                }
+                else await Task.Delay(250);
+                Status += "OK";
+            }
+            catch {
+                Status += "ERROR!";
+                throw;
+            }
+            finally {
+                package.IsChecked = false;
+                foreach (var p in Packages.Where(p => p.Name == package.Name && p.Version == package.Version)) p.IsChecked = false;
+            }
         }
         Status = null;
     }

@@ -50,6 +50,6 @@ public static class PackageCollectionTraits {
     /// <param name="items">Packages bound to the view.</param>
     /// <returns>All package items that are checked in the view.</returns>
     public static IEnumerable<PackageNode> GetChecked(this IEnumerable<PackageNode> items)
-        => items.Where(i => i.IsChecked).TraversePostOrder(n => n.Dependencies).Distinct();
+        => items.Where(i => i.IsChecked).TraversePostOrder(n => n.Dependencies).Distinct().Where(i => i.IsChecked);
     
 }

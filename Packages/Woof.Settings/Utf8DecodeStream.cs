@@ -73,7 +73,7 @@ public class Utf8DecodeStream : Stream {
     /// <returns>True if one or more subsequent Unicode escape sequences is found.</returns>
     private static bool DecodeUtf8Sequence(byte[] buffer, int index, out byte[] result, out int bytesConsumed) {
         bytesConsumed = 0;
-        result = Array.Empty<byte>();
+        result = [];
         List<char> parts = new(2);
         while (DecodeChar(buffer, index, out var part)) {
             parts.Add(part);
@@ -81,7 +81,7 @@ public class Utf8DecodeStream : Stream {
             bytesConsumed += 6;
         }
         if (parts.Count < 1) return false;
-        result = Encoding.UTF8.GetBytes(parts.ToArray());
+        result = Encoding.UTF8.GetBytes([.. parts]);
         return true;
     }
 

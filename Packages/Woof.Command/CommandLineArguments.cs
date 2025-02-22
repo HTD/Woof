@@ -37,7 +37,7 @@ public sealed partial class CommandLineArguments : IEnumerable<string> {
     /// </summary>
     public CommandLineArguments() {
         Any = false;
-        Raw = Array.Empty<string>();
+        Raw = [];
         Positional = new();
         Switches = new();
         Options = new();

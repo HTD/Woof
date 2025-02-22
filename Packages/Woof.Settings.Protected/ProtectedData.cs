@@ -29,13 +29,13 @@ public class ProtectedData : ISerializableSettingsValue, IProtectedSettingsValue
     /// </summary>
     public byte[] Value {
         get {
-            if (Serialized is null) return Array.Empty<byte>();
+            if (Serialized is null) return [];
             if (!IsProtected) return Convert.FromBase64String(Serialized);
             try {
                 return DP.Unprotect(Convert.FromBase64String(Serialized[2..]), DefaultDataProtectionScope);
             }
             catch {
-                return Array.Empty<byte>();
+                return [];
             }
         }
         set => Serialized = Convert.ToBase64String(value);

@@ -50,7 +50,7 @@ public class CommandAutoCompleteList : IEnumerable<string> {
     /// </summary>
     /// <param name="commands">A collection of commands to initialize the list.</param>
     public CommandAutoCompleteList(IEnumerable<string>? commands = null) {
-        Commands = commands?.ToArray() ?? Array.Empty<string>();
+        Commands = commands?.ToArray() ?? [];
         Reload();
         CurrentIndex = -1;
     }
@@ -63,7 +63,7 @@ public class CommandAutoCompleteList : IEnumerable<string> {
     /// Extends the commands list.
     /// </summary>
     /// <param name="commands">Any string collection.</param>
-    public void AddCommands(IEnumerable<string> commands) => Commands = Commands.Concat(commands.Where(i => !Commands.Contains(i, StringComparer.OrdinalIgnoreCase))).ToArray();
+    public void AddCommands(IEnumerable<string> commands) => Commands = [.. Commands, .. commands.Where(i => !Commands.Contains(i, StringComparer.OrdinalIgnoreCase))];
 
     /// <summary>
     /// Filters the list by the matching start string.
@@ -113,11 +113,11 @@ public class CommandAutoCompleteList : IEnumerable<string> {
             => _path.StartsWith(_dir, StringComparison.OrdinalIgnoreCase) ? _path[_dir.Length..].Trim('\\') : _path;
         if (Directory.Exists(dir)) {
             FileSystemEntries = Directory.EnumerateFileSystemEntries(dir, "*").Select(i => trim(i, dir)).ToArray();
-            All = includeCommands ? Commands.Concat(FileSystemEntries).OrderBy(i => i).ToArray() : FileSystemEntries.OrderBy(i => i).ToArray();
+            All = includeCommands ? [.. Commands.Concat(FileSystemEntries).OrderBy(i => i)] : [.. FileSystemEntries.OrderBy(i => i)];
         }
         else {
-            FileSystemEntries = Array.Empty<string>();
-            All = includeCommands ? Commands.OrderBy(i => i).ToArray() : FileSystemEntries;
+            FileSystemEntries = [];
+            All = includeCommands ? [.. Commands.OrderBy(i => i)] : FileSystemEntries;
         }
     }
 
@@ -126,7 +126,7 @@ public class CommandAutoCompleteList : IEnumerable<string> {
     /// </summary>
     public void Reset() {
         if (Peek1 >= 0 && Peek2 >= 0) Clear();
-        Matching = Array.Empty<string>();
+        Matching = [];
         CurrentIndex = Peek1 = Peek2 = OriginX = OriginY - 1;
     }
 
@@ -187,10 +187,10 @@ public class CommandAutoCompleteList : IEnumerable<string> {
 
     #region Private data
 
-    private string[] Commands = Array.Empty<string>();
-    private string[] FileSystemEntries = Array.Empty<string>();
-    private string[] All = Array.Empty<string>();
-    private string[] Matching = Array.Empty<string>();
+    private string[] Commands = [];
+    private string[] FileSystemEntries = [];
+    private string[] All = [];
+    private string[] Matching = [];
     private int OriginX;
     private int OriginY;
 

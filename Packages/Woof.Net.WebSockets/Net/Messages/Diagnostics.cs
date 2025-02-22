@@ -148,6 +148,6 @@ public sealed class GetStreamFragmentResponse {
     /// The buffer length represents the data length.
     /// </summary>
     [ProtoMember(2)]
-    public byte[] Buffer { get; set; } = Array.Empty<byte>();
+    public byte[] Buffer { get; set; } = [];
 
 }

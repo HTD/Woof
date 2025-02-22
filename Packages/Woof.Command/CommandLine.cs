@@ -45,7 +45,7 @@ public partial class CommandLine : ICommand {
     /// <summary>
     /// Creates a new empty command line.
     /// </summary>
-    public CommandLine() => Map = Array.Empty<int>();
+    public CommandLine() => Map = [];
 
     /// <summary>
     /// Creates a new command line from string.
@@ -104,7 +104,7 @@ public partial class CommandLine : ICommand {
             else builder.Append(c);
         }
         if (builder.Length > 0) result.Add(builder.ToString());
-        return result.ToArray();
+        return [.. result];
     }
 
     #endregion
@@ -118,7 +118,7 @@ public partial class CommandLine : ICommand {
         _Text = string.Empty;
         Command = string.Empty;
         Arguments = new();
-        Map = Array.Empty<int>();
+        Map = [];
     }
 
     ///// <summary>
@@ -153,7 +153,7 @@ public partial class CommandLine : ICommand {
                 if (--partLeft < 1) isOutside = true;
             }
         Command = unquoted.FirstOrDefault() ?? string.Empty;
-        Arguments = new CommandLineArguments(unquoted.Length > 0 ? unquoted[1..] : Array.Empty<string>());
+        Arguments = new CommandLineArguments(unquoted.Length > 0 ? unquoted[1..] : []);
     }
 
     #endregion

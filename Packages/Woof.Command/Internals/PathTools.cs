@@ -14,7 +14,7 @@ internal static class PathTools {
     /// <returns>Directory string collection.</returns>
     public static IEnumerable<string> GetPath(EnvironmentVariableTarget target = EnvironmentVariableTarget.User)
         => Environment.GetEnvironmentVariable(PATH, target)?.Split(PATH_SEPARATOR).Select(i => i.Trim())
-            ?? Enumerable.Empty<string>();
+            ?? [];
 
     /// <summary>
     /// Sets specified environment PATH to specified directory string collection.

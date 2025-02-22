@@ -16,5 +16,4 @@ public class IntVertex : GraphVertex<IntVertex> {
 
     public void Add(int value) => Vertices.Add(new(value));
 
-
 }

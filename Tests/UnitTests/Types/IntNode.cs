@@ -16,5 +16,4 @@ public class IntNode {
 
     public void Add(int value) => Children.Add(new(value));
 
-
 }

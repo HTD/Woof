@@ -189,19 +189,22 @@ public class MainView : ViewModelBase, IGetAsync {
     /// </summary>
     /// <param name="packages">Packages selected.</param>
     /// <returns>A <see cref="ValueTask"/> completed when the packages are published.</returns>
-    private async ValueTask PublishPackagesAsync(IEnumerable<PackageItem> packages) {
-        if (!packages.Any() || CurrentFeed is null) return;
+    private async ValueTask PublishPackagesAsync(IEnumerable<PackageNode> packages) {
+        if (!packages.Any()) return;
         foreach (var package in packages) {
             Status = $"Publishing package {package.Name} {package.Version}...";
             var packagePath = Path.Combine(LocalRepository.Path, package.Name, package.Version, $"{package.Name}.{package.Version}.nupkg");
-            var commandLine = CurrentFeed.ApiKey is not null && CurrentFeed.ApiKey.Value.Length > 0
-                ? $"nuget push -Source {CurrentFeed.Uri.OriginalString} -ApiKey {CurrentFeed.ApiKey.Value} \"{packagePath}\""
-                : $"nuget push -Source {CurrentFeed.Uri.OriginalString} \"{packagePath}\"";
-            var command = new ShellCommand(commandLine);
-            await command.ExecVoidAsync();
+            if (CurrentFeed is Settings.NuGetFeed feed) {
+                var commandLine = feed.ApiKey is not null && feed.ApiKey.Value.Length > 0
+                    ? $"nuget push -Source {feed.Uri.OriginalString} -ApiKey {feed.ApiKey.Value} \"{packagePath}\""
+                    : $"nuget push -Source {feed.Uri.OriginalString} \"{packagePath}\"";
+                var command = new ShellCommand(commandLine);
+                await command.ExecVoidAsync();
+            } else await Task.Delay(250);
+            package.IsChecked = false;
+            foreach (var p in Packages.Where(p => p.Name == package.Name && p.Version == package.Version)) p.IsChecked = false;
             Status += "OK";
         }
-        await Task.Delay(1000);
         Status = null;
     }
 

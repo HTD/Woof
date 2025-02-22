@@ -28,6 +28,10 @@ public record PackageNode : PackageItem, INotifyPropertyChanged {
 
     public PackageNode(PackageNode node) : base(node) => Dependencies = node.Dependencies;
 
+    public virtual bool Equals(PackageNode? other) => other is PackageNode n && n.Name == Name && n.Version == Version;
+
+    public override int GetHashCode() => HashCode.Combine(Name, Version);
+
     private bool _IsChecked;
     private bool _IsExpanded;
 

@@ -49,11 +49,7 @@ public static class PackageCollectionTraits {
     /// </summary>
     /// <param name="items">Packages bound to the view.</param>
     /// <returns>All package items that are checked in the view.</returns>
-    public static IEnumerable<PackageItem> GetChecked(this IEnumerable<PackageNode> items) {
-        List<PackageNode> result = [];
-        foreach (var item in items.TraverseDepthFirst(n => n.Dependencies).Where(i => i.IsChecked))
-            if (!result.Any(i => i.Name == item.Name)) result.Add(item);
-        return result;
-    }
-
+    public static IEnumerable<PackageNode> GetChecked(this IEnumerable<PackageNode> items)
+        => items.Where(i => i.IsChecked).TraversePostOrder(n => n.Dependencies).Distinct();
+    
 }

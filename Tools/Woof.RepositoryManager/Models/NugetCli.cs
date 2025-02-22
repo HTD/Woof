@@ -43,7 +43,7 @@ public static class NugetCli {
     public static ValueTask ResetRepositoryAsync() {
         Directory.Delete(Target, recursive: true);
         var localCache = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages"));
-        var cachedPackages = localCache.GetDirectories().Where(d => d.Name.StartsWith(Settings.Default.Prefix));
+        var cachedPackages = localCache.GetDirectories().Where(d => d.Name.StartsWith(Settings.Default.Prefix, StringComparison.Ordinal));
         foreach (var package in cachedPackages) package.Delete(recursive: true);
         return UpdateRepositoryAsync();
     }

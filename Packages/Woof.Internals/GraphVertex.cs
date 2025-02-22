@@ -51,6 +51,24 @@ public abstract class GraphVertex<TVertex> where TVertex : GraphVertex<TVertex> 
     }
 
     /// <summary>
+    /// Gets the collection of vertices in post-order order.
+    /// </summary>
+    public IEnumerable<TVertex> PostOrder {
+        get {
+            Stack<TVertex> stack1 = Vertices is IList<TVertex> l1 ? new(l1.Count) : new();
+            Stack<TVertex> stack2 = [];
+            stack1.Push((this as TVertex)!);
+            while (stack1.Count > 0) {
+                var vertex = stack1.Pop();
+                stack2.Push(vertex);
+                if (vertex.IsSink) continue;
+                foreach (var child in vertex.Vertices) stack1.Push(child);
+            }
+            return stack2;
+        }
+    }
+
+    /// <summary>
     /// Tests the graph for cycles using DFS and returns all cyclic edges.
     /// </summary>
     /// <param name="graph">A collection of all graph vertices.</param>
@@ -104,40 +122,6 @@ public abstract class GraphVertex<TVertex> where TVertex : GraphVertex<TVertex> 
 public static class GraphNode {
 
     /// <summary>
-    /// Traverses the graph nodes in DFS order.
-    /// </summary>
-    /// <typeparam name="TNode">Node type.</typeparam>
-    /// <param name="node">Tree node.</param>
-    /// <param name="children">A function returning child nodes of a node or null if the node doesn't contain child nodes.</param>
-    /// <returns>All node leaves in DFS order, this node included.</returns>
-    public static IEnumerable<TNode> TraverseDepthFirst<TNode>(TNode node, Func<TNode, IEnumerable<TNode>?> children) {
-        Stack<TNode> stack = [];
-        stack.Push(node);
-        while (stack.Count > 0) {
-            var current = stack.Pop();
-            yield return current;
-            var items = children(current);
-            if (!Any(items)) continue;
-            foreach (var item in items!.Reverse()) stack.Push(item);
-        }
-    }
-
-    /// <summary>
-    /// Traverses the graph nodes in DFS order.
-    /// </summary>
-    /// <typeparam name="TNode">Node type.</typeparam>
-    /// <param name="graph">Graph to traverse.</param>
-    /// <param name="children">A function returning child nodes of a node or null if the node doesn't contain child nodes.</param>
-    /// <returns>All graph leaves in DFS order.</returns>
-    public static IEnumerable<TNode> TraverseDepthFirst<TNode>(this IEnumerable<TNode> graph, Func<TNode, IEnumerable<TNode>?> children) {
-        foreach (var node in graph) {
-            foreach (var result in TraverseDepthFirst(node, children)) {
-                yield return result;
-            }
-        }
-    }
-
-    /// <summary>
     /// Traverses the graph nodes in BFS order.
     /// </summary>
     /// <typeparam name="TNode">Node type.</typeparam>
@@ -166,6 +150,76 @@ public static class GraphNode {
     public static IEnumerable<TNode> TraverseBreadthFirst<TNode>(this IEnumerable<TNode> graph, Func<TNode, IEnumerable<TNode>?> children) {
         foreach (var node in graph) {
             foreach (var result in TraverseBreadthFirst(node, children)) {
+                yield return result;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Traverses the graph nodes in DFS order.
+    /// </summary>
+    /// <typeparam name="TNode">Node type.</typeparam>
+    /// <param name="node">Tree node.</param>
+    /// <param name="children">A function returning child nodes of a node or null if the node doesn't contain child nodes.</param>
+    /// <returns>All graph sinks in DFS order, this node included.</returns>
+    public static IEnumerable<TNode> TraverseDepthFirst<TNode>(TNode node, Func<TNode, IEnumerable<TNode>?> children) {
+        Stack<TNode> stack = [];
+        stack.Push(node);
+        while (stack.Count > 0) {
+            var current = stack.Pop();
+            yield return current;
+            var items = children(current);
+            if (!Any(items)) continue;
+            foreach (var item in items!.Reverse()) stack.Push(item);
+        }
+    }
+
+    /// <summary>
+    /// Traverses the graph nodes in DFS order.
+    /// </summary>
+    /// <typeparam name="TNode">Node type.</typeparam>
+    /// <param name="graph">Graph to traverse.</param>
+    /// <param name="children">A function returning child nodes of a node or null if the node doesn't contain child nodes.</param>
+    /// <returns>All graph sinks in DFS order.</returns>
+    public static IEnumerable<TNode> TraverseDepthFirst<TNode>(this IEnumerable<TNode> graph, Func<TNode, IEnumerable<TNode>?> children) {
+        foreach (var node in graph) {
+            foreach (var result in TraverseDepthFirst(node, children)) {
+                yield return result;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Traverses the graph nodes in post-order order.
+    /// </summary>
+    /// <typeparam name="TNode">Node type.</typeparam>
+    /// <param name="node">Tree node.</param>
+    /// <param name="children">A function returning child nodes of a node or null if the node doesn't contain child nodes.</param>
+    /// <returns>All graph sinks in DFS order, this node included.</returns>
+    public static IEnumerable<TNode> TraversePostOrder<TNode>(TNode node, Func<TNode, IEnumerable<TNode>?> children) {
+        Stack<TNode> stack1 = [];
+        Stack<TNode> stack2 = [];
+        stack1.Push(node);
+        while (stack1.Count > 0) {
+            var current = stack1.Pop();
+            stack2.Push(current);
+            var items = children(current);
+            if (!Any(items)) continue;
+            foreach (var item in items!) stack1.Push(item);
+        }
+        return stack2;
+    }
+
+    /// <summary>
+    /// Traverses the graph nodes in post-order order.
+    /// </summary>
+    /// <typeparam name="TNode">Node type.</typeparam>
+    /// <param name="graph">Graph to traverse.</param>
+    /// <param name="children">A function returning child nodes of a node or null if the node doesn't contain child nodes.</param>
+    /// <returns>All graph sinks in DFS order.</returns>
+    public static IEnumerable<TNode> TraversePostOrder<TNode>(this IEnumerable<TNode> graph, Func<TNode, IEnumerable<TNode>?> children) {
+        foreach (var node in graph) {
+            foreach (var result in TraversePostOrder(node, children)) {
                 yield return result;
             }
         }

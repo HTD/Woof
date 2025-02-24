@@ -100,6 +100,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuke", "Tools\Nuke\Nuke.csproj", "{26363A02-0D35-443A-B770-CF164FDD0D7E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CppMerge", "Tools\CppMerge\CppMerge.csproj", "{7F812A04-A424-4EF2-84DB-571BFB38EBD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -246,6 +248,10 @@ Global
 		{26363A02-0D35-443A-B770-CF164FDD0D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26363A02-0D35-443A-B770-CF164FDD0D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26363A02-0D35-443A-B770-CF164FDD0D7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F812A04-A424-4EF2-84DB-571BFB38EBD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F812A04-A424-4EF2-84DB-571BFB38EBD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F812A04-A424-4EF2-84DB-571BFB38EBD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F812A04-A424-4EF2-84DB-571BFB38EBD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -289,6 +295,7 @@ Global
 		{FA3D0BBD-6AFE-42E2-80F1-8BB765B7C01E} = {845F9017-D0CD-47E2-A1B1-659604BDDC01}
 		{63543415-1A70-4F53-BB42-B0F7C2596DAE} = {939A05DB-484D-4F93-8A87-99D98486B020}
 		{26363A02-0D35-443A-B770-CF164FDD0D7E} = {92B29DCB-1157-4F21-AA8A-3B8C4384EB96}
+		{7F812A04-A424-4EF2-84DB-571BFB38EBD8} = {92B29DCB-1157-4F21-AA8A-3B8C4384EB96}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3151199D-4569-4768-93BA-473FE0CDBC6F}

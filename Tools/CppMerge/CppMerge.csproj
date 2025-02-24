@@ -6,9 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UseWindowsForms>True</UseWindowsForms>
+    <Title>WOOF CppMerge</Title>
+    <Version>1.0.0</Version>
+    <Authors>Adam Łyskawa</Authors>
+    <Company>CodeDog</Company>
+    <Description>C/C++ source merging tool.</Description>
+    <Copyright>(c)2025 by CodeDog, All rights reserved.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Packages\Woof.CommandLine\Woof.CommandLine.csproj" />
+    <ProjectReference Include="..\..\Packages\Woof.Console\Woof.Console.csproj" />
     <ProjectReference Include="..\..\Packages\Woof.Internals\Woof.Internals.csproj" />
   </ItemGroup>
 

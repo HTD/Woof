@@ -6,7 +6,7 @@ namespace CppMerge;
 /// <summary>
 /// A list that contains all dependency graph for a C/C++ codebase.
 /// </summary>
-internal class Codebase : List<Item> {
+internal class Codebase : List<CodeFile> {
 
     /// <summary>
     /// Gets or sets a project root directory.
@@ -16,12 +16,12 @@ internal class Codebase : List<Item> {
     /// <summary>
     /// Gets a root Code file if any.
     /// </summary>
-    public Item? Root { get; private set; }
+    public CodeFile? Root { get; private set; }
 
     /// <summary>
     /// Returns a collection of code items in order of dependency, where the root is at the end.
     /// </summary>
-    public IEnumerable<Item> DependencyChain {
+    public IEnumerable<CodeFile> DependencyChain {
         get {
             foreach (var item in this.TraversePostOrder(i => i.Vertices).Where(i => i.IsHeader).Distinct()) {
                 yield return item;
@@ -44,7 +44,7 @@ internal class Codebase : List<Item> {
             if (rootPathRelative is not null) {
                 var rootPathAbsolute = Path.Combine(Dir, rootPathRelative);
                 if (File.Exists(rootPathAbsolute)) {
-                    Root = new Item(this, rootPathRelative);
+                    Root = new CodeFile(this, rootPathRelative);
                     Add(Root);
                     Root.Parse();
                     return;
@@ -53,7 +53,7 @@ internal class Codebase : List<Item> {
             throw new ArgumentException("File doesn't exist");
         }
         foreach (var relativePath in GetPaths()) Add(new(this, relativePath));
-        while (this.FirstOrDefault(i => !i.IsParsed) is Item unparsed) unparsed.Parse();
+        while (this.FirstOrDefault(i => !i.IsParsed) is CodeFile unparsed) unparsed.Parse();
     }
 
     /// <summary>
@@ -95,7 +95,7 @@ internal class Codebase : List<Item> {
         var absolute = Path.Combine(Dir, normalized);
         if (File.Exists(absolute)) return normalized;
         return
-            Directory.EnumerateFiles(Dir, fileName, SearchOption.AllDirectories).Select(f => Path.GetRelativePath(Dir, f)).FirstOrDefault();
+            Directory.EnumerateFiles(Dir, Path.GetFileName(fileName), SearchOption.AllDirectories).Select(f => Path.GetRelativePath(Dir, f)).FirstOrDefault();
     }
 
     internal string? FindImplementation(string fileName) {
@@ -110,13 +110,13 @@ internal class Codebase : List<Item> {
     /// </summary>
     /// <param name="fileName"></param>
     /// <returns></returns>
-    internal Item? GetByFileName(string fileName) => this.FirstOrDefault(f => Path.GetFileName(f.RelativePath) == Path.GetFileName(NormalizePath(fileName)));
+    internal CodeFile? GetByFileName(string fileName) => this.FirstOrDefault(f => Path.GetFileName(f.RelativePath) == Path.GetFileName(NormalizePath(fileName)));
 
     /// <summary>
     /// Gets the file from this collection matched by relative path.
     /// </summary>
     /// <param name="relativePath">Relative path to match.</param>
     /// <returns>File instance or null if not found.</returns>
-    internal Item? GetByRelativePath(string relativePath) => this.FirstOrDefault(f => f.RelativePath == NormalizePath(relativePath));
+    internal CodeFile? GetByRelativePath(string relativePath) => this.FirstOrDefault(f => f.RelativePath == NormalizePath(relativePath));
         
 }
